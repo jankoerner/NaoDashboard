@@ -13,7 +13,7 @@ import javafx.scene.control.*;
 public class Controller {
     @FXML
     TextField tx_IP;
-    private static String PORT = ":9559";
+    private static String PORT = ":1234";
     private StringProperty NaoUrl = new SimpleStringProperty();
 
     public static void main(String[] args) {
