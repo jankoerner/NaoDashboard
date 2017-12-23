@@ -1,0 +1,60 @@
+Allgemeines:
+
+    - Logik in die Models auslagern, ( versch. Models für die verschiedenen Funktionen)
+    - im Controller nur die Methoden in den Models aufrufen
+    - Bennenung Methoden, Variablen in lowerCamelCase
+    - Bennenung Klassen, Interfaces in UpperCamelCase
+    - http://google.github.io/styleguide/javaguide.html daran vllt. halten ?
+
+Must-Have:
+
+Verbindung Nao:
+    - Ip / Port angeben
+    - validieren, ggf. Fehlermeldung
+    - Verbindungsdaten in Datei speichern, Autofill beim nächsten Start
+    - Alles andere deaktivieren bis verbunden ist (nice)
+
+Steuerung Kopf:
+    - rechts links oben unten -> 4 Knöpfe
+
+Fortbewegung: (Jan)
+    - vorwärts / rückwärts, evtl. Kurven laufen mit Art Joystick (nice)
+    - rechts links, mit Knöpfe
+    - Geschwindigkeit mit Schieberegler
+
+Nao - Posen:
+    - Katalog mit Posen
+    - Vorschaubild
+
+Sprachausgabe:
+    - Feld mit Texteingabe
+    - Einstellungen: Sprache, Tonhöhe, Lautstärke etc.
+
+Leds ansteuern:
+    - Farben / Effekte ändern
+    - Effekte selbst programmieren ?
+
+Design entwerfen:
+    - Grundstruktur
+    - Css- Styles schreiben
+    - Bedienfreundlich
+
+
+Nice To Have:
+
+Kamerabild:
+    - vllt. zentriert in der Mitte
+    - Fotos / Videos aufnehmen -> speichern
+
+NaoMark :
+    - Suchmodus aktivieren (Knopf?)
+    - automatisch hinlaufen ?
+
+Red Ball Tracker:
+    - Modus einschalten, Knopf
+    - automatische Verfolgung vom Ball
+
+Einbinden von Webservice:
+    - Alexa, Google Translate etc.
+
+Ausführen von Behaviours ?

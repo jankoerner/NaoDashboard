@@ -6,9 +6,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
-        <Button fx:id="btn_SayHello" layoutX="595.0" layoutY="564.0" mnemonicParsing="false" onAction="#btn_SayHelloIsPressed" text="Say Hello Nao!" />
-        <Button fx:id="btn_connect" layoutX="636.0" layoutY="25.0" mnemonicParsing="false" onAction="#btn_ConnectIsPressed" text="Connect" />
-        <TextField fx:id="tx_IP" layoutX="454.0" layoutY="25.0" promptText="Enter Nao IP" />
-        <Button id="Sever connection" fx:id="btn_disconnect" layoutX="617.0" layoutY="61.0" mnemonicParsing="false" onAction="#btn_disconnectIsPressed" text="Disconnect" />
+        <Button layoutX="636.0" layoutY="25.0" mnemonicParsing="false" onAction="#btn_ConnectIsPressed" text="Connect" />
+        <Button mnemonicParsing="false" onAction="#doSitDown" text="Crouch (hinhocken)" />
+
+        <TextField fx:id="tx_IP" layoutX="432.0" layoutY="25.0" promptText="Enter Nao IP" />
+        <TextField fx:id="tx_Port" layoutX="432.0" layoutY="61.0" promptText="Enter Nao Port" />
+
+        <Button layoutX="76.0" layoutY="120.0" mnemonicParsing="false" onAction="#moveForward" text="vor" />
+
     </children>
 </AnchorPane>
