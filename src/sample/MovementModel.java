@@ -8,14 +8,20 @@ public class MovementModel {
     }
 
     public void move(Application app, String direction) throws Exception{
+        ALMotion alMotion = new ALMotion(app.session());
         switch (direction){
             case "forward":
-                ALMotion alMotion = new ALMotion(app.session());
-                alMotion.move(1f,0f,0f);
-                System.out.println("test");
+                alMotion.moveTo(0.1f, 0f, 0f);
                 break;
-           
+            case "backward":
+                alMotion.moveTo(-0.1f,0f,0f);
+                break;
+            case "left":
+                alMotion.moveTo(0f,0.1f,0f);
+                break;
+            case "right":
+                alMotion.moveTo(0f,-0.1f,0f);
+                break;
         }
-
     }
 }

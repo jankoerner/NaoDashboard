@@ -12,7 +12,10 @@
         <TextField fx:id="tx_IP" layoutX="432.0" layoutY="25.0" promptText="Enter Nao IP" />
         <TextField fx:id="tx_Port" layoutX="432.0" layoutY="61.0" promptText="Enter Nao Port" />
 
-        <Button layoutX="76.0" layoutY="120.0" mnemonicParsing="false" onAction="#moveForward" text="vor" />
+        <Button layoutX="76.0" layoutY="120.0" mnemonicParsing="false" onAction="#moveForward" text="vor" onKeyPressed="#moveForward" />
+        <Button layoutX="115.0" layoutY="146.0" mnemonicParsing="false" onAction="#moveRight" text="rechts" />
+        <Button layoutX="28.0" layoutY="146.0" mnemonicParsing="false" onAction="#moveLeft" text="links" />
+        <Button layoutX="65.0" layoutY="172.0" mnemonicParsing="false" onAction="#moveBackward" text="zurück" />
 
     </children>
 </AnchorPane>

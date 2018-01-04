@@ -5,12 +5,13 @@ import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+
+import java.awt.event.KeyEvent;
 
 public class Controller {
-    @FXML
-    TextField tx_IP;
-    @FXML
-    TextField tx_Port;
+    @FXML TextField tx_IP;
+    @FXML TextField tx_Port;
     Application app;
     MovementModel movementModel;
 
@@ -31,10 +32,28 @@ public class Controller {
 
     }
 
-     public void moveForward(ActionEvent actionEvent)throws Exception {
+    public void moveForward(ActionEvent actionEvent)throws Exception {
         movementModel = new MovementModel();
         movementModel.move(app,"forward");
-        System.out.println("test2");
+        System.out.println("vor");
+    }
+
+    public void moveBackward(ActionEvent actionEvent)throws Exception {
+        movementModel = new MovementModel();
+        movementModel.move(app,"backward");
+        System.out.println("zurück");
+    }
+
+    public void moveLeft(ActionEvent actionEvent)throws Exception {
+        movementModel = new MovementModel();
+        movementModel.move(app,"left");
+        System.out.println("links");
+    }
+
+    public void moveRight(ActionEvent actionEvent)throws Exception {
+        movementModel = new MovementModel();
+        movementModel.move(app,"right");
+        System.out.println("rechts");
     }
 
     public void doSitDown(ActionEvent actionEvent) throws Exception {
