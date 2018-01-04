@@ -1,0 +1,90 @@
+FUNKTIONALITÄTSANFORDERUNGEN AN DAS NAO DASHBOARD
+
+AUTOR: VL
+
+// BEI ÄNDERUNGEN BITTE NICHT EINFACH DIESES DOK ÄNDERN
+// SONDERN ÄNDERUNGEN IM GRUPPENCHAT BESPRECHEN - KANN GUT SEIN DASS
+// ICH BEI MANCHEN SACHEN SCHWACHSINN GESCHRIEBEN HABE.. :D -
+// DAMIT JEDER NEUE ZIELE IM BLICK HAT.
+// UNKLARHEITEN EBENSO IM GRUPPENCHAT BESPRECHEN.
+// WENN SICH JEMAND AN DIE ERLEDIGUNG EINES ZIELS SETZT,
+// DIESES BITTE MIT GUT ERKENNBAREM KÜRZEL MARKIEREN
+// WENN AUFGABE ERLEDIGT IST, DIESEN EINTRAG NICHT LÖSCHEN .
+// EIN X MARKIERT ERLEDIGTE AUFGABEN...  ODER WIE AUCH IMMER. EINFACH SINNVOLL KENNZEICHNEN
+// ERLEDIGTE AUFGABEN SOLLTEN NOCHMAL ÜBERPRÜFT WERDEN :)
+
+
+Caps und Multizeilenkommentar damit ihr es euch durchlest :D
+
+
+MUST-HAVE mit Sachen die NICE wären (nur als Ziel)
+-> Habe mal alle Ziele reingetan. War jetzt nichts dabei wo ich dachte, fuck das ist niemals machbar :D
+
+Verbindung mit NAO
+
+	-> IP-Adresse aus Texteingabefeld auslesen
+	-> if IP-Adresse equals "127.0.0.1" Eingabe des Ports erzwingen vor Verbindung, nach Überprüfung ob ":" enthalten ist
+	-> falls IP-Adressen String nicht "127.0.0.1" überprüfen, ob ein ":" enthalten ist
+		-> falls enthalten Nachricht anzeigen, die dem User sagt, dass der Port standardmäßig hinzugefügt wird (StringProperty StandardPort erstellen, die man auf Knopfdruck bearbeiten kann, so muss der User nicht jedesmal den Port eingeben)
+			-> Nachricht soll Möglichkeit haben "Diese Nachricht nicht mehr anzeigen" -> ob angezeigt oder nicht soll in Textdatei gespeichert werden
+	-> auch letzte Verbindung soll in der Textdatei gespeichert werden, einfach vor Beendung des Programms Datei neu speichern
+	-> Überprüfen ob IP Valid ist bevor verbunden wird, zb anhand von Anpingen
+	
+Ausrichtung des Kopfes (sehe grade keine Schwierigkeiten dabei & keine großen Optimierungsmöglichkeiten)
+
+	-> Knöpfe auf Oberfläche	
+	-> Bewegung auch mit Pfeiltasten möglich
+	
+Fortbewegung vor und zur Seite
+
+	-> Knöpfe auf Oberfläche (wer die Oberfläche machen will, bitte... Ich reiß mich nicht drum ;) )
+		-> auch mit WASD bedienbar (kann der überhaupt rückwärts? Der kann ja nichtmal gescheit vorwärts..)
+	-> Einstellung der Geschwindigkeit (Slider, Geschwindigkeit auch über "+" und "-" Tasten verstellbar -> Geschwindigkeit als Property)
+	
+Ausführung der verschiedenen Posen
+
+	-> wieviele gibt es ??
+		-> evtl einfach Seitenleiste wo man wie man lustig ist auf die verschiedenen Posen drücken kann. 
+		-> neue Pose ausführen erst dann möglich, wenn anderes mit Fehler/Success Meldung abgeschlossen wurde
+		
+Eingabe von Text den NAO sagen soll
+
+	-> Scanner um String evtl aus neuem MessageDialog auszulesen, Designentscheidung
+	-> Tonhöhe & Lautstärke als Slider, soll es eine Standardeinstellung geben?
+	-> Sprachen auswählen (nur DE und ENG außer es gibt eine Möglichkeit zu checken welche Sprachpakete auf dem NAO installiert sind)
+	
+Festlegen der Augenfarbe
+
+	-> links rechts farbe, welche Farben gibt es?
+	-> Designabhängig... wenn möglich wäre es bedienerfreundlich wenn man auf einem Bild
+	   welches den NAO darstellt auf die Augen klicken kann und dann die Farben zur Auswahl hat & die ausgewählte Farbe auch auf
+	   dem Bild die Augen verändert
+	-> Farbe am besten als Property? 
+	-> Kann man die aktuelle Augenfarbe des NAOs holen?
+	
+	
+Abbildung der sinnvollen Fähigkeiten
+
+	-> Keine Ahnung, aktuell fällt mir nix außer der Kamera ein
+	-> Zu Kamera: aktuelles Bild anzeigen und Speichern
+	-> NAOMark/Landmark/roten Ball suchen
+		-> denke hier wird man die Schwierigkeiten und Optimierungsmöglichkeiten erkennen sobald man sich daransetzt
+	-> Behaviors
+	-> oder hat er ein Mikrofon? man könnte die Tonspur anzeigen
+	-> Anzeige der Tonspur wenn er was sagt?
+	-> ist das überhaupt sinnvoll?
+	-> Vorschläge einfach in Gruppenchat :)
+	
+NICE fänd ich außerdem noch:
+	
+	-> ein Verbindungslog
+	-> Fehlerlog
+	-> dem User zeigen dass was passiert, stelle ich mir wie eine Konsole auf dem Dashboard vor
+		-> in diese Konsole soll jedoch nichts hereingeschrieben werden (dürfen)
+		-> soll lediglich zeigen "Nao "+IP+" führt im Moment "+XY+" aus..."
+		
+Außerdem NICE
+	
+	-> Einbinden eines Webservices. Alexa oder Google Translate...
+		-> Einfach gemeinsam Besprechen wenn jemand eine Idee hat
+		

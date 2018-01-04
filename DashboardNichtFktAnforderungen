@@ -1,0 +1,18 @@
+NICHTFUNKTIONALE ANFORDERUNGEN AN DAS NAO DASHBOARD
+
+
+UMSETZUNG MIT JAVAFX
+
+EIGENE STYLES
+
+GUT LESBARER CODE
+	-> Kommentare
+	-> sinnvolle Variablenbezeichnung, nicht einfach x oderso :D
+		-> bei schleife ist "i" oderso schon okay
+	
+ALLE ARBEITEN MIT GIT
+	-> Bei mir funktionierts irgendwie noch nicht aber irgendwie krieg ich das schon hin
+	-> Dozent muss lesenden Zugriff auf Repository haben
+	
+TRENNUNG DER NAO FUNKTIONALITÄTEN DURCH JAVA PACKAGES ODER EIGENE JAVA BIBLIOTHEK
+	-> kenn ich mich nicht so aus.. sorry. einfach mal besprechen
