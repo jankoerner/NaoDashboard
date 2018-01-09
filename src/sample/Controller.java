@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.text.TextFlow;
 
 import java.awt.event.KeyEvent;
 
@@ -14,8 +13,7 @@ public class Controller {
     @FXML TextField tx_IP;
     @FXML TextField tx_Port;
     Application app;
-    Logger log;
-    MovementModel movementModel;
+    MovementModel movementModel = new MovementModel();
 
     public static void main(String[] args) {
         //TODO vielleicht hier Eingabe einer URL forcen
@@ -29,32 +27,27 @@ public class Controller {
             app.start();
         }
         else{
-            log.Write("IP stimmt nicht/Port stimmt nicht");
             System.out.println("Ip stimmt nicht, Port stimmt nicht"); // TODO Fehlermeldung im Gui anzeigen
         }
 
     }
 
     public void moveForward(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"forward");
         System.out.println("vor");
     }
 
     public void moveBackward(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"backward");
         System.out.println("zurück");
     }
 
     public void moveLeft(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"left");
         System.out.println("links");
     }
 
     public void moveRight(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"right");
         System.out.println("rechts");
     }
