@@ -21,7 +21,7 @@ public class ConnectionModel {
     }
 
     public boolean isIPValid(String ip){
-        boolean valid = true; // TODO Validirungs überlegen
+        boolean valid = false; // TODO Validirungs überlegen
         return valid;
     }
 
