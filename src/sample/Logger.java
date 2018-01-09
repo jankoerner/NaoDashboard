@@ -18,11 +18,12 @@ public class Logger {
     }
 
     public String Write (String text){
+        
         log.setAccessibleText(text);
     }
 
-    public final void setColor(String Color){
-        Color.setColor(Color);
+    public final void setColor(String color){
+        Color.set(color);
     }
     public final String GetColor(){
         return Color.get();
