@@ -4,9 +4,10 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveKeyBoard" onKeyReleased="#moveKeyBoard" prefHeight="600.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<?import javafx.scene.text.TextFlow?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <Button layoutX="636.0" layoutY="25.0" mnemonicParsing="false" onAction="#btn_ConnectIsPressed" text="Connect" />
         <Button mnemonicParsing="false" onAction="#doSitDown" text="Crouch (hinhocken)" />
@@ -18,8 +19,8 @@
         <Button id="right" layoutX="115.0" layoutY="146.0" mnemonicParsing="false" onAction="#move" text="rechts" />
         <Button id="left" layoutX="28.0" layoutY="146.0" mnemonicParsing="false" onAction="#move" text="links" />
         <Button id="backward" layoutX="65.0" layoutY="172.0" mnemonicParsing="false" onAction="#move" text="zurück" />
-        <ListView layoutX="198.0" layoutY="260.0" prefHeight="200.0" prefWidth="200.0" />
         <Slider fx:id="velocityslider" accessibleText="Velocity" blockIncrement="0.01" layoutX="207.0" layoutY="121.0" majorTickUnit="0.1" max="1.0" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" />
+        <TextFlow fx:id="tfl_Log" layoutX="14.0" layoutY="413.0" prefHeight="137.0" prefWidth="667.0"/>
 
     </children>
 </AnchorPane>

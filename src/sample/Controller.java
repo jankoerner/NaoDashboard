@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.control.TextField;
 
 public class Controller {
     @FXML TextField tx_IP;
@@ -16,20 +17,22 @@ public class Controller {
     private MovementModel movementModel = new MovementModel();
     private ALMotion alMotion;
     private Boolean first = true;
+
+    Log log = new Log();
+    Logger logger = new Logger(log, "");
+
     public static void main(String[] args) {
-        //TODO vielleicht hier Eingabe einer URL force
+        //TODO vielleicht hier Eingabe einer URL forcen
+
     }
 
     public void btn_ConnectIsPressed(ActionEvent actionEvent) throws Exception {
         ConnectionModel connectionModel = new ConnectionModel();
-        if (connectionModel.connect(tx_IP.getText(),tx_Port.getText()))
+        if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
         {
             app = new Application(new String[] {},connectionModel.getNaoUrl());
             app.start();
-        }
-        else{
-            System.out.println("Ip stimmt nicht, Port stimmt nicht"); // TODO Fehlermeldung im Gui anzeigen
-        }
+        } else logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
 
     }
     public void moveKeyBoard(KeyEvent keyEvent)throws Exception{
