@@ -9,7 +9,7 @@
         <Button mnemonicParsing="false" onAction="#doSitDown" text="Crouch (hinhocken)" />
 
         <TextField fx:id="tx_IP" layoutX="432.0" layoutY="25.0" promptText="Enter Nao IP" />
-        <TextField fx:id="tx_Port" layoutX="432.0" layoutY="61.0" promptText="Enter Nao Port" />
+        <TextField fx:id="tx_Port" layoutX="432.0" layoutY="61.0" promptText="Enter Nao Port" text="9559"/>
         <TextFlow fx:id="tfl_Log" layoutX="14.0" layoutY="413.0" prefHeight="137.0" prefWidth="667.0"/>
         <Button layoutX="76.0" layoutY="120.0" mnemonicParsing="false" onAction="#moveForward" onKeyPressed="#moveForward" text="vor" />
         <Button layoutX="115.0" layoutY="146.0" mnemonicParsing="false" onAction="#moveRight" text="rechts" />
