@@ -18,7 +18,7 @@ public class Logger {
     }
 
     public String Write (String text){
-        
+
         log.setAccessibleText(text);
     }
 
