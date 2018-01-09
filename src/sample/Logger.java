@@ -6,7 +6,7 @@ import javafx.scene.control.ListView;
 
 
 public class Logger {
-    final ListView log;
+    final private ListView log;
     private StringProperty Color=new SimpleStringProperty();
 
     public static void main(String[] args) {
@@ -20,6 +20,7 @@ public class Logger {
     public String Write (String text){
 
         log.setAccessibleText(text);
+        return text;
     }
 
     public final void setColor(String color){
