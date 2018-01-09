@@ -32,7 +32,10 @@ public class Controller {
         {
             app = new Application(new String[] {},connectionModel.getNaoUrl());
             app.start();
-        } else logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
+        } else{
+            logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
+
+        }
 
     }
     public void moveKeyBoard(KeyEvent keyEvent)throws Exception{
