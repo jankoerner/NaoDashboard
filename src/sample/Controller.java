@@ -22,7 +22,7 @@ public class Controller {
 
     public void btn_ConnectIsPressed(ActionEvent actionEvent) throws Exception {
         ConnectionModel connectionModel = new ConnectionModel();
-        if (connectionModel.connect(tx_IP.getText(),tx_Port.getText()))
+        if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
         {
             app = new Application(new String[] {},connectionModel.getNaoUrl());
             app.start();
