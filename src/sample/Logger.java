@@ -20,6 +20,7 @@ public class Logger {
     public String Write (String text){
 
         log.setAccessibleText(text);
+        return "";
     }
 
     public final void setColor(String color){
