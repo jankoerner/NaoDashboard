@@ -13,7 +13,7 @@ public class Controller {
     @FXML TextField tx_IP;
     @FXML TextField tx_Port;
     Application app;
-    MovementModel movementModel;
+    MovementModel movementModel = new MovementModel();
 
     public static void main(String[] args) {
         //TODO vielleicht hier Eingabe einer URL forcen
@@ -33,25 +33,21 @@ public class Controller {
     }
 
     public void moveForward(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"forward");
         System.out.println("vor");
     }
 
     public void moveBackward(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"backward");
         System.out.println("zurück");
     }
 
     public void moveLeft(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"left");
         System.out.println("links");
     }
 
     public void moveRight(ActionEvent actionEvent)throws Exception {
-        movementModel = new MovementModel();
         movementModel.move(app,"right");
         System.out.println("rechts");
     }

@@ -31,7 +31,7 @@ public class ConnectionModel {
     }
 
     public final void setNaoUrl(String ip, String port){
-        NaoUrl.set("tcp://"+ip + ":" + port  );
+        NaoUrl.set("tcp://"+ip + ":" + port);
     }
 
     public final String getNaoUrl(){
