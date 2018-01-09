@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="java-naoqi-sdk-2.1.4.13-linux64" level="project" />
+    <orderEntry type="library" name="java-naoqi-sdk-2.1.4.13-linux64" level="project" />
   </component>
 </module>
