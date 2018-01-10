@@ -10,12 +10,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.css.PseudoClass;
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -25,6 +27,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+
 
 enum Level {DEBUG, INFO, WARN, ERROR}
 
@@ -42,6 +45,8 @@ class Log {
 }
 
 class Logger {
+    @FXML
+    TextFlow tfl_log;
     private final Log log;
     private final String context;
 
