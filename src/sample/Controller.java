@@ -64,11 +64,9 @@ public class Controller {
                 movementModel.moveKeyboard(alMotion,keyEvent.getText(),velocity);
             }
             else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
-                alMotion.killMove();
                 movementModel.moveKeyboard(alMotion,"stop", velocity);
                 ALRobotPosture posture = new ALRobotPosture(app.session());
                 posture.goToPosture("Stand", 1.0f);
-
             }
         }
     }

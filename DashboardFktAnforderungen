@@ -30,10 +30,10 @@ Verbindung mit NAO
 	-> auch letzte Verbindung soll in der Textdatei gespeichert werden, einfach vor Beendung des Programms Datei neu speichern
 	-> Überprüfen ob IP Valid ist bevor verbunden wird, zb anhand von Anpingen
 	
-Ausrichtung des Kopfes (sehe grade keine Schwierigkeiten dabei & keine großen Optimierungsmöglichkeiten)
+(X) Ausrichtung des Kopfes
 
-	-> Knöpfe auf Oberfläche	
-	-> Bewegung auch mit Pfeiltasten möglich
+	(X)-> Knöpfe auf Oberfläche, (sind 5 Knöpfe geworden Oben, Unten, Links, Rechts, Mitte).	
+	-> Bewegung auch mit Pfeiltasten möglich (muss noch mit der Tastatur verbunden werden). 
 	
 Fortbewegung vor und zur Seite
 	-> Knöpfe auf Oberfläche (wer die Oberfläche machen will, bitte... Ich reiß mich nicht drum ;) )
