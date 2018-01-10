@@ -1,15 +1,20 @@
 package sample;
 
+import com.aldebaran.qi.Application;
+import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
+import com.aldebaran.qi.helper.proxies.ALConnectionManager;
+import com.aldebaran.qi.helper.proxies.ALUserSession;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.List;
+
 
 public class ConnectionModel {
     private StringProperty NaoUrl = new SimpleStringProperty();
-
+    ALAnimatedSpeech alAnimatedSpeech;
 
     public static void main(String[] args) {
 
@@ -44,6 +49,12 @@ public class ConnectionModel {
 
     public final String getNaoUrl(){
         return NaoUrl.get();
+    }
+
+    public void disconnect(com.aldebaran.qi.Application app)throws Exception{
+        alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+        alAnimatedSpeech.say("Bye");
+        
     }
 
 }
