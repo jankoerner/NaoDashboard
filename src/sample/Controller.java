@@ -14,13 +14,15 @@ import javafx.scene.text.TextFlow;
 public class Controller {
     @FXML TextField tx_IP;
     @FXML TextField tx_Port;
-    @FXML Slider velocityslider;
+    @FXML Slider velocitySlider;
     @FXML TextFlow tfl_log;
+    @FXML TextArea textToSpeech;
     private Application app;
     private MovementModel movementModel = new MovementModel();
     private ALMotion alMotion;
     private Boolean first = true;
     private ConnectionModel connectionModel;
+    private TextToSpeechModel textToSpeechModel;
     Log log = new Log();
     Logger logger = new Logger(log,"");
 
@@ -57,10 +59,9 @@ public class Controller {
                 alMotion = new ALMotion(app.session());
                 first = false;
             }
-            float velocity = (float) velocityslider.getValue();
+            float velocity = (float) velocitySlider.getValue();
             if(keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)){
                 movementModel.moveKeyboard(alMotion,keyEvent.getText(),velocity);
-                System.out.println(velocityslider.getValue());
             }
             else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
                 alMotion.killMove();
@@ -75,6 +76,13 @@ public class Controller {
     public void move(ActionEvent actionEvent)throws Exception{
        Button button = (Button) actionEvent.getSource();
        movementModel.move(app,button.getId());
+    }
+
+    public void say(ActionEvent actionEvent)throws Exception{
+        if (textToSpeech.getText() != null){
+            textToSpeechModel = new TextToSpeechModel();
+            textToSpeechModel.say(app, textToSpeech.getText());
+        }
     }
 
     public void doSitDown(ActionEvent actionEvent) throws Exception {

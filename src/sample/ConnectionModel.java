@@ -52,9 +52,10 @@ public class ConnectionModel {
     }
 
     public void disconnect(com.aldebaran.qi.Application app)throws Exception{
-        alAnimatedSpeech = new ALAnimatedSpeech(app.session());
-        alAnimatedSpeech.say("Bye");
-        
+        if (alAnimatedSpeech != null)
+        {
+            alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+            alAnimatedSpeech.say("Bye");
+        }
     }
-
 }

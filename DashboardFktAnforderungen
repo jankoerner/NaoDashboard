@@ -36,22 +36,23 @@ Ausrichtung des Kopfes (sehe grade keine Schwierigkeiten dabei & keine großen O
 	-> Bewegung auch mit Pfeiltasten möglich
 	
 Fortbewegung vor und zur Seite
-
 	-> Knöpfe auf Oberfläche (wer die Oberfläche machen will, bitte... Ich reiß mich nicht drum ;) )
 		-> auch mit WASD bedienbar (kann der überhaupt rückwärts? Der kann ja nichtmal gescheit vorwärts..)
 	-> Einstellung der Geschwindigkeit (Slider, Geschwindigkeit auch über "+" und "-" Tasten verstellbar -> Geschwindigkeit als Property)
 	
 Ausführung der verschiedenen Posen
-
 	-> wieviele gibt es ??
 		-> evtl einfach Seitenleiste wo man wie man lustig ist auf die verschiedenen Posen drücken kann. 
 		-> neue Pose ausführen erst dann möglich, wenn anderes mit Fehler/Success Meldung abgeschlossen wurde
 		
 Eingabe von Text den NAO sagen soll
 
-	-> Scanner um String evtl aus neuem MessageDialog auszulesen, Designentscheidung
+	-> Scanner um String evtl aus neuem MessageDialog auszulesen, Designentscheidung (check)
 	-> Tonhöhe & Lautstärke als Slider, soll es eine Standardeinstellung geben?
 	-> Sprachen auswählen (nur DE und ENG außer es gibt eine Möglichkeit zu checken welche Sprachpakete auf dem NAO installiert sind)
+
+Sprachsteuerung
+    -> einzelne Funktionen durch Sprachbefehle ausführen lassen
 	
 Festlegen der Augenfarbe
 
