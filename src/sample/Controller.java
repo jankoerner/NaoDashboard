@@ -17,6 +17,7 @@ public class Controller {
     private MovementModel movementModel = new MovementModel();
     private ALMotion alMotion;
     private Boolean first = true;
+    private MoveHeadModel moveHeadModel = new MoveHeadModel();
 
     Log log = new Log();
     Logger logger = new Logger(log, "");
@@ -64,6 +65,11 @@ public class Controller {
     public void move(ActionEvent actionEvent)throws Exception{
        Button button = (Button) actionEvent.getSource();
        movementModel.move(app,button.getId());
+    }
+
+    public void moveHeadKey(ActionEvent actionEvent)throws Exception{
+        Button button = (Button) actionEvent.getSource();
+        moveHeadModel.moveHead(app,button.getId());
     }
 
     public void doSitDown(ActionEvent actionEvent) throws Exception {
