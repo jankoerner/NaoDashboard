@@ -1,9 +1,6 @@
 package sample;
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.helper.proxies.*;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-
 
 public class MovementModel {
     public static void main(String[] args) {

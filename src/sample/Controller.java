@@ -1,6 +1,7 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.event.ActionEvent;
@@ -12,13 +13,15 @@ import javafx.scene.control.TextField;
 public class Controller {
     @FXML TextField tx_IP;
     @FXML TextField tx_Port;
-    @FXML Slider velocityslider;
+    @FXML Slider velocitySlider;
+    @FXML TextArea textToSpeech;
     private Application app;
     private MovementModel movementModel = new MovementModel();
     private ALMotion alMotion;
     private Boolean first = true;
+    private ConnectionModel connectionModel;
+    private TextToSpeechModel textToSpeechModel;
     private MoveHeadModel moveHeadModel = new MoveHeadModel();
-    //private boolean headMoveInitializer = true; für eine Kopf-spezifische moveKeyklasse??
 
     Log log = new Log();
     Logger logger = new Logger(log, "");
@@ -29,34 +32,37 @@ public class Controller {
     }
 
     public void btn_ConnectIsPressed(ActionEvent actionEvent) throws Exception {
-        ConnectionModel connectionModel = new ConnectionModel();
+         connectionModel = new ConnectionModel();
         if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
         {
-            app = new Application(new String[] {},connectionModel.getNaoUrl());
+            if(app == null){
+                app = new Application(new String[] {},connectionModel.getNaoUrl());
+            }
             app.start();
-        } else{
+            ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+            alAnimatedSpeech.say("You are connected");
+
+        }
+        else{
             logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
 
         }
 
     }
-    public void moveKeyBoard(KeyEvent keyEvent)throws Exception{ //machen wir eine Oberklasse für Bewegung? - j
+    public void moveKeyBoard(KeyEvent keyEvent)throws Exception{
         if (app != null){
             if (first){
                 alMotion = new ALMotion(app.session());
                 first = false;
             }
-            float velocity = (float) velocityslider.getValue();
+            float velocity = (float) velocitySlider.getValue();
             if(keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)){
                 movementModel.moveKeyboard(alMotion,keyEvent.getText(),velocity);
-                System.out.println(velocityslider.getValue());
             }
             else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
-                alMotion.killMove();
                 movementModel.moveKeyboard(alMotion,"stop", velocity);
                 ALRobotPosture posture = new ALRobotPosture(app.session());
                 posture.goToPosture("Stand", 1.0f);
-
             }
         }
 
@@ -66,6 +72,13 @@ public class Controller {
     public void move(ActionEvent actionEvent)throws Exception{
        Button button = (Button) actionEvent.getSource();
        movementModel.move(app,button.getId());
+    }
+
+    public void say(ActionEvent actionEvent)throws Exception{
+        if (textToSpeech.getText() != null){
+            textToSpeechModel = new TextToSpeechModel();
+            textToSpeechModel.say(app, textToSpeech.getText());
+        }
     }
 
     public void moveHeadKey(ActionEvent actionEvent)throws Exception{
