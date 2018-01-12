@@ -24,16 +24,16 @@
         <Button id="backward" fx:id="s" layoutX="53.0" layoutY="146.0" mnemonicParsing="false" onAction="#move" text="s" />
         <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="146.0" layoutY="109.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
         <Label layoutX="10.0" layoutY="79.0" text="Steuerung Fortbewegung" />
-        <TextArea fx:id="textToSpeech" layoutX="433.0" layoutY="109.0" prefHeight="77.0" prefWidth="171.0" promptText="Enter Something and let the Nao say it" />
-        <Button id="say" layoutX="617.0" layoutY="159.0" mnemonicParsing="false" onAction="#say" text="Say" />
+        <Button id="say" layoutX="615.0" layoutY="390.0" mnemonicParsing="false" onAction="#say" text="Say" />
         <TextFlow fx:id="tfl_Log" layoutX="14.0" layoutY="413.0" prefHeight="137.0" prefWidth="667.0" />
-        <Button id="up" layoutX="315.0" layoutY="108.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Oben" />
-        <Button id="left" layoutX="254.0" layoutY="147.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Links" />
-        <Button id="right" layoutX="373.0" layoutY="146.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Rechts" />
-        <Button id="down" layoutX="315.0" layoutY="185.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Unten" />
-        <Button id="center" layoutX="313.0" layoutY="147.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Mitte" />
-        <Label layoutX="327.0" layoutY="87.0" text="Kopf" />
+        <Button id="up" layoutX="62.0" layoutY="261.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Oben" />
+        <Button id="left" layoutX="10.0" layoutY="287.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Links" />
+        <Button id="right" layoutX="115.0" layoutY="287.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Rechts" />
+        <Button id="down" layoutX="60.0" layoutY="313.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Unten" />
+        <Button id="center" layoutX="63.0" layoutY="287.0" mnemonicParsing="false" onAction="#moveHeadKey" text="Mitte" />
+        <Label layoutX="9.0" layoutY="225.0" text="Steuerung Kopf" />
       <Circle fx:id="connectCircle" fill="#f01414" layoutX="617.0" layoutY="38.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+        <TextArea fx:id="textToSpeech" layoutX="432.0" layoutY="339.0" prefHeight="77.0" prefWidth="171.0" promptText="Enter Something and let the Nao say it" />
 
     </children>
 </AnchorPane>
