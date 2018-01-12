@@ -1,7 +1,6 @@
 package sample;
 
 import com.aldebaran.qi.Application;
-import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.event.ActionEvent;
@@ -9,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextField;
-import javafx.scene.text.TextFlow;
 
 public class Controller {
     @FXML TextField tx_IP;
@@ -23,9 +21,10 @@ public class Controller {
     private Boolean first = true;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
-    Log log = new Log();
-    Logger logger = new Logger(log,"");
+    private MoveHeadModel moveHeadModel = new MoveHeadModel();
 
+    Log log = new Log();
+    Logger logger = new Logger(log, "");
 
     public static void main(String[] args) {
         //TODO vielleicht hier Eingabe einer URL forcen
@@ -48,10 +47,7 @@ public class Controller {
             logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
 
         }
-    }
 
-    public void disconnect(ActionEvent actionEvent)throws Exception{
-        connectionModel.disconnect(app);
     }
     public void moveKeyBoard(KeyEvent keyEvent)throws Exception{
         if (app != null){
@@ -69,6 +65,8 @@ public class Controller {
                 posture.goToPosture("Stand", 1.0f);
             }
         }
+
+
     }
 
     public void move(ActionEvent actionEvent)throws Exception{
@@ -83,13 +81,18 @@ public class Controller {
         }
     }
 
+    public void moveHeadKey(ActionEvent actionEvent)throws Exception{
+        Button button = (Button) actionEvent.getSource();
+        moveHeadModel.moveHead(app,button.getId());
+    }
+
     public void doSitDown(ActionEvent actionEvent) throws Exception {
         if(app == null) {
             System.out.println("App ist null");
         }
         else{
             ALRobotPosture posture = new ALRobotPosture(app.session());
-            posture.goToPosture("Stand", 1.0f);
+            posture.goToPosture("Crouch", 1.0f);
         }
     }
 }
