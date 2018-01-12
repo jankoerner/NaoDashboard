@@ -18,8 +18,7 @@ public class Controller {
     private ALMotion alMotion;
     private Boolean first = true;
     private MoveHeadModel moveHeadModel = new MoveHeadModel();
-    //private boolean headMoveInitializer = true; //für Initialisierung der ... Überhaupt notwendig? Siehe Erweiterung
-    //von moveKeyboard
+    //private boolean headMoveInitializer = true; für eine Kopf-spezifische moveKeyklasse??
 
     Log log = new Log();
     Logger logger = new Logger(log, "");
@@ -50,15 +49,11 @@ public class Controller {
             float velocity = (float) velocityslider.getValue();
             if(keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)){
                 movementModel.moveKeyboard(alMotion,keyEvent.getText(),velocity);
-                //moveHeadModel.moveHead(app, keyEvent.getText()); -j
-                //Erweiterung für Tastureingabe/Kopfbewegung -j
                 System.out.println(velocityslider.getValue());
             }
             else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
                 alMotion.killMove();
                 movementModel.moveKeyboard(alMotion,"stop", velocity);
-                //moveHeadModel.moveHead(app, keyEvent.getText());  - change logic so the head retains its position at
-                // key release? currently it snaps back to middle position - j
                 ALRobotPosture posture = new ALRobotPosture(app.session());
                 posture.goToPosture("Stand", 1.0f);
 
