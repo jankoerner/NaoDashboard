@@ -1,15 +1,17 @@
 package sample;
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.helper.proxies.*;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 
 
 public class MovementModel {
     public static void main(String[] args) {
 
     }
+
     public void move(Application app, String direction) throws Exception{
         ALMotion alMotion = new ALMotion(app.session());
-
         switch (direction) {
                 case "forward":
                     alMotion.walkTo(0.1f, 0f, 0f);
@@ -41,12 +43,10 @@ public class MovementModel {
                 alMotion.move(0f, velocity, 0f);
                 break;
             case "d":
-                alMotion.move(0f, -velocity
-
-                        , 0f);
+                alMotion.move(0f, -velocity, 0f);
                 break;
             case "stop":
-                alMotion.stopWalk();
+                alMotion.stopMove();
                 break;
         }
     }
