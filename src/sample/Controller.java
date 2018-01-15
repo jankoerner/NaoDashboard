@@ -145,7 +145,8 @@ public class Controller {
             moveBodyModel = new MoveBodyModel();
         }
 
-        if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")|| keyEvent.getText().equals("d")){
+        if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
+                || keyEvent.getText().equals("d")){
            if (app != null) {
                float velocity = (float) velocitySlider.getValue();
                if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
@@ -159,7 +160,8 @@ public class Controller {
 
                }
            }
-       } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")|| keyEvent.getText().equals("l") ) {
+       } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")
+                || keyEvent.getText().equals("l") || keyEvent.getText().equals("m") ) {
             if (app != null) {
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
                     moveBodyModel.moveKeyboard(app, keyEvent.getText());
