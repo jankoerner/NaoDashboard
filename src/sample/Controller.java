@@ -4,9 +4,7 @@ import com.aldebaran.qi.Application;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
-import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,16 +14,30 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextFlow;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class Controller {
-    @FXML TextField tx_IP, tx_Port;
+
     @FXML Slider velocitySlider;
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton;
     @FXML Circle connectCircle;
     @FXML ComboBox dropDownPostures;
+    @FXML
+    TextField tx_IP;
+    @FXML
+    TextField tx_Port;
+
+    private FileInputStream file;
+    private BufferedReader reader;
+    private String IP;
+    private String Port;
+
 
     private Application app;
     private ConnectionModel connectionModel;
@@ -38,12 +50,53 @@ public class Controller {
     private ALMotion alMotion;
     private Boolean first = true;
 
-    Log log = new Log();
-    Logger logger = new Logger(log, "");
-
     public static void main(String[] args) {
 
     }
+
+    public void initialize() {
+        read();
+        //Main.logger.info("Dies ist ein Test");
+        //setLogger();
+    }
+
+    //private void setLogger(Stage primaryStage) throws Exception {
+    //    Log log = new Log();
+    //    Logger logger = new Logger(log, "");
+    //    LogViewer logViewer = new LogViewer();
+    //    logViewer.start(primaryStage);
+    //}
+
+    private void read() {
+        IP = "";
+        Port = "";
+        try {
+            try {
+                file = new FileInputStream("connectionlog.txt");
+                reader = new BufferedReader(new InputStreamReader(file));
+                IP = reader.readLine();
+                Port = reader.readLine();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } finally {
+            try {
+                file.close();
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            tx_IP.setText(IP);
+            tx_Port.setText(Port);
+            disconnectButton.setDisable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void btn_ConnectIsPressed(ActionEvent actionEvent) throws Exception {
         if (connectionModel == null){
@@ -54,7 +107,7 @@ public class Controller {
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
 
-                if(app == null){
+                if (app == null) {
                     app = new Application(new String[] {},connectionModel.getNaoUrl());
                     app.start();
                 }
@@ -71,12 +124,12 @@ public class Controller {
                     }
                     List list = posturesModel.getPostures(app);
                     ObservableList postureList = FXCollections.observableArrayList(list);
-                    dropDownPostures.setItems(postureList);
+                    if (postureList != null) dropDownPostures.setItems(postureList);
                 }
 
             }
             else{
-                logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
+                Main.logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
             }
         }
 
@@ -141,6 +194,7 @@ public class Controller {
     }
 
     public void disconnect(){
+        app.session().close();
         connectCircle.setFill(Color.rgb(240,20,20));
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);

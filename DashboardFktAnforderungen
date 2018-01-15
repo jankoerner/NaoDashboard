@@ -20,15 +20,22 @@ Caps und Multizeilenkommentar damit ihr es euch durchlest :D
 MUST-HAVE mit Sachen die NICE wären (nur als Ziel)
 -> Habe mal alle Ziele reingetan. War jetzt nichts dabei wo ich dachte, fuck das ist niemals machbar :D
 
-Verbindung mit NAO
+Verbindung mit NAO (Valentin)
 
-	-> IP-Adresse aus Texteingabefeld auslesen
-	-> if IP-Adresse equals "127.0.0.1" Eingabe des Ports erzwingen vor Verbindung, nach Überprüfung ob ":" enthalten ist
-	-> falls IP-Adressen String nicht "127.0.0.1" überprüfen, ob ein ":" enthalten ist
-		-> falls enthalten Nachricht anzeigen, die dem User sagt, dass der Port standardmäßig hinzugefügt wird (StringProperty StandardPort erstellen, die man auf Knopfdruck bearbeiten kann, so muss der User nicht jedesmal den Port eingeben)
-			-> Nachricht soll Möglichkeit haben "Diese Nachricht nicht mehr anzeigen" -> ob angezeigt oder nicht soll in Textdatei gespeichert werden
-	-> auch letzte Verbindung soll in der Textdatei gespeichert werden, einfach vor Beendung des Programms Datei neu speichern
-	-> Überprüfen ob IP Valid ist bevor verbunden wird, zb anhand von Anpingen
+	(X) -> IP-Adresse aus Texteingabefeld auslesen
+
+	//-> if IP-Adresse equals "127.0.0.1" Eingabe des Ports erzwingen vor Verbindung, nach Überprüfung ob ":" enthalten ist
+	//-> falls IP-Adressen String nicht "127.0.0.1" überprüfen, ob ein ":" enthalten ist
+	//	-> falls enthalten Nachricht anzeigen, die dem User sagt, dass der Port standardmäßig hinzugefügt wird (StringProperty StandardPort erstellen, die man auf Knopfdruck bearbeiten kann, so muss der User nicht jedesmal den Port eingeben)
+	//		-> Nachricht soll Möglichkeit haben "Diese Nachricht nicht mehr anzeigen" -> ob angezeigt oder nicht soll in Textdatei gespeichert werden
+
+	(X)	Änderung: Port und IP Adresse werden in seperate Textfelder eingegeben und ausgelesen.
+	(X)	Aus Textdatei connectionlog wird letzte Verbindung ausgelesen und in Textfelder IP und Port gefüllt
+
+	(X)-> auch letzte Verbindung soll in der Textdatei gespeichert werden, einfach vor Beendung des Programms Datei neu speichern
+
+	(X)-> Überprüfen ob IP Valid ist bevor verbunden wird, zb anhand von Anpingen
+	
 	
 (X) Ausrichtung des Kopfes
 

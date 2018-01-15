@@ -3,6 +3,7 @@ package sample;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -25,16 +26,18 @@ public class ConnectionModel {
         }
     }
 
-    public boolean isIPValid(String ip, int port, Integer timeout) {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(ip, port), timeout);
-            return true;
-        } catch (IOException e) {
-            return false; // Either timeout or unreachable or failed DNS lookup.
-        }
+    private boolean isIPValid(String ip, int port, Integer timeout) {
+        if ((!ip.equals("")) && (port > 0)) {
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(ip, port), timeout);
+                return true;
+            } catch (IOException e) {
+                return false; // Either timeout or unreachable or failed DNS lookup.
+            }
+        } else return false;
     }
 
-    public final void setNaoUrl(String ip, String port){
+    private final void setNaoUrl(String ip, String port) {
         NaoUrl.set("tcp://"+ip + ":" + port);
     }
 
