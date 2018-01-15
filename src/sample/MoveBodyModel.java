@@ -42,38 +42,48 @@ public class MoveBodyModel {
 
         switch(direction){
             case "i":
-                if (upDown > -0.5)
+                if (upDown > -0.6720)
                 {
-                    upDown =- 0.1720;
+                    upDown =- 0.6720;
                 }
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("i");
                 break;
             case"k":
-                if (upDown < 0.5)
+                if (upDown < 0.5149)
                 {
-                    upDown =+ 0.1720;
+                    upDown =+ 0.5149;
                 }
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("k");
                 break;
             case"j":
-                if (leftRight < 1.8){
-                    leftRight=+ 0.2857;
+                if (leftRight < 2.08){
+                    leftRight =+ 2.08;
                 }
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
+                alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("j");
                 break;
             case"l":
-                if (leftRight > 1.8){
-                    leftRight=-0.2857;
+                if (leftRight > -2.08){
+                    leftRight =- 2.08;
                 }
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
+                alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("l");
+                break;
+            case "m": //Kopf wieder in die Mitte stellen
+                if (leftRight != 0 || upDown != 0){
+                    float center = 0;
+
+                alMotion.angleInterpolation("HeadYaw", center, velocity, isAbsolute);
+                alMotion.angleInterpolation("HeadPitch", center, velocity, isAbsolute);
+                alMotion.waitUntilMoveIsFinished();
+                System.out.println("m");
+                }
                 break;
             case"stop":
                 alMotion.stopMove();
