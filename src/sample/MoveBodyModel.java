@@ -44,7 +44,7 @@ public class MoveBodyModel {
             case "i":
                 if (upDown > -0.6720)
                 {
-                    upDown =- 0.6720;
+                    upDown =- 0.1720;
                 }
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
@@ -53,7 +53,7 @@ public class MoveBodyModel {
             case"k":
                 if (upDown < 0.5149)
                 {
-                    upDown =+ 0.5149;
+                    upDown =+ 0.1149;
                 }
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
