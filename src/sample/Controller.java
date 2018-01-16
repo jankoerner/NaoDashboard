@@ -129,7 +129,7 @@ public class Controller {
 
             }
             else{
-                Main.logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
+                //Main.logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
             }
         }
 
@@ -144,34 +144,40 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
+        if (app != null){
+            if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
+                    || keyEvent.getText().equals("d")){
 
-        if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
-                || keyEvent.getText().equals("d")){
-           if (app != null) {
-               float velocity = (float) velocitySlider.getValue();
-               if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                   moveBodyModel.moveKeyboard(app, keyEvent.getText(), velocity);
-               } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-                   moveBodyModel.moveKeyboard(app, "stop", velocity);
-                   if (posturesModel == null) {
-                       posturesModel = new PosturesModel();
-                   }
-                   posturesModel.makePosture(app, "Stand");
+                float velocity = (float) velocitySlider.getValue();
+                if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
+                    moveBodyModel.moveKeyboard(app, keyEvent.getText(), velocity);
+                } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
+                    moveBodyModel.moveKeyboard(app, "stop", velocity);
+                    if (posturesModel == null) {
+                        posturesModel = new PosturesModel();
+                    }
+                    posturesModel.makePosture(app, "Stand");
 
-               }
-           }
-       } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")
-                || keyEvent.getText().equals("l") || keyEvent.getText().equals("m") ) {
-            if (app != null) {
+                }
+
+            } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")
+                    || keyEvent.getText().equals("l") || keyEvent.getText().equals("m") ) {
+
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
                     moveBodyModel.moveKeyboard(app, keyEvent.getText());
-                    System.out.println(keyEvent.getText());
+                    //System.out.println(keyEvent.getText());
                 }
                 else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
                     moveBodyModel.moveKeyboard(app, "stop");
+                    System.out.println("stop");
+                    if (posturesModel == null) {
+                        posturesModel = new PosturesModel();
+                    }
+                    posturesModel.makePosture(app, "Stand");
                 }
             }
-       }
+        }
+
 
     }
 
