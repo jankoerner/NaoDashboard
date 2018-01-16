@@ -14,10 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextFlow;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 
 public class Controller {
@@ -33,6 +30,7 @@ public class Controller {
     @FXML
     TextField tx_Port;
 
+    private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
     private String IP;
@@ -66,6 +64,17 @@ public class Controller {
     //    LogViewer logViewer = new LogViewer();
     //    logViewer.start(primaryStage);
     //}
+
+    private void write(String ip,String port){
+        try {
+            writer=new BufferedWriter(new FileWriter("connectionlog.txt"));
+            writer.write(ip);
+            writer.write(port);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     private void read() {
         IP = "";
@@ -113,6 +122,7 @@ public class Controller {
                 }
 
                 if (app.session().isConnected()){
+                    write(tx_Port.getText(),tx_IP.getText());
                     connectCircle.setFill(Color.rgb(60,230,30));
                     connectButton.setDisable(true);
                     disconnectButton.setDisable(false);
