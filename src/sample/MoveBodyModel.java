@@ -39,9 +39,10 @@ public class MoveBodyModel {
         }
         double velocity = 2.0;
         boolean isAbsolute = true;
+        boolean moveFinished
 
         switch(direction){
-            case "i":
+            case "i": //Kopf nach oben
                 if (upDown > -0.6720)
                 {
                     upDown =- 0.1720;
@@ -50,7 +51,7 @@ public class MoveBodyModel {
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("i");
                 break;
-            case"k":
+            case"k": //Kopf nach unten
                 if (upDown < 0.5149)
                 {
                     upDown =+ 0.1149;
@@ -59,7 +60,7 @@ public class MoveBodyModel {
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("k");
                 break;
-            case"j":
+            case"j": //Kopf nach links
                 if (leftRight < 2.08){
                     leftRight =+ 2.08;
                 }
@@ -67,7 +68,7 @@ public class MoveBodyModel {
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("j");
                 break;
-            case"l":
+            case"l": //Kopf nach rechts
                 if (leftRight > -2.08){
                     leftRight =- 2.08;
                 }
