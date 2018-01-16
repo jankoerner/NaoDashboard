@@ -39,7 +39,7 @@ public class MoveBodyModel {
         }
         double velocity = 2.0;
         boolean isAbsolute = true;
-        boolean moveFinished
+
 
         switch(direction){
             case "i": //Kopf nach oben
