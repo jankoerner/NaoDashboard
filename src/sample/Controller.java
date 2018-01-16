@@ -14,21 +14,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextFlow;
 
+import javax.print.DocFlavor;
 import java.io.*;
 import java.util.List;
 
 public class Controller {
 
-    @FXML Slider velocitySlider;
+    @FXML Slider velocitySlider, volumeSlider;
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
-    @FXML Button w,a,s,d, connectButton, disconnectButton;
+    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle;
-    @FXML ComboBox dropDownPostures;
-    @FXML
-    TextField tx_IP;
-    @FXML
-    TextField tx_Port;
+    @FXML ComboBox dropDownPostures, dropDownLanguages;
+    @FXML TextField tx_IP, tx_Port;
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -65,13 +63,16 @@ public class Controller {
     //    logViewer.start(primaryStage);
     //}
 
-    private void write(String ip,String port){
+    private void write(String ip,String port) throws IOException {
         try {
-            writer=new BufferedWriter(new FileWriter("connectionlog.txt"));
+            writer=new BufferedWriter(new FileWriter(new File("connectionlog.txt")));
             writer.write(ip);
+            writer.newLine();
             writer.write(port);
         } catch (Exception e){
             e.printStackTrace();
+        }finally {
+            writer.close();
         }
 
     }
@@ -83,8 +84,8 @@ public class Controller {
             try {
                 file = new FileInputStream("connectionlog.txt");
                 reader = new BufferedReader(new InputStreamReader(file));
-                IP = reader.readLine();
                 Port = reader.readLine();
+                IP = reader.readLine();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -122,19 +123,8 @@ public class Controller {
                 }
 
                 if (app.session().isConnected()){
-                    write(tx_Port.getText(),tx_IP.getText());
-                    connectCircle.setFill(Color.rgb(60,230,30));
-                    connectButton.setDisable(true);
-                    disconnectButton.setDisable(false);
-                    ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
-                    alAnimatedSpeech.say("You are connected");
-
-                    if (posturesModel == null){
-                        posturesModel = new PosturesModel();
-                    }
-                    List list = posturesModel.getPostures(app);
-                    ObservableList postureList = FXCollections.observableArrayList(list);
-                    if (postureList != null) dropDownPostures.setItems(postureList);
+                    //write(tx_Port.getText(),tx_IP.getText());
+                    onConnected();
                 }
 
             }
@@ -192,13 +182,19 @@ public class Controller {
     }
 
     public void say(ActionEvent actionEvent)throws Exception{
-        if (textToSpeechModel == null)
-        {
-            textToSpeechModel = new TextToSpeechModel();
-        }
-        if (textToSpeech.getText() != null){
-            textToSpeechModel.say(app, textToSpeech.getText());
-        }
+       if (app != null){
+           if (textToSpeechModel == null)
+           {
+               textToSpeechModel = new TextToSpeechModel();
+           }
+           if (textToSpeech.getText() != null){
+               String language =(String) dropDownLanguages.getValue();
+               System.out.println(language);
+               float volume = (float) volumeSlider.getValue();
+               textToSpeechModel.say(app, textToSpeech.getText(),volume, language);
+           }
+       }
+
     }
 
     public void doSitDown(ActionEvent actionEvent) throws Exception {
@@ -211,8 +207,9 @@ public class Controller {
         }
     }
 
-    public void disconnect(){
+    public void disconnect()throws Exception{
         app.session().close();
+
         connectCircle.setFill(Color.rgb(240,20,20));
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
@@ -224,5 +221,44 @@ public class Controller {
         }
         String actualPose = (String) dropDownPostures.getValue();
         posturesModel.makePosture(app,actualPose);
+    }
+
+    private void onConnected() throws Exception{
+        this.write(tx_Port.getText(),tx_IP.getText());
+        connectCircle.setFill(Color.rgb(60,230,30));
+        connectButton.setDisable(true);
+        disconnectButton.setDisable(false);
+        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+        alAnimatedSpeech.say("You are connected");
+
+        if (posturesModel == null){
+            posturesModel = new PosturesModel();
+        }
+        List postureList1 = posturesModel.getPostures(app);
+        ObservableList postureList = FXCollections.observableArrayList(postureList1);
+        if (postureList != null){
+            dropDownPostures.setItems(postureList);
+            poseButton.setDisable(false);
+        }else
+        {
+            dropDownPostures.setDisable(true);
+            poseButton.setDisable(true);
+
+        }
+
+        if(textToSpeechModel == null) {
+            textToSpeechModel = new TextToSpeechModel();
+        }
+        List languagesList1 = textToSpeechModel.getLanguages(app);
+        ObservableList languagesList = FXCollections.observableArrayList(languagesList1);
+        if (languagesList != null){
+            dropDownLanguages.setItems(languagesList);
+            dropDownLanguages.setValue(languagesList.get(0));
+            sayButton.setDisable(false);
+        }
+        else {
+            dropDownLanguages.setDisable(true);
+            sayButton.setDisable(true);
+        }
     }
 }

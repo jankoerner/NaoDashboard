@@ -8,14 +8,18 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    Parent root;
+    Scene scene;
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("NaoDashboard");
-        Scene scene = new Scene(root,720,720);
+        scene = new Scene(root,720,720);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+
 
 
     public static void main(String[] args) {
