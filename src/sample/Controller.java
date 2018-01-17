@@ -33,12 +33,16 @@ public class Controller {
     private String IP;
     private String Port;
 
+
+
     private static Application app;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
-
+    public static Application getApp() {
+        return app;
+    }
 
     public static void main(String[] args) {
 
@@ -146,7 +150,18 @@ public class Controller {
         }
 
     }
+    public void moveBody(String keyStroke) throws Exception{
 
+        if (moveBodyModel == null) {
+            moveBodyModel = new MoveBodyModel();
+        }
+        if (keyStroke.equals("i") || keyStroke.equals("k") || keyStroke.equals("j") || keyStroke.equals("l") ||
+                keyStroke.equals("m") || keyStroke.equals("x")) {
+
+            moveBodyModel.moveKeyboard(app, keyStroke);
+
+        }
+    }
     public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();

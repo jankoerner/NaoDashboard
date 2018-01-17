@@ -46,16 +46,16 @@ public class MoveBodyModel {
             case "i": //Kopf nach oben
                 if (upDown > -0.6720)
                 {
-                    upDown =- 0.1720;
+                    upDown -= 0.1720;
                 }
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
-                //alMotion.waitUntilMoveIsFinished();
+                alMotion.waitUntilMoveIsFinished();
                 System.out.println("i");
                 break;
             case"k": //Kopf nach unten
                 if (upDown < 0.5149)
                 {
-                    upDown =+ 0.1149;
+                    upDown += 0.1149;
                 }
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
                 //alMotion.waitUntilMoveIsFinished();
@@ -63,17 +63,17 @@ public class MoveBodyModel {
                 break;
             case"j": //Kopf nach links
                 if (leftRight < 2.08){
-                    leftRight =+ 2.08;
+                    leftRight += 0.08;
                 }
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
+                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
                 //alMotion.waitUntilMoveIsFinished();
                 System.out.println("j");
                 break;
             case"l": //Kopf nach rechts
                 if (leftRight > -2.08){
-                    leftRight =- 2.08;
+                    leftRight -= 0.08;
                 }
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
+                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
                 //alMotion.waitUntilMoveIsFinished();
                 System.out.println("l");
                 break;
@@ -83,20 +83,12 @@ public class MoveBodyModel {
 
                 alMotion.angleInterpolation("HeadYaw", center, velocity, isAbsolute);
                 alMotion.angleInterpolation("HeadPitch", center, velocity, isAbsolute);
-                //alMotion.waitUntilMoveIsFinished();
                 System.out.println("m");
                 }
                 break;
             case"stop":
-                alMotion.killAll();
-                //alMotion.waitUntilMoveIsFinished();
+                alMotion.stopMove();
                 break;
-                /*leftRight = 0;
-                upDown = 0;
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, true);
-                alMotion.angleInterpolation("HeadPitch", upDown, velocity, true);
-                alMotion.waitUntilMoveIsFinished();
-                break;*/
         }
 
     }
