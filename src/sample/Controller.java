@@ -14,19 +14,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.TextFlow;
 
-import javax.print.DocFlavor;
 import java.io.*;
 import java.util.List;
 
 public class Controller {
-
+    @FXML ToggleGroup mode;
     @FXML Slider velocitySlider, volumeSlider;
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages;
-    @FXML TextField tx_IP, tx_Port;
+    @FXML TextField tx_IP, tx_Port, degreeField;
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -34,17 +33,12 @@ public class Controller {
     private String IP;
     private String Port;
 
-
-    private Application app;
+    private static Application app;
     private ConnectionModel connectionModel;
-    private MovementModel movementModel = new MovementModel();
     private TextToSpeechModel textToSpeechModel;
-    private MoveHeadModel moveHeadModel = new MoveHeadModel();
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
 
-    private ALMotion alMotion;
-    private Boolean first = true;
 
     public static void main(String[] args) {
 
@@ -136,8 +130,21 @@ public class Controller {
     }
 
     public void move(ActionEvent actionEvent)throws Exception{
-       Button button = (Button) actionEvent.getSource();
-       movementModel.move(app,button.getId());
+       if (app != null){
+           if (moveBodyModel == null){
+               moveBodyModel = new MoveBodyModel();
+           }
+           if(degreeField.getText() != null){
+               String degreeString = degreeField.getText();
+
+               if (isNumber(degreeString)){
+                   Float degree = Float.parseFloat(degreeString);
+                   moveBodyModel.turn(app,degree/(45f));
+               }
+
+           }
+        }
+
     }
 
     public void moveBody(KeyEvent keyEvent) throws Exception{
@@ -170,10 +177,6 @@ public class Controller {
                 else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
                     moveBodyModel.moveKeyboard(app, "stop");
                     System.out.println("stop");
-                    if (posturesModel == null) {
-                        posturesModel = new PosturesModel();
-                    }
-                    posturesModel.makePosture(app, "Stand");
                 }
             }
         }
@@ -223,6 +226,20 @@ public class Controller {
         posturesModel.makePosture(app,actualPose);
     }
 
+    public void mode(ActionEvent actionEvent) throws Exception{
+        if (app != null){
+            if(moveBodyModel == null){
+                moveBodyModel = new MoveBodyModel();
+            }
+            ToggleButton object;
+            if(mode.getSelectedToggle().getClass() == ToggleButton.class){
+               object =(ToggleButton) mode.getSelectedToggle();
+               moveBodyModel.mode(app, object.getText());
+            }
+        }
+
+    }
+
     private void onConnected() throws Exception{
         this.write(tx_Port.getText(),tx_IP.getText());
         connectCircle.setFill(Color.rgb(60,230,30));
@@ -261,4 +278,22 @@ public class Controller {
             sayButton.setDisable(true);
         }
     }
+
+    private boolean isNumber(String number){
+        float d;
+        try
+        {
+             d = Float.parseFloat(number);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        if (d>=(-180) && d<=180){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

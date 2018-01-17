@@ -7,9 +7,9 @@ public class MoveBodyModel {
     public static void main(String[] args) {
 
     }
-    ALMotion alMotion;
-    double upDown = 0;
-    double leftRight=0;
+    private ALMotion alMotion;
+    private double upDown = 0;
+    private double leftRight=0;
 
     public void moveKeyboard(Application app, String direction, Float velocity)throws Exception {
         if (alMotion == null){
@@ -98,5 +98,26 @@ public class MoveBodyModel {
                 break;*/
         }
 
+    }
+    public void turn(Application app, float degree) throws Exception{
+        if (alMotion == null){
+            alMotion = new ALMotion(app.session());
+        }
+        alMotion.moveTo(0f,0f,degree);
+        alMotion.waitUntilMoveIsFinished();
+    }
+
+    public void mode(Application app, String mode) throws Exception{
+        if (alMotion == null){
+            alMotion = new ALMotion(app.session());
+        }
+        switch (mode){
+            case "Relax":
+                alMotion.rest();
+                break;
+            case "Stand":
+                alMotion.wakeUp();
+                break;
+        }
     }
 }
