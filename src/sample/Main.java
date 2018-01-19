@@ -35,6 +35,7 @@ public class Main extends Application {
             @Override
             public void handle(KeyEvent event) {
                 //logic here
+
                 String keyStroke = event.getText();
                     try {
                         switch (event.getCode()) {
@@ -51,6 +52,18 @@ public class Main extends Application {
                                 controller.moveBody(keyStroke);
                                 break;
                             case M:
+                                controller.moveBody(keyStroke);
+                                //Die Implimentierung von laufen funktioniert noch nicht ganz. Das GUI muss
+                                // geändert werden, sodass es moveBody (also die neue Methode) annimmt.
+                                //Wie es gerade ist, wird das Programm nicht hochfahren. Es hängt sich immer an der
+                                //Linie 17 im Main().
+                            case W:
+                                controller.moveBody(keyStroke);
+                            case A:
+                                controller.moveBody(keyStroke);
+                            case S:
+                                controller.moveBody(keyStroke);
+                            case D:
                                 controller.moveBody(keyStroke);
                         }
 

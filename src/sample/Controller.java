@@ -150,19 +150,32 @@ public class Controller {
         }
 
     }
-    public void moveBody(String keyStroke) throws Exception{
+
+    //hier die neue Methode.
+    public void moveBody(String keyStroke) throws Exception {
 
         if (moveBodyModel == null) {
             moveBodyModel = new MoveBodyModel();
         }
+        float velocity = (float) velocitySlider.getValue();
         if (keyStroke.equals("i") || keyStroke.equals("k") || keyStroke.equals("j") || keyStroke.equals("l") ||
                 keyStroke.equals("m") || keyStroke.equals("x")) {
 
             moveBodyModel.moveKeyboard(app, keyStroke);
 
+        } else if (keyStroke.equals("w") || keyStroke.equals("a") || keyStroke.equals("s") || keyStroke.equals("d")) {
+            moveBodyModel.moveKeyboard(app, keyStroke, velocity);
+        } else if (keyStroke.equals("x")) {
+            moveBodyModel.moveKeyboard(app, "stop", velocity);
+            if (posturesModel == null) {
+                posturesModel = new PosturesModel();
+            }
+            posturesModel.makePosture(app, "Stand");
+
         }
     }
-    public void moveBody(KeyEvent keyEvent) throws Exception{
+
+    /*public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
@@ -182,22 +195,10 @@ public class Controller {
 
                 }
 
-            } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")
-                    || keyEvent.getText().equals("l") || keyEvent.getText().equals("m") ) {
-
-                if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(app, keyEvent.getText());
-                    //System.out.println(keyEvent.getText());
-                }
-                else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
-                    moveBodyModel.moveKeyboard(app, "stop");
-                    System.out.println("stop");
-                }
             }
         }
+    }*/
 
-
-    }
 
     public void say(ActionEvent actionEvent)throws Exception{
        if (app != null){

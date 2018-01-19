@@ -38,60 +38,75 @@ public class MoveBodyModel {
         if (alMotion == null){
             alMotion = new ALMotion(app.session());
         }
-        double velocity = 2.0;
+        double velocity = 1.0;
         boolean isAbsolute = true;
 
-
-        switch(direction){
+         switch(direction){
             case "i": //Kopf nach oben
-                if (upDown > -0.6720)
+                if (upDown > -0.6720 & alMotion.moveIsActive() != true)
                 {
                     upDown -= 0.1720;
-                }
+
                 alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
                 alMotion.waitUntilMoveIsFinished();
                 System.out.println("i");
                 break;
+                }else{
+
+                    break;
+                }
             case"k": //Kopf nach unten
-                if (upDown < 0.5149)
-                {
+                if (upDown < 0.5149 & alMotion.moveIsActive() != true) {
                     upDown += 0.1149;
+
+                    alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
+                    //alMotion.waitUntilMoveIsFinished();
+                    System.out.println("k");
+                    break;
+                }else {
+                    break;
                 }
-                alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
-                //alMotion.waitUntilMoveIsFinished();
-                System.out.println("k");
-                break;
             case"j": //Kopf nach links
-                if (leftRight < 2.08){
+                if (leftRight < 2.08 & alMotion.moveIsActive() != true) {
                     leftRight += 0.08;
+
+                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
+                    //alMotion.waitUntilMoveIsFinished();
+                    System.out.println("j");
+                    break;
+                }else {
+                    break;
                 }
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
-                //alMotion.waitUntilMoveIsFinished();
-                System.out.println("j");
-                break;
             case"l": //Kopf nach rechts
-                if (leftRight > -2.08){
+                if (leftRight > -2.08 & alMotion.moveIsActive() != true) {
                     leftRight -= 0.08;
+
+                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
+                    //alMotion.waitUntilMoveIsFinished();
+                    System.out.println("l");
+                    break;
+                }else {
+                    break;
                 }
-                alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
-                //alMotion.waitUntilMoveIsFinished();
-                System.out.println("l");
-                break;
             case "m": //Kopf wieder in die Mitte stellen
-                if (leftRight != 0 || upDown != 0){
+                if (leftRight != 0 || upDown != 0 & alMotion.moveIsActive() != true) {
                     float center = 0;
 
-                alMotion.angleInterpolation("HeadYaw", center, velocity, isAbsolute);
-                alMotion.angleInterpolation("HeadPitch", center, velocity, isAbsolute);
-                System.out.println("m");
+                    alMotion.angleInterpolation("HeadYaw", center, velocity, isAbsolute);
+                    alMotion.angleInterpolation("HeadPitch", center, velocity, isAbsolute);
+                    System.out.println("m");
+                    break;
+                }else {
+                    break;
                 }
-                break;
-            case"stop":
+            case"x":
                 alMotion.stopMove();
                 break;
-        }
-
+            }
     }
+
+
+
     public void turn(Application app, float degree) throws Exception{
         if (alMotion == null){
             alMotion = new ALMotion(app.session());
