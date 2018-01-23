@@ -3,16 +3,29 @@ package sample;
 
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
+import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
+
+import java.util.List;
 
 public class TextToSpeechModel {
-    ALAnimatedSpeech alAnimatedSpeech;
+    ALTextToSpeech alTextToSpeech;
     public static void main(String[] args) {
 
     }
-    public void say(Application app, String text)throws Exception{
-        if (alAnimatedSpeech == null){
-            alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+    public void say(Application app, String text, float volume, String language)throws Exception{
+        if (alTextToSpeech == null){
+            alTextToSpeech = new ALTextToSpeech(app.session());
         }
-        alAnimatedSpeech.say(text);
+        System.out.println(alTextToSpeech.getAvailableLanguages());
+        alTextToSpeech.setVolume(volume);
+        alTextToSpeech.say(text, language);
+
+    }
+
+    public List getLanguages(Application app)throws Exception{
+        if (alTextToSpeech == null){
+            alTextToSpeech = new ALTextToSpeech(app.session());
+        }
+        return alTextToSpeech.getAvailableLanguages();
     }
 }

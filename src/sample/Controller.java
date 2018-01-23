@@ -3,6 +3,7 @@ package sample;
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
+import com.aldebaran.qi.helper.proxies.ALBattery;
 import com.aldebaran.qi.helper.proxies.ALLeds;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
@@ -18,19 +19,18 @@ import javafx.scene.text.TextFlow;
 
 import java.io.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller {
-
-    @FXML Slider velocitySlider;
+    @FXML ToggleGroup mode;
+    @FXML Slider velocitySlider, volumeSlider;
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
-    @FXML Button w,a,s,d, connectButton, disconnectButton;
-    @FXML Circle connectCircle;
-    @FXML ComboBox dropDownPostures;
-    @FXML
-    TextField tx_IP;
-    @FXML
-    TextField tx_Port;
+    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
+    @FXML Circle connectCircle, batteryCircle;
+    @FXML ComboBox dropDownPostures, dropDownLanguages;
+    @FXML TextField tx_IP, tx_Port, degreeField;
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -38,6 +38,9 @@ public class Controller {
     private String IP;
     private String Port;
 
+
+
+    private static Application app;
     private LEDModel ledModel;
     private Application app;
     private ConnectionModel connectionModel;
@@ -46,19 +49,13 @@ public class Controller {
     private MoveHeadModel moveHeadModel = new MoveHeadModel();
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
-
-    private ALMotion alMotion;
-    private Boolean first = true;
+    public static Application getApp() {
+        return app;
+    }
 
     public static void main(String[] args) {
 
     }
-
-    public Application getApp(){
-        return app;
-    }
-
-
 
     public void initialize() {
         read();
@@ -73,13 +70,16 @@ public class Controller {
     //    logViewer.start(primaryStage);
     //}
 
-    private void write(String ip,String port){
+    private void write(String ip,String port) throws IOException {
         try {
-            writer=new BufferedWriter(new FileWriter("connectionlog.txt"));
+            writer=new BufferedWriter(new FileWriter(new File("connectionlog.txt")));
             writer.write(ip);
+            writer.newLine();
             writer.write(port);
         } catch (Exception e){
             e.printStackTrace();
+        }finally {
+            writer.close();
         }
 
     }
@@ -91,8 +91,8 @@ public class Controller {
             try {
                 file = new FileInputStream("connectionlog.txt");
                 reader = new BufferedReader(new InputStreamReader(file));
-                IP = reader.readLine();
                 Port = reader.readLine();
+                IP = reader.readLine();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -130,22 +130,8 @@ public class Controller {
                 }
 
                 if (app.session().isConnected()){
-                    write(tx_Port.getText(),tx_IP.getText());
-                    connectCircle.setFill(Color.rgb(60,230,30));
-                    connectButton.setDisable(true);
-                    disconnectButton.setDisable(false);
-                    ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
-                        alAnimatedSpeech.say("You are connected");
-                    if (ledModel==null)
-                        ledModel=new LEDModel();
-                        ledModel.test(app);
-
-                    if (posturesModel == null){
-                        posturesModel = new PosturesModel();
-                    }
-                    List list = posturesModel.getPostures(app);
-                    ObservableList postureList = FXCollections.observableArrayList(list);
-                    if (postureList != null) dropDownPostures.setItems(postureList);
+                    //write(tx_Port.getText(),tx_IP.getText());
+                    onConnected();
                 }
 
             }
@@ -157,53 +143,71 @@ public class Controller {
     }
 
     public void move(ActionEvent actionEvent)throws Exception{
-       Button button = (Button) actionEvent.getSource();
-       movementModel.move(app,button.getId());
+       if (app != null){
+           if (moveBodyModel == null){
+               moveBodyModel = new MoveBodyModel();
+           }
+           if(degreeField.getText() != null){
+               String degreeString = degreeField.getText();
+
+               if (isNumber(degreeString)){
+                   Float degree = Float.parseFloat(degreeString);
+                   moveBodyModel.turn(app,degree/(45f));
+               }
+
+           }
+        }
+
     }
 
     public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
+        if (app != null){
+            if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
+                    || keyEvent.getText().equals("d")){
 
-        if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
-                || keyEvent.getText().equals("d")){
-           if (app != null) {
-               float velocity = (float) velocitySlider.getValue();
-               if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                   moveBodyModel.moveKeyboard(app, keyEvent.getText(), velocity);
-               } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-                   moveBodyModel.moveKeyboard(app, "stop", velocity);
-                   if (posturesModel == null) {
-                       posturesModel = new PosturesModel();
-                   }
-                   posturesModel.makePosture(app, "Stand");
+                float velocity = (float) velocitySlider.getValue();
+                if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
+                    moveBodyModel.moveKeyboard(app, keyEvent.getText(), velocity);
+                } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
+                    moveBodyModel.moveKeyboard(app, "stop", velocity);
+                    if (posturesModel == null) {
+                        posturesModel = new PosturesModel();
+                    }
+                    posturesModel.makePosture(app, "Stand");
 
-               }
-           }
-       } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")
-                || keyEvent.getText().equals("l") || keyEvent.getText().equals("m") ) {
-            if (app != null) {
+                }
+
+            }else if (keyEvent.getText().equals("i")|| keyEvent.getText().equals("j") || keyEvent.getText().equals("k")
+                    || keyEvent.getText().equals("l") || keyEvent.getText().equals("m")){
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
                     moveBodyModel.moveKeyboard(app, keyEvent.getText());
-                    System.out.println(keyEvent.getText());
-                }
-                else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
+                }else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
                     moveBodyModel.moveKeyboard(app, "stop");
                 }
+
             }
-       }
+        }
+    }
 
     }
 
     public void say(ActionEvent actionEvent)throws Exception{
-        if (textToSpeechModel == null)
-        {
-            textToSpeechModel = new TextToSpeechModel();
-        }
-        if (textToSpeech.getText() != null){
-            textToSpeechModel.say(app, textToSpeech.getText());
-        }
+       if (app != null){
+           if (textToSpeechModel == null)
+           {
+               textToSpeechModel = new TextToSpeechModel();
+           }
+           if (textToSpeech.getText() != null){
+               String language =(String) dropDownLanguages.getValue();
+               System.out.println(language);
+               float volume = (float) volumeSlider.getValue();
+               textToSpeechModel.say(app, textToSpeech.getText(),volume, language);
+           }
+       }
+
     }
 
     public void doSitDown(ActionEvent actionEvent) throws Exception {
@@ -216,8 +220,9 @@ public class Controller {
         }
     }
 
-    public void disconnect(){
+    public void disconnect()throws Exception{
         app.session().close();
+
         connectCircle.setFill(Color.rgb(240,20,20));
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
@@ -230,4 +235,108 @@ public class Controller {
         String actualPose = (String) dropDownPostures.getValue();
         posturesModel.makePosture(app,actualPose);
     }
+
+    public void mode(ActionEvent actionEvent) throws Exception{
+        if (app != null){
+            if(moveBodyModel == null){
+                moveBodyModel = new MoveBodyModel();
+            }
+            ToggleButton object;
+            if(mode.getSelectedToggle().getClass() == ToggleButton.class){
+               object =(ToggleButton) mode.getSelectedToggle();
+               moveBodyModel.mode(app, object.getText());
+            }
+        }
+
+    }
+
+    private void onConnected() throws Exception{
+        this.write(tx_Port.getText(),tx_IP.getText());
+        connectCircle.setFill(Color.rgb(60,230,30));
+        connectButton.setDisable(true);
+        disconnectButton.setDisable(false);
+        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+        alAnimatedSpeech.say("You are connected");
+
+        if (posturesModel == null){
+            posturesModel = new PosturesModel();
+        }
+        List postureList1 = posturesModel.getPostures(app);
+        ObservableList postureList = FXCollections.observableArrayList(postureList1);
+        if (postureList != null){
+            dropDownPostures.setItems(postureList);
+            poseButton.setDisable(false);
+        }else
+        {
+            dropDownPostures.setDisable(true);
+            poseButton.setDisable(true);
+
+        }
+
+        if(textToSpeechModel == null) {
+            textToSpeechModel = new TextToSpeechModel();
+        }
+        List languagesList1 = textToSpeechModel.getLanguages(app);
+        ObservableList languagesList = FXCollections.observableArrayList(languagesList1);
+        if (languagesList != null){
+            dropDownLanguages.setItems(languagesList);
+            dropDownLanguages.setValue(languagesList.get(0));
+            sayButton.setDisable(false);
+        }
+        else {
+            dropDownLanguages.setDisable(true);
+            sayButton.setDisable(true);
+        }
+        batteryCharge();
+    }
+
+    private boolean isNumber(String number){
+        float d;
+        try
+        {
+             d = Float.parseFloat(number);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        if (d>=(-180) && d<=180){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private void batteryCharge(){
+        Timer batteryTimer = new Timer();
+        TimerTask checkBattery = new TimerTask() {
+            @Override
+            public void run(){
+                try {
+                    ALBattery alBattery = new ALBattery(app.session());
+                    if (alBattery.getBatteryCharge() > 75) {
+                        batteryCircle.setFill(Color.GREEN);
+                        System.out.println(alBattery.getBatteryCharge());
+                    } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
+                        batteryCircle.setFill(Color.ORANGE);
+                        System.out.println(alBattery.getBatteryCharge());
+                    } else if (alBattery.getBatteryCharge() < 30 & alBattery.getBatteryCharge() != 0) {
+                        batteryCircle.setFill(Color.RED);
+                        System.out.println(alBattery.getBatteryCharge());
+                    } else {
+                        batteryCircle.setFill(Color.BLACK);
+                        System.out.println("No battery detected.");
+
+                    }
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 300000);
+    }
 }
+
+
+
+
