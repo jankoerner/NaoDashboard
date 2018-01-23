@@ -2,6 +2,7 @@ package sample;
 
 import com.aldebaran.qi.Application;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
+import com.aldebaran.qi.helper.proxies.ALBattery;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.collections.FXCollections;
@@ -16,6 +17,8 @@ import javafx.scene.text.TextFlow;
 
 import java.io.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller {
     @FXML ToggleGroup mode;
@@ -23,7 +26,7 @@ public class Controller {
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
-    @FXML Circle connectCircle;
+    @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages;
     @FXML TextField tx_IP, tx_Port, degreeField;
 
@@ -151,31 +154,7 @@ public class Controller {
 
     }
 
-    //hier die neue Methode.
-    public void moveBody(String keyStroke) throws Exception {
-
-        if (moveBodyModel == null) {
-            moveBodyModel = new MoveBodyModel();
-        }
-        float velocity = (float) velocitySlider.getValue();
-        if (keyStroke.equals("i") || keyStroke.equals("k") || keyStroke.equals("j") || keyStroke.equals("l") ||
-                keyStroke.equals("m") || keyStroke.equals("x")) {
-
-            moveBodyModel.moveKeyboard(app, keyStroke);
-
-        } else if (keyStroke.equals("w") || keyStroke.equals("a") || keyStroke.equals("s") || keyStroke.equals("d")) {
-            moveBodyModel.moveKeyboard(app, keyStroke, velocity);
-        } else if (keyStroke.equals("x")) {
-            moveBodyModel.moveKeyboard(app, "stop", velocity);
-            if (posturesModel == null) {
-                posturesModel = new PosturesModel();
-            }
-            posturesModel.makePosture(app, "Stand");
-
-        }
-    }
-
-    /*public void moveBody(KeyEvent keyEvent) throws Exception{
+    public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
@@ -195,9 +174,17 @@ public class Controller {
 
                 }
 
+            }else if (keyEvent.getText().equals("i")|| keyEvent.getText().equals("j") || keyEvent.getText().equals("k")
+                    || keyEvent.getText().equals("l") || keyEvent.getText().equals("m")){
+                if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
+                    moveBodyModel.moveKeyboard(app, keyEvent.getText());
+                }else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
+                    moveBodyModel.moveKeyboard(app, "stop");
+                }
+
             }
         }
-    }*/
+    }
 
 
     public void say(ActionEvent actionEvent)throws Exception{
@@ -293,6 +280,7 @@ public class Controller {
             dropDownLanguages.setDisable(true);
             sayButton.setDisable(true);
         }
+        batteryCharge();
     }
 
     private boolean isNumber(String number){
@@ -312,4 +300,36 @@ public class Controller {
         }
     }
 
+    private void batteryCharge(){
+        Timer batteryTimer = new Timer();
+        TimerTask checkBattery = new TimerTask() {
+            @Override
+            public void run(){
+                try {
+                    ALBattery alBattery = new ALBattery(app.session());
+                    if (alBattery.getBatteryCharge() > 75) {
+                        batteryCircle.setFill(Color.GREEN);
+                        System.out.println(alBattery.getBatteryCharge());
+                    } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
+                        batteryCircle.setFill(Color.ORANGE);
+                        System.out.println(alBattery.getBatteryCharge());
+                    } else if (alBattery.getBatteryCharge() < 30 & alBattery.getBatteryCharge() != 0) {
+                        batteryCircle.setFill(Color.RED);
+                        System.out.println(alBattery.getBatteryCharge());
+                    } else {
+                        batteryCircle.setFill(Color.BLACK);
+                        System.out.println("No battery detected.");
+
+                    }
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 300000);
+    }
 }
+
+
+
+
