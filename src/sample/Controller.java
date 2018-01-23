@@ -1,7 +1,9 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
+import com.aldebaran.qi.helper.proxies.ALLeds;
 import com.aldebaran.qi.helper.proxies.ALMotion;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.collections.FXCollections;
@@ -36,7 +38,7 @@ public class Controller {
     private String IP;
     private String Port;
 
-
+    private LEDModel ledModel;
     private Application app;
     private ConnectionModel connectionModel;
     private MovementModel movementModel = new MovementModel();
@@ -51,6 +53,12 @@ public class Controller {
     public static void main(String[] args) {
 
     }
+
+    public Application getApp(){
+        return app;
+    }
+
+
 
     public void initialize() {
         read();
@@ -127,7 +135,10 @@ public class Controller {
                     connectButton.setDisable(true);
                     disconnectButton.setDisable(false);
                     ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
-                    alAnimatedSpeech.say("You are connected");
+                        alAnimatedSpeech.say("You are connected");
+                    if (ledModel==null)
+                        ledModel=new LEDModel();
+                        ledModel.test(app);
 
                     if (posturesModel == null){
                         posturesModel = new PosturesModel();
