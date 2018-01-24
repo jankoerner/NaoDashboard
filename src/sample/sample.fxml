@@ -60,6 +60,8 @@
       <Button layoutX="81.0" layoutY="267.0" mnemonicParsing="false" text="l" />
       <Button layoutX="53.0" layoutY="293.0" mnemonicParsing="false" text="k" />
       <Button layoutX="29.0" layoutY="267.0" mnemonicParsing="false" text="j" />
+      <ComboBox fx:id="cb_LEDS" layoutX="230.0" layoutY="33.0" prefWidth="150.0" />
+      <Button layoutX="318.0" layoutY="74.0" mnemonicParsing="false" onAction="#rasta" text="Button" />
 
     </children>
 </AnchorPane>
