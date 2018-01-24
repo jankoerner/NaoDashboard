@@ -3,6 +3,7 @@ package sample;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
+import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,9 +13,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,6 +32,7 @@ public class Controller {
     @FXML ComboBox dropDownPostures, dropDownLanguages;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
+    @FXML Text temperatureText;
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -307,6 +311,7 @@ public class Controller {
         mode.selectToggle(toggle);
 
         batteryCharge();
+        checkTemperature();
     }
 
     private boolean isNumber(String number){
@@ -348,7 +353,36 @@ public class Controller {
                 }
             }
         };
-        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 300000);
+        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
+    }
+
+    private void checkTemperature(){
+        Timer temperatureTimer = new Timer();
+        TimerTask checkTemp = new TimerTask() {
+            @Override
+            public void run() {
+                try{
+                    ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
+                    if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
+                        ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
+                        if(tempEvent.get(0).equals(1)){
+                            temperatureText.setText("Warm");
+                            temperatureText.setFill(Color.ORANGE);
+                        }else{
+                            temperatureText.setText("Heiß");
+                            temperatureText.setFill(Color.RED);
+                        }
+                    }else{
+                        temperatureText.setText("Kühl");
+                        temperatureText.setFill(Color.GREEN);
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 }
 
