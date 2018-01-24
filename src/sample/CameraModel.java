@@ -1,6 +1,7 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALPhotoCapture;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,9 +16,9 @@ public class CameraModel {
     public static void main(String[] args) {
 
     }
-    public void takePhoto(ImageView photoView, Application app)throws Exception{
+    public void takePhoto(ImageView photoView, Session session)throws Exception{
         if (alPhotoCapture == null){
-            alPhotoCapture = new ALPhotoCapture(app.session());
+            alPhotoCapture = new ALPhotoCapture(session);
         }
         System.out.println("test");
         System.out.println(alPhotoCapture.getCameraID());

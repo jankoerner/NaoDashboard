@@ -1,12 +1,8 @@
 package sample;
 
-import com.aldebaran.qi.Application;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
-import com.aldebaran.qi.helper.proxies.ALLeds;
-import com.aldebaran.qi.helper.proxies.ALMotion;
-import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.TextFlow;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,21 +23,18 @@ public class Controller {
     @FXML ComboBox cb_LEDS;
     @FXML ToggleGroup mode;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider;
-    @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle, batteryCircle;
-    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_scan;
+    @FXML ComboBox dropDownPostures, dropDownLanguages;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
 
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private String IP;
-    private String Port;
 
-    private static Application app;
+    private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
@@ -50,8 +42,8 @@ public class Controller {
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
 
-    public static Application getApp() {
-        return app;
+    public static Session getSession() {
+        return session;
     }
 
     public static void main(String[] args) {
@@ -86,13 +78,13 @@ public class Controller {
     }
 
     private void read() {
-        IP = "";
-        Port = "";
+        String IP = "";
+        String port = "";
         try {
             try {
                 file = new FileInputStream("connectionlog.txt");
                 reader = new BufferedReader(new InputStreamReader(file));
-                Port = reader.readLine();
+                port = reader.readLine();
                 IP = reader.readLine();
 
             } catch (Exception e) {
@@ -108,7 +100,7 @@ public class Controller {
         }
         try {
             tx_IP.setText(IP);
-            tx_Port.setText(Port);
+            tx_Port.setText(port);
             disconnectButton.setDisable(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +108,7 @@ public class Controller {
     }
 
 
-    public void btn_ConnectIsPressed(ActionEvent actionEvent) throws Exception {
+    public void btn_ConnectIsPressed() throws Exception {
         if (connectionModel == null){
             connectionModel = new ConnectionModel();
         }
@@ -125,24 +117,22 @@ public class Controller {
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
 
-                if (app == null) {
-                    app = new Application(new String[] {},connectionModel.getNaoUrl());
+
+                if (session == null){
+                    session = new Session();                    ///TODO DISCONNECT & RECONNECT TESTEN!
                 }
-                app.session().connect(connectionModel.getNaoUrl()).get();
-                if (app.session().isConnected()){
+                session.connect(connectionModel.getNaoUrl()).get();
+                if (session.isConnected()){
                     onConnected();
                 }
 
-            }
-            else{
-                //Main.logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
             }
         }
 
     }
 
-    public void move(ActionEvent actionEvent)throws Exception{
-       if (app != null){
+    public void move()throws Exception{
+       if (session.isConnected()){
            if (moveBodyModel == null){
                moveBodyModel = new MoveBodyModel();
            }
@@ -151,7 +141,7 @@ public class Controller {
 
                if (isNumber(degreeString)){
                    Float degree = Float.parseFloat(degreeString);
-                   moveBodyModel.turn(app,degree/(45f));
+                   moveBodyModel.turn(session,degree/(45f));
                }
 
            }
@@ -163,36 +153,36 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        if (app != null){
+        if (session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
 
                 float velocity = (float) velocitySlider.getValue();
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(app, keyEvent.getText(), velocity);
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity);
                 } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-                    moveBodyModel.moveKeyboard(app, "stop", velocity);
+                    moveBodyModel.moveKeyboard(session, "stop", velocity);
                     if (posturesModel == null) {
                         posturesModel = new PosturesModel();
                     }
-                    posturesModel.makePosture(app, "Stand");
+                    posturesModel.makePosture(session, "Stand");
 
                 }
 
             }else if (keyEvent.getText().equals("i")|| keyEvent.getText().equals("j") || keyEvent.getText().equals("k")
                     || keyEvent.getText().equals("l") || keyEvent.getText().equals("m")){
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(app, keyEvent.getText());
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText());
                 }else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
-                    moveBodyModel.moveKeyboard(app, "stop");
+                    moveBodyModel.moveKeyboard(session, "stop");
                 }
 
             }
         }
     }
 
-    public void say(ActionEvent actionEvent)throws Exception{
-       if (app != null){
+    public void say()throws Exception{
+       if (session.isConnected()){
            if (textToSpeechModel == null)
            {
                textToSpeechModel = new TextToSpeechModel();
@@ -201,7 +191,7 @@ public class Controller {
                String language =(String) dropDownLanguages.getValue();
                float volume = (float) volumeSlider.getValue();
                float voice = (float) voiceSlider.getValue();
-               textToSpeechModel.say(app, textToSpeech.getText(),volume, language, voice);
+               textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice);
            }
        }
 
@@ -209,19 +199,13 @@ public class Controller {
 
 
 
-    public void disconnect()throws Exception{
-        app.session().close();
+    public void disconnect(){
+        session.close();
         connectCircle.setFill(Color.rgb(240,20,20));
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
     }
 
-    public void rasta(ActionEvent actionEvent) throws Exception{
-        if (ledModel==null){
-            LEDModel ledModel = new LEDModel();
-        }
-        ledModel.setAlLeds();
-    }
 
     public void postures(ActionEvent actionEvent) throws Exception{
         if (posturesModel == null){
@@ -232,42 +216,41 @@ public class Controller {
             if (actionEvent.getSource().getClass()!= Button.class ){
                 posturesModel.changeImage(actualPose, imageView);
             }else{
-                posturesModel.makePosture(app,actualPose);
+                posturesModel.makePosture(session,actualPose);
             }
         }
-
     }
 
-    public void mode(ActionEvent actionEvent) throws Exception{
-        if (app != null){
+    public void mode() throws Exception{
+        if (session.isConnected()){
             if(moveBodyModel == null){
                 moveBodyModel = new MoveBodyModel();
             }
             ToggleButton object;
             if(mode.getSelectedToggle().getClass() == ToggleButton.class){
                object =(ToggleButton) mode.getSelectedToggle();
-               moveBodyModel.mode(app, object.getText());
+               moveBodyModel.mode(session, object.getText());
             }
         }
 
     }
 
-    public void takePhoto(ActionEvent actionEvent)throws Exception{
-        if (app!= null){
+    public void takePhoto()throws Exception{
+        if (session.isConnected()){
             if (cameraModel == null){
                 cameraModel = new CameraModel();
             }
-            cameraModel.takePhoto(imageView, app);
+            cameraModel.takePhoto(imageView, session);
         }
     }
 
-
+    @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
         this.write(tx_Port.getText(),tx_IP.getText());
         connectCircle.setFill(Color.rgb(60,230,30));
         connectButton.setDisable(true);
         disconnectButton.setDisable(false);
-        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
         //alAnimatedSpeech.say("You are connected");
 
         if (posturesModel == null){
@@ -276,10 +259,10 @@ public class Controller {
         if (ledModel == null){
             ledModel = new LEDModel();
         }
-        List ledList1 = ledModel.getLEDs(app);
+        List ledList1 = ledModel.getLEDs(session);
         ObservableList ledList = FXCollections.observableList(ledList1);
         System.out.println(ledList);
-        if (ledList != null){
+        if (!ledList.isEmpty()){
             cb_LEDS.setItems(ledList);
             cb_LEDS.setDisable(false);
         }else
@@ -287,9 +270,9 @@ public class Controller {
             cb_LEDS.setDisable(true);
         }
 
-        List postureList1 = posturesModel.getPostures(app);
+        List postureList1 = posturesModel.getPostures(session);
         ObservableList postureList = FXCollections.observableArrayList(postureList1);
-        if (postureList != null){
+        if (!postureList.isEmpty()){
             dropDownPostures.setItems(postureList);
             poseButton.setDisable(false);
         }else
@@ -302,9 +285,9 @@ public class Controller {
         if(textToSpeechModel == null) {
             textToSpeechModel = new TextToSpeechModel();
         }
-        List languagesList1 = textToSpeechModel.getLanguages(app);
+        List languagesList1 = textToSpeechModel.getLanguages(session);
         ObservableList languagesList = FXCollections.observableArrayList(languagesList1);
-        if (languagesList != null){
+        if (!languagesList.isEmpty()){
             dropDownLanguages.setItems(languagesList);
             dropDownLanguages.setValue(languagesList.get(0));
             sayButton.setDisable(false);
@@ -318,7 +301,7 @@ public class Controller {
             moveBodyModel = new MoveBodyModel();
         }
 
-        moveBodyModel.mode(app,"Relax");
+        moveBodyModel.mode(session,"Relax");
         List list = mode.getToggles();
         Toggle toggle = (Toggle) list.get(1);
         mode.selectToggle(toggle);
@@ -336,11 +319,7 @@ public class Controller {
         {
             return false;
         }
-        if (d>=(-180) && d<=180){
-            return true;
-        }else{
-            return false;
-        }
+        return d >= (-180) && d <= 180;
     }
 
     private void batteryCharge(){
@@ -349,7 +328,7 @@ public class Controller {
             @Override
             public void run(){
                 try {
-                    ALBattery alBattery = new ALBattery(app.session());
+                    ALBattery alBattery = new ALBattery(session);
                     if (alBattery.getBatteryCharge() > 75) {
                         batteryCircle.setFill(Color.GREEN);
                         System.out.println(alBattery.getBatteryCharge());
