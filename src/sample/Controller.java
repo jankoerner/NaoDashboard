@@ -181,23 +181,12 @@ public class Controller {
                     moveBodyModel.moveKeyboard(app, "stop");
                 }
 
-            } else if (keyEvent.getText().equals("j")|| keyEvent.getText().equals("i") || keyEvent.getText().equals("k")
-                    || keyEvent.getText().equals("l") || keyEvent.getText().equals("m") ) {
-
-                if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(app, keyEvent.getText());
-                    //System.out.println(keyEvent.getText());
-                }
-                else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
-                    moveBodyModel.moveKeyboard(app, "stop");
-                    System.out.println("stop");
-                }
             }
         }
     }
 
 
-    }
+
 
     public void say(ActionEvent actionEvent)throws Exception{
        if (app != null){
