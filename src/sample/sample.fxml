@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -10,6 +11,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane id="Relax" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="600.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
@@ -49,6 +51,9 @@
       <Button layoutX="81.0" layoutY="267.0" mnemonicParsing="false" text="l" />
       <Button layoutX="53.0" layoutY="293.0" mnemonicParsing="false" text="k" />
       <Button layoutX="29.0" layoutY="267.0" mnemonicParsing="false" text="j" />
+      <ProgressBar fx:id="batteryBar" layoutX="128.0" layoutY="568.0" prefWidth="200.0" progress="0.0" />
+      <Label layoutX="390.0" layoutY="570.0" text="Körpertemperatur:" />
+      <Text fx:id="bodyTempText" layoutX="518.0" layoutY="583.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
 
     </children>
 </AnchorPane>

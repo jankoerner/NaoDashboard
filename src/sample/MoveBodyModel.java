@@ -43,7 +43,7 @@ public class MoveBodyModel {
         boolean isAbsolute = true;
 
         //timer um zu versichern, dass die KEY_PRESSED Events nicht angestaut werden. . .
-        if(System.currentTimeMillis() - lastStrokeProcessed > 500){
+        if(System.currentTimeMillis() - lastStrokeProcessed > 200){
          switch(direction){
             case "i": //Kopf nach oben
                 if (upDown > -0.6720 & alMotion.moveIsActive() != true)

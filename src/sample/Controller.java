@@ -312,7 +312,7 @@ public class Controller {
                     batteryBar.setProgress(batteryPercent);
                     System.out.println(alBattery.getBatteryCharge());
                     if (alBattery.getBatteryCharge() > 75) {
-                        batteryBar.setStyle("-fx-background-color: green");
+                        batteryCircle.setFill(Color.GREEN);
                         System.out.println(alBattery.getBatteryCharge());
                     } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
                         batteryCircle.setFill(Color.ORANGE);
