@@ -6,7 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+
+
+
 public class Main extends Application {
+
 
     Parent root;
     Scene scene;
@@ -17,6 +21,8 @@ public class Main extends Application {
         scene = new Scene(root,720,720);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
 
     public static void main(String[] args) {

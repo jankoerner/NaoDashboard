@@ -10,6 +10,7 @@ public class MoveBodyModel {
     private ALMotion alMotion;
     private double upDown = 0;
     private double leftRight=0;
+    private long lastStrokeProcessed = 0;
 
     public void moveKeyboard(Application app, String direction, Float velocity)throws Exception {
         if (alMotion == null){
@@ -41,68 +42,74 @@ public class MoveBodyModel {
         double velocity = 1.0;
         boolean isAbsolute = true;
 
+        //timer um zu versichern, dass die KEY_PRESSED Events nicht angestaut werden. . .
+        if(System.currentTimeMillis() - lastStrokeProcessed > 500){
          switch(direction){
             case "i": //Kopf nach oben
                 if (upDown > -0.6720 & alMotion.moveIsActive() != true)
                 {
                     upDown -= 0.1720;
 
-                alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
-                alMotion.waitUntilMoveIsFinished();
-                System.out.println("i");
+                alMotion.angleInterpolation("HeadPitch", upDown, velocity + 1, isAbsolute);
+                lastStrokeProcessed = System.currentTimeMillis();
                 break;
                 }else{
-
                     break;
                 }
-            case"k": //Kopf nach unten
+
+            case "k": //Kopf nach unten
                 if (upDown < 0.5149 & alMotion.moveIsActive() != true) {
                     upDown += 0.1149;
 
-                    alMotion.angleInterpolation("HeadPitch", upDown, velocity, isAbsolute);
-                    //alMotion.waitUntilMoveIsFinished();
-                    System.out.println("k");
+                    alMotion.angleInterpolation("HeadPitch", upDown, velocity + 1, isAbsolute);
+                    lastStrokeProcessed = System.currentTimeMillis();
                     break;
                 }else {
                     break;
                 }
-            case"j": //Kopf nach links
+
+            case "j": //Kopf nach links
                 if (leftRight < 2.08 & alMotion.moveIsActive() != true) {
                     leftRight += 0.08;
 
-                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
-                    //alMotion.waitUntilMoveIsFinished();
-                    System.out.println("j");
+                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
+                    lastStrokeProcessed = System.currentTimeMillis();
                     break;
+
                 }else {
                     break;
                 }
-            case"l": //Kopf nach rechts
+
+            case "l": //Kopf nach rechts
                 if (leftRight > -2.08 & alMotion.moveIsActive() != true) {
                     leftRight -= 0.08;
 
-                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity, isAbsolute);
-                    //alMotion.waitUntilMoveIsFinished();
-                    System.out.println("l");
+                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
+                    lastStrokeProcessed = System.currentTimeMillis();
                     break;
+
                 }else {
                     break;
                 }
+
             case "m": //Kopf wieder in die Mitte stellen
                 if (leftRight != 0 || upDown != 0 & alMotion.moveIsActive() != true) {
                     float center = 0;
 
-                    alMotion.angleInterpolation("HeadYaw", center, velocity, isAbsolute);
-                    alMotion.angleInterpolation("HeadPitch", center, velocity, isAbsolute);
-                    System.out.println("m");
+                    alMotion.angleInterpolation("HeadYaw", center, velocity + 1, isAbsolute);
+                    alMotion.angleInterpolation("HeadPitch", center, velocity + 1, isAbsolute);
+                    lastStrokeProcessed = System.currentTimeMillis();
                     break;
+
                 }else {
                     break;
                 }
-            case"x":
+
+            case "x":
                 alMotion.stopMove();
                 break;
             }
+        }
     }
 
 
