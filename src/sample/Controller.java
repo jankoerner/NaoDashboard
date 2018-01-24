@@ -18,18 +18,20 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextFlow;
 
 import java.io.*;
+import java.net.Socket;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Controller {
+    @FXML ComboBox cb_LEDS;
     @FXML ToggleGroup mode;
     @FXML Slider velocitySlider, volumeSlider;
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle, batteryCircle;
-    @FXML ComboBox dropDownPostures, dropDownLanguages;
+    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_scan;
     @FXML TextField tx_IP, tx_Port, degreeField;
 
     private BufferedWriter writer;
@@ -42,7 +44,6 @@ public class Controller {
 
     private static Application app;
     private LEDModel ledModel;
-    private Application app;
     private ConnectionModel connectionModel;
     private MovementModel movementModel = new MovementModel();
     private TextToSpeechModel textToSpeechModel;
@@ -126,11 +127,9 @@ public class Controller {
 
                 if (app == null) {
                     app = new Application(new String[] {},connectionModel.getNaoUrl());
-                    app.start();
                 }
-
+                app.session().connect(connectionModel.getNaoUrl()).get();
                 if (app.session().isConnected()){
-                    //write(tx_Port.getText(),tx_IP.getText());
                     onConnected();
                 }
 
@@ -192,7 +191,7 @@ public class Controller {
         }
     }
 
-    }
+
 
     public void say(ActionEvent actionEvent)throws Exception{
        if (app != null){
@@ -222,10 +221,16 @@ public class Controller {
 
     public void disconnect()throws Exception{
         app.session().close();
-
         connectCircle.setFill(Color.rgb(240,20,20));
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
+    }
+
+    public void rasta(ActionEvent actionEvent) throws Exception{
+        if (ledModel==null){
+            LEDModel ledModel = new LEDModel();
+        }
+        ledModel.setAlLeds();
     }
 
     public void postures(ActionEvent actionEvent) throws Exception{
@@ -261,6 +266,20 @@ public class Controller {
         if (posturesModel == null){
             posturesModel = new PosturesModel();
         }
+        if (ledModel == null){
+            ledModel = new LEDModel();
+        }
+        List ledList1 = ledModel.getLEDs(app);
+        ObservableList ledList = FXCollections.observableList(ledList1);
+        System.out.println(ledList);
+        if (ledList != null){
+            cb_LEDS.setItems(ledList);
+            cb_LEDS.setDisable(false);
+        }else
+            {
+            cb_LEDS.setDisable(true);
+        }
+
         List postureList1 = posturesModel.getPostures(app);
         ObservableList postureList = FXCollections.observableArrayList(postureList1);
         if (postureList != null){

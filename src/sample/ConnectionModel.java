@@ -32,7 +32,7 @@ public class ConnectionModel {
                 socket.connect(new InetSocketAddress(ip, port), timeout);
                 return true;
             } catch (IOException e) {
-                return false; // Either timeout or unreachable or failed DNS lookup.
+                return false; //  timeout / unreachable / failed DNS lookup
             }
         } else return false;
     }
@@ -45,11 +45,4 @@ public class ConnectionModel {
         return NaoUrl.get();
     }
 
-    public void disconnect(com.aldebaran.qi.Application app)throws Exception{
-        if (alAnimatedSpeech != null)
-        {
-            alAnimatedSpeech = new ALAnimatedSpeech(app.session());
-            alAnimatedSpeech.say("Bye");
-        }
-    }
 }
