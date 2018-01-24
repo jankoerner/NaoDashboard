@@ -8,19 +8,24 @@ import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 import java.util.List;
 
 public class TextToSpeechModel {
-    ALTextToSpeech alTextToSpeech;
+    private ALTextToSpeech alTextToSpeech;
+    private ALAnimatedSpeech alAnimatedSpeech;
+
     public static void main(String[] args) {
 
     }
-    public void say(Application app, String text, float volume, String language)throws Exception{
-        if (alTextToSpeech == null){
+
+    public void say(Application app, String text, float volume, String language, float pitch) throws Exception {
+        if (alTextToSpeech == null) {
             alTextToSpeech = new ALTextToSpeech(app.session());
         }
-        System.out.println(alTextToSpeech.getAvailableLanguages());
         alTextToSpeech.setVolume(volume);
+        alTextToSpeech.setParameter("pitchShift", pitch );
+        System.out.println(alTextToSpeech.getAvailableVoices());
+        //alAnimatedSpeech.say(text);
         alTextToSpeech.say(text, language);
+        }
 
-    }
 
     public List getLanguages(Application app)throws Exception{
         if (alTextToSpeech == null){
