@@ -11,8 +11,8 @@ import java.util.List;
 public class LEDModel {
    private ALLeds alLeds;
 
-    public void changeColor(Application app, String groupLED, String color)throws Exception {
-        alLeds = new ALLeds(app.session());
+    public void changeColor(Session session, String groupLED, String color)throws Exception {
+        alLeds = new ALLeds(session);
         String groupName = "AllLeds";
         switch (groupLED) {
             case "All LEDs":
@@ -57,8 +57,8 @@ public class LEDModel {
     }
 
 
-    public List getLEDs(Application app) throws Exception {
-        alLeds = new ALLeds(app.session());
+    public List getLEDs(Session session) throws Exception {
+        alLeds = new ALLeds(session);
         String[] ledgroups = {"All LEDs", "BrainLEDs","ChestLEDs", "EarLEDs","Left Ear LEDs","Right Ear LEDs", "EyesLEDs", "Right Eye LEDs","Left Eyes LEDs", "FeetLEDs" };
         return Arrays.asList(ledgroups);
     }

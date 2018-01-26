@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -67,11 +68,11 @@
       <Label layoutX="347.0" layoutY="408.0" text="VoiceSpeed" />
       <ComboBox fx:id="colorBox" layoutX="579.0" layoutY="514.0" onAction="#changeColor" prefWidth="150.0" promptText="Select Color" />
       <Label layoutX="405.0" layoutY="481.0" text="Change LED Color" />
-      <Button layoutX="318.0" layoutY="74.0" mnemonicParsing="false" text="Button" />
       <Label layoutX="380.0" layoutY="570.0" text="Körpertemperatur:" />
       <Text fx:id="temperatureText" layoutX="504.0" layoutY="583.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
       <ListView fx:id="lv_Sounds" layoutX="20.0" layoutY="323.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="btn_play" layoutX="230.0" layoutY="390.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
+      <ProgressBar fx:id="batteryPercentage" layoutX="115.0" layoutY="568.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
 
     </children>
 </AnchorPane>

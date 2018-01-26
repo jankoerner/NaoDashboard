@@ -26,7 +26,7 @@ import java.util.TimerTask;
 
 public class Controller {
     @FXML ToggleGroup mode;
-    @FXML Slider velocitySlider, volumeSlider, voiceSlider;
+    @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle, batteryCircle;
@@ -35,6 +35,7 @@ public class Controller {
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText;
     @FXML ListView lv_Sounds;
+    @FXML ProgressBar batteryPercentage;
 
 
     private BufferedWriter writer;
@@ -199,11 +200,11 @@ public class Controller {
                textToSpeechModel = new TextToSpeechModel();
            }
            if (textToSpeech.getText() != null){
+               Float volume = (float) volumeSlider.getValue();
                String language =(String) dropDownLanguages.getValue();
-               textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice);
                String voice = String.valueOf((int)voiceSlider.getValue());
                String speed = String.valueOf((int)voiceSpeedSlider.getValue());
-               textToSpeechModel.say(app, textToSpeech.getText(),volume, language, voice, speed);
+               textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice, speed);
            }
        }
 
@@ -259,7 +260,7 @@ public class Controller {
     public void changeColor()throws Exception{
         ledModel = new LEDModel();
         if(colorBox.getValue() != null){
-            ledModel.changeColor(app, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
+            ledModel.changeColor(session, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
         }
 
     }
@@ -286,7 +287,7 @@ public class Controller {
         connectCircle.setFill(Color.rgb(60,230,30));
         connectButton.setDisable(true);
         disconnectButton.setDisable(false);
-        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
+        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
         alAnimatedSpeech.say("You are connected");
 
         if(audioModel==null){
@@ -299,14 +300,14 @@ public class Controller {
         if (ledModel == null){
             ledModel = new LEDModel();
         }
-        List SoundFiles = audioModel.getSoundFiles();
+        /*List SoundFiles = audioModel.getSoundFiles();
         if (!SoundFiles.isEmpty()){
             lv_Sounds.setItems(FXCollections.observableList(SoundFiles));
             lv_Sounds.setDisable(false);
         }else{
             lv_Sounds.setDisable(true);
             lv_Sounds.setVisible(false);
-        }
+        }*/
 
         List ledList1 = ledModel.getLEDs(session);
         ObservableList ledList = FXCollections.observableList(ledList1);
@@ -348,15 +349,15 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        boolean isWakeUp = moveBodyModel.getMode(app);
+        boolean isWakeUp = moveBodyModel.getMode(session);
         List list = mode.getToggles();
         Toggle toggle;
         if (isWakeUp){
-            moveBodyModel.mode(app,"Stand");
+            moveBodyModel.mode(session,"Stand");
             toggle = (Toggle) list.get(0);
             mode.selectToggle(toggle);
         }else{
-            moveBodyModel.mode(app,"Relax");
+            moveBodyModel.mode(session,"Relax");
             toggle = (Toggle) list.get(1);
             mode.selectToggle(toggle);
         }
@@ -364,7 +365,7 @@ public class Controller {
         if (ledModel == null){
             ledModel = new LEDModel();
         }
-        ObservableList ledGroups = FXCollections.observableArrayList(ledModel.getLEDs(app));
+        ObservableList ledGroups = FXCollections.observableArrayList(ledModel.getLEDs(session));
         cb_LEDS.setItems(ledGroups);
         Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
         ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
@@ -406,8 +407,8 @@ public class Controller {
                     } else {
                         batteryCircle.setFill(Color.BLACK);
                         System.out.println("No battery detected.");
-
                     }
+                    batteryPercentage.progressProperty().set(alBattery.getBatteryCharge() / 100);
                 }catch(Exception e) {
                     e.printStackTrace();
                 }
