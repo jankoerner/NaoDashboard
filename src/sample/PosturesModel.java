@@ -1,6 +1,7 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,9 +13,9 @@ public class PosturesModel {
     }
     private ALRobotPosture robotPosture;
     private Image image;
-    public void makePosture(Application app, String posture) throws Exception{
+    public void makePosture(Session session, String posture) throws Exception{
         if (robotPosture == null){
-            robotPosture = new ALRobotPosture(app.session());
+            robotPosture = new ALRobotPosture(session);
         }
 
         switch (posture){
@@ -48,9 +49,9 @@ public class PosturesModel {
         }
     }
 
-    public List getPostures(Application app)throws Exception{
+    public List getPostures(Session session)throws Exception{
         if (robotPosture == null){
-            robotPosture = new ALRobotPosture(app.session());
+            robotPosture = new ALRobotPosture(session);
         }
         return robotPosture.getPostureList();
     }
@@ -96,7 +97,7 @@ public class PosturesModel {
                     break;
             }
         }catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }

@@ -2,6 +2,7 @@ package sample;
 
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 
@@ -14,16 +15,16 @@ public class TextToSpeechModel {
 
     }
 
-    public void say(Application app, String text, float volume, String language, String pitch, String speed) throws Exception {
-        alTextToSpeech= new ALTextToSpeech(app.session());
+    public void say(Session session, String text, float volume, String language, String pitch, String speed) throws Exception {
+        alTextToSpeech= new ALTextToSpeech(session);
         alTextToSpeech.async().setVolume(volume);
         alTextToSpeech.say("\\rspd="+speed+"\\\\vct="+pitch+"\\"+text,language);
     }
 
 
-    public List getLanguages(Application app)throws Exception{
+    public List getLanguages(Session session)throws Exception{
         if (alTextToSpeech == null){
-            alTextToSpeech = new ALTextToSpeech(app.session());
+            alTextToSpeech = new ALTextToSpeech(session);
         }
         return alTextToSpeech.getAvailableLanguages();
     }

@@ -1,8 +1,10 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
+import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,9 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.Text;
 
 import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -22,33 +26,31 @@ import java.util.TimerTask;
 
 public class Controller {
     @FXML ToggleGroup mode;
-    @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider;
-    @FXML TextFlow tfl_log;
+    @FXML Slider velocitySlider, volumeSlider, voiceSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
+    @FXML Text temperatureText;
+    @FXML ListView lv_Sounds;
 
 
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private String IP;
-    private String Port;
-
-    private static Application app;
+    private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
+    private AudioModel audioModel;
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
 
-
-    public static Application getApp() {
-        return app;
+    public Session getSession() {
+        return session;
     }
 
     public static void main(String[] args) {
@@ -57,7 +59,16 @@ public class Controller {
 
     public void initialize() {
         read();
+        //Main.logger.info("Dies ist ein Test");
+        //setLogger();
     }
+
+    //private void setLogger(Stage primaryStage) throws Exception {
+    //    Log log = new Log();
+    //    Logger logger = new Logger(log, "");
+    //    LogViewer logViewer = new LogViewer();
+    //    logViewer.start(primaryStage);
+    //}
 
     private void write(String ip,String port) throws IOException {
         try {
@@ -74,13 +85,13 @@ public class Controller {
     }
 
     private void read() {
-        IP = "";
-        Port = "";
+        String IP = "";
+        String port = "";
         try {
             try {
                 file = new FileInputStream("connectionlog.txt");
                 reader = new BufferedReader(new InputStreamReader(file));
-                Port = reader.readLine();
+                port = reader.readLine();
                 IP = reader.readLine();
 
             } catch (Exception e) {
@@ -96,7 +107,7 @@ public class Controller {
         }
         try {
             tx_IP.setText(IP);
-            tx_Port.setText(Port);
+            tx_Port.setText(port);
             disconnectButton.setDisable(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +115,7 @@ public class Controller {
     }
 
 
-    public void btn_ConnectIsPressed(ActionEvent actionEvent) throws Exception {
+    public void btn_ConnectIsPressed() throws Exception {
         if (connectionModel == null){
             connectionModel = new ConnectionModel();
         }
@@ -113,24 +124,21 @@ public class Controller {
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
 
-                if (app == null) {
-                    app = new Application(new String[] {},connectionModel.getNaoUrl());
-                }
-                app.session().connect(connectionModel.getNaoUrl()).get();
-                if (app.session().isConnected()){
-                    onConnected();
-                }
 
-            }
-            else{
-                //Main.logger.warn("IP stimmt nicht oder Port stimmt nicht, bitte Verbindung überprüfen");
+                if (session == null){
+                    session = new Session(connectionModel.getNaoUrl());                    ///TODO DISCONNECT & RECONNECT TESTEN!
+                }
+                if (!session.isConnected()){
+                    session.connect(connectionModel.getNaoUrl()).get();
+                }
+                if (session.isConnected()) onConnected();
             }
         }
 
     }
 
-    public void move(ActionEvent actionEvent)throws Exception{
-       if (app != null){
+    public void move()throws Exception{
+       if (session.isConnected()){
            if (moveBodyModel == null){
                moveBodyModel = new MoveBodyModel();
            }
@@ -139,7 +147,7 @@ public class Controller {
 
                if (isNumber(degreeString)){
                    Float degree = Float.parseFloat(degreeString);
-                   moveBodyModel.turn(app,degree/(45f));
+                   moveBodyModel.turn(session,degree/(45f));
                }
 
            }
@@ -147,47 +155,52 @@ public class Controller {
 
     }
 
+    public void playSounds(){
+        String filename = lv_Sounds.getSelectionModel().getSelectedItem().toString();
+        audioModel.playSound(filename/*, (float) volumeSlider.getValue()*/);
+    }
+
     public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        if (app != null){
+        if (session!=null && session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
 
                 float velocity = (float) velocitySlider.getValue();
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(app, keyEvent.getText(), velocity);
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity);
                 } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-                    moveBodyModel.moveKeyboard(app, "stop", velocity);
+                    moveBodyModel.moveKeyboard(session, "stop", velocity);
                     if (posturesModel == null) {
                         posturesModel = new PosturesModel();
                     }
-                    posturesModel.makePosture(app, "Stand");
+                    posturesModel.makePosture(session, "Stand");
 
                 }
 
             }else if (keyEvent.getText().equals("i")|| keyEvent.getText().equals("j") || keyEvent.getText().equals("k")
                     || keyEvent.getText().equals("l") || keyEvent.getText().equals("m")){
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(app, keyEvent.getText());
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText());
                 }else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
-                    moveBodyModel.moveKeyboard(app, "stop");
+                    moveBodyModel.moveKeyboard(session, "stop");
                 }
 
             }
         }
     }
 
-    public void say(ActionEvent actionEvent)throws Exception{
-       if (app != null){
+    public void say()throws Exception{
+       if (session.isConnected()){
            if (textToSpeechModel == null)
            {
                textToSpeechModel = new TextToSpeechModel();
            }
            if (textToSpeech.getText() != null){
                String language =(String) dropDownLanguages.getValue();
-               float volume = (float) volumeSlider.getValue();
+               textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice);
                String voice = String.valueOf((int)voiceSlider.getValue());
                String speed = String.valueOf((int)voiceSpeedSlider.getValue());
                textToSpeechModel.say(app, textToSpeech.getText(),volume, language, voice, speed);
@@ -198,8 +211,8 @@ public class Controller {
 
 
 
-    public void disconnect()throws Exception{
-        app.session().close();
+    public void disconnect(){
+        session.close();
         connectCircle.setFill(Color.rgb(240,20,20));
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
@@ -215,32 +228,31 @@ public class Controller {
             if (actionEvent.getSource().getClass()!= Button.class ){
                 posturesModel.changeImage(actualPose, imageView);
             }else{
-                posturesModel.makePosture(app,actualPose);
+                posturesModel.makePosture(session,actualPose);
             }
         }
-
     }
 
-    public void mode(ActionEvent actionEvent) throws Exception{
-        if (app != null){
+    public void mode() throws Exception{
+        if (session.isConnected()){
             if(moveBodyModel == null){
                 moveBodyModel = new MoveBodyModel();
             }
             ToggleButton object;
             if(mode.getSelectedToggle().getClass() == ToggleButton.class){
                object =(ToggleButton) mode.getSelectedToggle();
-               moveBodyModel.mode(app, object.getText());
+               moveBodyModel.mode(session, object.getText());
             }
         }
 
     }
 
-    public void takePhoto(ActionEvent actionEvent)throws Exception{
-        if (app!= null){
+    public void takePhoto()throws Exception{
+        if (session.isConnected()){
             if (cameraModel == null){
                 cameraModel = new CameraModel();
             }
-            cameraModel.takePhoto(imageView, app);
+            cameraModel.takePhoto(imageView, session);
         }
     }
 
@@ -268,6 +280,7 @@ public class Controller {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
         this.write(tx_Port.getText(),tx_IP.getText());
         connectCircle.setFill(Color.rgb(60,230,30));
@@ -276,15 +289,38 @@ public class Controller {
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
         alAnimatedSpeech.say("You are connected");
 
+        if(audioModel==null){
+            audioModel = new AudioModel();
+        }
+
         if (posturesModel == null){
             posturesModel = new PosturesModel();
         }
         if (ledModel == null){
             ledModel = new LEDModel();
         }
-        List postureList1 = posturesModel.getPostures(app);
+        List SoundFiles = audioModel.getSoundFiles();
+        if (!SoundFiles.isEmpty()){
+            lv_Sounds.setItems(FXCollections.observableList(SoundFiles));
+            lv_Sounds.setDisable(false);
+        }else{
+            lv_Sounds.setDisable(true);
+            lv_Sounds.setVisible(false);
+        }
+
+        List ledList1 = ledModel.getLEDs(session);
+        ObservableList ledList = FXCollections.observableList(ledList1);
+        if (!ledList.isEmpty()){
+            cb_LEDS.setItems(ledList);
+            cb_LEDS.setDisable(false);
+        }else
+            {
+            cb_LEDS.setDisable(true);
+        }
+
+        List postureList1 = posturesModel.getPostures(session);
         ObservableList postureList = FXCollections.observableArrayList(postureList1);
-        if (postureList != null){
+        if (!postureList.isEmpty()){
             dropDownPostures.setItems(postureList);
             poseButton.setDisable(false);
         }else
@@ -297,9 +333,9 @@ public class Controller {
         if(textToSpeechModel == null) {
             textToSpeechModel = new TextToSpeechModel();
         }
-        List languagesList1 = textToSpeechModel.getLanguages(app);
+        List languagesList1 = textToSpeechModel.getLanguages(session);
         ObservableList languagesList = FXCollections.observableArrayList(languagesList1);
-        if (languagesList != null){
+        if (!languagesList.isEmpty()){
             dropDownLanguages.setItems(languagesList);
             dropDownLanguages.setValue(languagesList.get(0));
             sayButton.setDisable(false);
@@ -335,6 +371,7 @@ public class Controller {
         colorBox.setItems(colorList);
 
         batteryCharge();
+        checkTemperature();
     }
 
     private boolean isNumber(String number){
@@ -347,11 +384,7 @@ public class Controller {
         {
             return false;
         }
-        if (d>=(-180) && d<=180){
-            return true;
-        }else{
-            return false;
-        }
+        return d >= (-180) && d <= 180;
     }
 
     private void batteryCharge(){
@@ -360,7 +393,7 @@ public class Controller {
             @Override
             public void run(){
                 try {
-                    ALBattery alBattery = new ALBattery(app.session());
+                    ALBattery alBattery = new ALBattery(session);
                     if (alBattery.getBatteryCharge() > 75) {
                         batteryCircle.setFill(Color.GREEN);
                         System.out.println(alBattery.getBatteryCharge());
@@ -380,7 +413,36 @@ public class Controller {
                 }
             }
         };
-        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 300000);
+        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
+    }
+
+    private void checkTemperature(){
+        Timer temperatureTimer = new Timer();
+        TimerTask checkTemp = new TimerTask() {
+            @Override
+            public void run() {
+                try{
+                    ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
+                    if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
+                        ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
+                        if(tempEvent.get(0).equals(1)){
+                            temperatureText.setText("Warm");
+                            temperatureText.setFill(Color.ORANGE);
+                        }else{
+                            temperatureText.setText("Heiß");
+                            temperatureText.setFill(Color.RED);
+                        }
+                    }else{
+                        temperatureText.setText("Kühl");
+                        temperatureText.setFill(Color.GREEN);
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 }
 
