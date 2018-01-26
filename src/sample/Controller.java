@@ -1,12 +1,8 @@
 package sample;
 
 import com.aldebaran.qi.Application;
-import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
-import com.aldebaran.qi.helper.proxies.ALLeds;
-import com.aldebaran.qi.helper.proxies.ALMotion;
-import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,22 +15,22 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.TextFlow;
 
 import java.io.*;
-import java.net.Socket;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Controller {
-    @FXML ComboBox cb_LEDS;
     @FXML ToggleGroup mode;
-    @FXML Slider velocitySlider, volumeSlider, voiceSlider;
+    @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider;
     @FXML TextFlow tfl_log;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle, batteryCircle;
-    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_scan;
+    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
+
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -50,6 +46,7 @@ public class Controller {
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
 
+
     public static Application getApp() {
         return app;
     }
@@ -60,16 +57,7 @@ public class Controller {
 
     public void initialize() {
         read();
-        //Main.logger.info("Dies ist ein Test");
-        //setLogger();
     }
-
-    //private void setLogger(Stage primaryStage) throws Exception {
-    //    Log log = new Log();
-    //    Logger logger = new Logger(log, "");
-    //    LogViewer logViewer = new LogViewer();
-    //    logViewer.start(primaryStage);
-    //}
 
     private void write(String ip,String port) throws IOException {
         try {
@@ -200,8 +188,9 @@ public class Controller {
            if (textToSpeech.getText() != null){
                String language =(String) dropDownLanguages.getValue();
                float volume = (float) volumeSlider.getValue();
-               float voice = (float) voiceSlider.getValue();
-               textToSpeechModel.say(app, textToSpeech.getText(),volume, language, voice);
+               String voice = String.valueOf((int)voiceSlider.getValue());
+               String speed = String.valueOf((int)voiceSpeedSlider.getValue());
+               textToSpeechModel.say(app, textToSpeech.getText(),volume, language, voice, speed);
            }
        }
 
@@ -216,12 +205,6 @@ public class Controller {
         disconnectButton.setDisable(true);
     }
 
-    public void rasta(ActionEvent actionEvent) throws Exception{
-        if (ledModel==null){
-            LEDModel ledModel = new LEDModel();
-        }
-        ledModel.setAlLeds();
-    }
 
     public void postures(ActionEvent actionEvent) throws Exception{
         if (posturesModel == null){
@@ -261,6 +244,29 @@ public class Controller {
         }
     }
 
+    public void changeColor()throws Exception{
+        ledModel = new LEDModel();
+        if(colorBox.getValue() != null){
+            ledModel.changeColor(app, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
+        }
+
+    }
+
+    public void changeChoice(){
+        String selcetedGroup = cb_LEDS.getValue().toString();
+        if (selcetedGroup.equals("BrainLEDs") || selcetedGroup.equals("EarLEDs") || selcetedGroup.equals("Left Ear LEDs") || selcetedGroup.equals("Right Ear LEDs")){
+            Object[] colorArray = {"On","Off"};
+            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+            colorBox.setValue("");
+            colorBox.setItems(colorList);
+
+        }else {
+            Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
+            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+            colorBox.setValue("");
+            colorBox.setItems(colorList);
+        }
+    }
 
     private void onConnected() throws Exception{
         this.write(tx_Port.getText(),tx_IP.getText());
@@ -268,7 +274,7 @@ public class Controller {
         connectButton.setDisable(true);
         disconnectButton.setDisable(false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(app.session());
-        //alAnimatedSpeech.say("You are connected");
+        alAnimatedSpeech.say("You are connected");
 
         if (posturesModel == null){
             posturesModel = new PosturesModel();
@@ -276,17 +282,6 @@ public class Controller {
         if (ledModel == null){
             ledModel = new LEDModel();
         }
-        List ledList1 = ledModel.getLEDs(app);
-        ObservableList ledList = FXCollections.observableList(ledList1);
-        System.out.println(ledList);
-        if (ledList != null){
-            cb_LEDS.setItems(ledList);
-            cb_LEDS.setDisable(false);
-        }else
-            {
-            cb_LEDS.setDisable(true);
-        }
-
         List postureList1 = posturesModel.getPostures(app);
         ObservableList postureList = FXCollections.observableArrayList(postureList1);
         if (postureList != null){
@@ -317,11 +312,27 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-
-        moveBodyModel.mode(app,"Relax");
+        boolean isWakeUp = moveBodyModel.getMode(app);
         List list = mode.getToggles();
-        Toggle toggle = (Toggle) list.get(1);
-        mode.selectToggle(toggle);
+        Toggle toggle;
+        if (isWakeUp){
+            moveBodyModel.mode(app,"Stand");
+            toggle = (Toggle) list.get(0);
+            mode.selectToggle(toggle);
+        }else{
+            moveBodyModel.mode(app,"Relax");
+            toggle = (Toggle) list.get(1);
+            mode.selectToggle(toggle);
+        }
+
+        if (ledModel == null){
+            ledModel = new LEDModel();
+        }
+        ObservableList ledGroups = FXCollections.observableArrayList(ledModel.getLEDs(app));
+        cb_LEDS.setItems(ledGroups);
+        Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
+        ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+        colorBox.setItems(colorList);
 
         batteryCharge();
     }

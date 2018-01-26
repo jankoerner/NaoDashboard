@@ -18,16 +18,16 @@ public class MoveBodyModel {
         }
         switch (direction) {
             case "w":
-                alMotion.move(velocity, 0f, 0f);
+                alMotion.async().move(velocity, 0f, 0f);
                 break;
             case "s":
-                alMotion.move(-velocity, 0f, 0f);
+                alMotion.async().move(-velocity, 0f, 0f);
                 break;
             case "a":
-                alMotion.move(0f, velocity, 0f);
+                alMotion.async().move(0f, velocity, 0f);
                 break;
             case "d":
-                alMotion.move(0f, -velocity, 0f);
+                alMotion.async().move(0f, -velocity, 0f);
                 break;
             case "stop":
                 alMotion.stopMove();
@@ -43,14 +43,14 @@ public class MoveBodyModel {
         boolean isAbsolute = true;
 
         //timer um zu versichern, dass die KEY_PRESSED Events nicht angestaut werden. . .
-        if(System.currentTimeMillis() - lastStrokeProcessed > 500){
+        if(System.currentTimeMillis() - lastStrokeProcessed > 100){
          switch(direction){
             case "i": //Kopf nach oben
                 if (upDown > -0.6720 & alMotion.moveIsActive() != true)
                 {
-                    upDown -= 0.1720;
+                    upDown -= 0.0720;
 
-                alMotion.angleInterpolation("HeadPitch", upDown, velocity + 1, isAbsolute);
+                alMotion.async().angleInterpolation("HeadPitch", upDown, velocity + 1, isAbsolute);
                 lastStrokeProcessed = System.currentTimeMillis();
                 break;
                 }else{
@@ -61,7 +61,7 @@ public class MoveBodyModel {
                 if (upDown < 0.5149 & alMotion.moveIsActive() != true) {
                     upDown += 0.1149;
 
-                    alMotion.angleInterpolation("HeadPitch", upDown, velocity + 1, isAbsolute);
+                    alMotion.async().angleInterpolation("HeadPitch", upDown, velocity + 1, isAbsolute);
                     lastStrokeProcessed = System.currentTimeMillis();
                     break;
                 }else {
@@ -72,7 +72,7 @@ public class MoveBodyModel {
                 if (leftRight < 2.08 & alMotion.moveIsActive() != true) {
                     leftRight += 0.08;
 
-                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
+                    alMotion.async().angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
                     lastStrokeProcessed = System.currentTimeMillis();
                     break;
 
@@ -84,7 +84,7 @@ public class MoveBodyModel {
                 if (leftRight > -2.08 & alMotion.moveIsActive() != true) {
                     leftRight -= 0.08;
 
-                    alMotion.angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
+                    alMotion.async().angleInterpolation("HeadYaw", leftRight, velocity + 1, isAbsolute);
                     lastStrokeProcessed = System.currentTimeMillis();
                     break;
 
@@ -96,8 +96,8 @@ public class MoveBodyModel {
                 if (leftRight != 0 || upDown != 0 & alMotion.moveIsActive() != true) {
                     float center = 0;
 
-                    alMotion.angleInterpolation("HeadYaw", center, velocity + 1, isAbsolute);
-                    alMotion.angleInterpolation("HeadPitch", center, velocity + 1, isAbsolute);
+                    alMotion.async().angleInterpolation("HeadYaw", center, velocity + 1, isAbsolute);
+                    alMotion.async().angleInterpolation("HeadPitch", center, velocity + 1, isAbsolute);
                     lastStrokeProcessed = System.currentTimeMillis();
                     break;
 
@@ -134,5 +134,12 @@ public class MoveBodyModel {
                 alMotion.wakeUp();
                 break;
         }
+    }
+
+    public boolean getMode(Application app) throws Exception{
+        if (alMotion == null){
+            alMotion = new ALMotion(app.session());
+        }
+        return alMotion.robotIsWakeUp();
     }
 }

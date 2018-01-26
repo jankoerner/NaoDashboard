@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane id="Relax" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="600.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane id="Relax" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="715.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <Button fx:id="connectButton" layoutX="636.0" layoutY="25.0" mnemonicParsing="false" onAction="#btn_ConnectIsPressed" text="Connect" />
         <Button fx:id="disconnectButton" layoutX="617.0" layoutY="61.0" mnemonicParsing="false" onAction="#disconnect" text="Disconnect" />
@@ -45,8 +45,8 @@
             <Rectangle2D />
          </viewport>
       </ImageView>
-      <Slider fx:id="voiceSlider" layoutX="407.0" layoutY="339.0" majorTickUnit="0.1" max="4.0" min="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="1.0" />
-      <Label layoutX="339.0" layoutY="362.0" text="VoicePitch" />
+      <Slider fx:id="voiceSlider" layoutX="407.0" layoutY="339.0" majorTickUnit="0.1" max="200.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
+      <Label layoutX="381.0" layoutY="319.0" text="VoicePitch" />
       <ImageView fx:id="photoView" fitHeight="150.0" fitWidth="200.0" layoutX="11.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
       <Button layoutX="215.0" layoutY="514.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
       <Label layoutX="16.0" layoutY="570.0" text="Akkustand:" />
@@ -60,8 +60,11 @@
       <Button layoutX="81.0" layoutY="267.0" mnemonicParsing="false" text="l" />
       <Button layoutX="53.0" layoutY="293.0" mnemonicParsing="false" text="k" />
       <Button layoutX="29.0" layoutY="267.0" mnemonicParsing="false" text="j" />
-      <ComboBox fx:id="cb_LEDS" layoutX="230.0" layoutY="33.0" prefWidth="150.0" />
-      <Button layoutX="318.0" layoutY="74.0" mnemonicParsing="false" onAction="#rasta" text="Button" />
+      <ComboBox fx:id="cb_LEDS" layoutX="407.0" layoutY="514.0" onAction="#changeChoice" prefHeight="26.0" prefWidth="171.0" promptText="Select LED Group" />
+      <Slider fx:id="voiceSpeedSlider" blockIncrement="1.0" layoutX="373.0" layoutY="340.0" majorTickUnit="0.1" max="400.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
+      <Label layoutX="347.0" layoutY="408.0" text="VoiceSpeed" />
+      <ComboBox fx:id="colorBox" layoutX="579.0" layoutY="514.0" onAction="#changeColor" prefWidth="150.0" promptText="Select Color" />
+      <Label layoutX="405.0" layoutY="481.0" text="Change LED Color" />
 
     </children>
 </AnchorPane>
