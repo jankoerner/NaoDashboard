@@ -33,20 +33,20 @@ public class Controller {
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText;
-
+    @FXML ListView lv_Sounds;
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-
     private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
+    private AudioModel audioModel;
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
 
-    public static Session getSession() {
+    public Session getSession() {
         return session;
     }
 
@@ -123,13 +123,12 @@ public class Controller {
 
 
                 if (session == null){
-                    session = new Session();                    ///TODO DISCONNECT & RECONNECT TESTEN!
+                    session = new Session(connectionModel.getNaoUrl());                    ///TODO DISCONNECT & RECONNECT TESTEN!
                 }
-                session.connect(connectionModel.getNaoUrl()).get();
-                if (session.isConnected()){
-                    onConnected();
+                if (!session.isConnected()){
+                    session.connect(connectionModel.getNaoUrl()).get();
                 }
-
+                if (session.isConnected()) onConnected();
             }
         }
 
@@ -153,11 +152,16 @@ public class Controller {
 
     }
 
+    public void playSounds(){
+        String filename = lv_Sounds.getSelectionModel().getSelectedItem().toString();
+        audioModel.playSound(filename/*, (float) volumeSlider.getValue()*/);
+    }
+
     public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        if (session.isConnected()){
+        if (session!=null && session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
 
@@ -257,15 +261,27 @@ public class Controller {
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
         //alAnimatedSpeech.say("You are connected");
 
+        if(audioModel==null){
+            audioModel = new AudioModel();
+        }
+
         if (posturesModel == null){
             posturesModel = new PosturesModel();
         }
         if (ledModel == null){
             ledModel = new LEDModel();
         }
+        List SoundFiles = audioModel.getSoundFiles();
+        if (!SoundFiles.isEmpty()){
+            lv_Sounds.setItems(FXCollections.observableList(SoundFiles));
+            lv_Sounds.setDisable(false);
+        }else{
+            lv_Sounds.setDisable(true);
+            lv_Sounds.setVisible(false);
+        }
+
         List ledList1 = ledModel.getLEDs(session);
         ObservableList ledList = FXCollections.observableList(ledList1);
-        System.out.println(ledList);
         if (!ledList.isEmpty()){
             cb_LEDS.setItems(ledList);
             cb_LEDS.setDisable(false);
