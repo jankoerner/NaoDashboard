@@ -26,7 +26,7 @@ import java.util.TimerTask;
 
 public class Controller {
     @FXML ToggleGroup mode;
-    @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider;
+    @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
     @FXML Circle connectCircle, batteryCircle;
@@ -138,7 +138,7 @@ public class Controller {
 
     }
 
-    public void move()throws Exception{
+    public void turn()throws Exception{
        if (session.isConnected()){
            if (moveBodyModel == null){
                moveBodyModel = new MoveBodyModel();
@@ -165,15 +165,19 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
+        System.out.println(keyEvent.getText());
         if (session!=null && session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
 
                 float velocity = (float) velocitySlider.getValue();
+                float angle = (float) angleSlider.getValue();
+                float angleRound = round(angle, 5);
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity);
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity,angleRound);
                 } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-                    moveBodyModel.moveKeyboard(session, "stop", velocity);
+                    moveBodyModel.moveKeyboard(session, "stop", velocity,angleRound);
+                    angleSlider.valueProperty().set(0);
                     if (posturesModel == null) {
                         posturesModel = new PosturesModel();
                     }
@@ -386,6 +390,10 @@ public class Controller {
             return false;
         }
         return d >= (-180) && d <= 180;
+    }
+
+    private float round(double i, int v){
+        return (float) (Math.round(i/v) * v);
     }
 
     private void batteryCharge(){

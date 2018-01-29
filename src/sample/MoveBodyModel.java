@@ -12,22 +12,22 @@ public class MoveBodyModel {
     private double leftRight=0;
     private long lastStrokeProcessed = 0;
 
-    public void moveKeyboard(Session session, String direction, Float velocity)throws Exception {
+    public void moveKeyboard(Session session, String direction, Float velocity, Float angle)throws Exception {
         if (alMotion == null){
             alMotion = new ALMotion(session);
         }
         switch (direction) {
             case "w":
-                alMotion.move(velocity, 0f, 0f);
+                alMotion.move(velocity, 0f, angle);
                 break;
             case "s":
-                alMotion.move(-velocity, 0f, 0f);
+                alMotion.move(-velocity, 0f, angle);
                 break;
             case "a":
-                alMotion.move(0f, velocity, 0f);
+                alMotion.move(0f, velocity,angle);
                 break;
             case "d":
-                alMotion.move(0f, -velocity, 0f);
+                alMotion.move(0f, -velocity, angle);
                 break;
             case "stop":
                 alMotion.stopMove();

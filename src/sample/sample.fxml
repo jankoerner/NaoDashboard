@@ -24,7 +24,7 @@
         <TextField fx:id="tx_IP" layoutX="432.0" layoutY="25.0" promptText="Enter Nao IP" />
         <TextField fx:id="tx_Port" layoutX="432.0" layoutY="61.0" promptText="Enter Nao Port" />
         <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="146.0" layoutY="109.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
-        <Label layoutX="10.0" layoutY="79.0" text="Steuerung Fortbewegung" />
+        <Label layoutX="13.0" layoutY="53.0" text="Steuerung Fortbewegung" />
         <Button id="say" fx:id="sayButton" layoutX="633.0" layoutY="390.0" mnemonicParsing="false" onAction="#say" text="Say" />
         <Label layoutX="9.0" layoutY="225.0" text="Steuerung Kopf" />
         <Circle fx:id="connectCircle" fill="#f01414" layoutX="617.0" layoutY="38.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
@@ -36,7 +36,7 @@
       <Label layoutX="162.0" layoutY="138.0" text="Velocity" />
       <ComboBox fx:id="dropDownLanguages" layoutX="432.0" layoutY="423.0" prefHeight="26.0" prefWidth="171.0" promptText="Select Language" />
       <TextField fx:id="degreeField" layoutX="26.0" layoutY="180.0" prefHeight="26.0" prefWidth="42.0" promptText="Degree" />
-      <Button layoutX="80.0" layoutY="180.0" mnemonicParsing="false" onAction="#move" text="Turn" />
+      <Button layoutX="80.0" layoutY="180.0" mnemonicParsing="false" onAction="#turn" text="Turn" />
       <ToggleButton id="Stand" layoutX="64.0" layoutY="25.0" mnemonicParsing="false" onAction="#mode" text="Stand">
          <toggleGroup>
             <ToggleGroup fx:id="mode" />
@@ -73,6 +73,7 @@
       <ListView fx:id="lv_Sounds" layoutX="20.0" layoutY="323.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="btn_play" layoutX="230.0" layoutY="390.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
       <ProgressBar fx:id="batteryPercentage" layoutX="115.0" layoutY="568.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
+      <Slider fx:id="angleSlider" accessibleText="dddd" layoutX="26.0" layoutY="76.0" majorTickUnit="30.0" max="90.0" min="-90.0" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
 
     </children>
 </AnchorPane>
