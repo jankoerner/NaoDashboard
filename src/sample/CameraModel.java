@@ -24,7 +24,7 @@ public class CameraModel {
         System.out.println(alPhotoCapture.getCameraID());
         alPhotoCapture.setResolution(2);
         alPhotoCapture.setPictureFormat("jpeg");
-        alPhotoCapture.takePicture("/home/student/IdeaProjects/NaoDashboardRichtig/out/production/NaoDashboardRichtig/sample","xyz",true);
+        alPhotoCapture.takePicture("./","file:xyz",true);
         //showPhoto(photoView);
         //pictureNumber++;
     }

@@ -73,7 +73,7 @@
       <ListView fx:id="lv_Sounds" layoutX="20.0" layoutY="323.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="btn_play" layoutX="230.0" layoutY="390.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
       <ProgressBar fx:id="batteryPercentage" layoutX="115.0" layoutY="568.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
-      <Slider fx:id="angleSlider" accessibleText="dddd" layoutX="26.0" layoutY="76.0" majorTickUnit="30.0" max="90.0" min="-90.0" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
+      <Slider fx:id="angleSlider" layoutX="26.0" layoutY="76.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
 
     </children>
 </AnchorPane>

@@ -166,6 +166,8 @@ public class Controller {
             moveBodyModel = new MoveBodyModel();
         }
         System.out.println(keyEvent.getText());
+
+        System.out.println(keyEvent.getText());
         if (session!=null && session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
@@ -174,7 +176,7 @@ public class Controller {
                 float angle = (float) angleSlider.getValue();
                 float angleRound = round(angle, 5);
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity,angleRound);
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity,(float)((angleRound)*(Math.PI/180)));
                 } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
                     moveBodyModel.moveKeyboard(session, "stop", velocity,angleRound);
                     angleSlider.valueProperty().set(0);
