@@ -1,13 +1,10 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
-import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
-import com.aldebaran.qi.helper.proxies.ALBattery;
-import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
-import com.aldebaran.qi.helper.proxies.ALConnectionManager;
+import com.aldebaran.qi.helper.EventCallback;
+import com.aldebaran.qi.helper.proxies.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -431,6 +427,7 @@ public class Controller {
 
         batteryCharge();
         checkTemperature();
+        checkTouch(memory);
     }
 
     private boolean isNumber(String number){
@@ -506,15 +503,52 @@ public class Controller {
                             }
                         }
 
-                    }catch(Exception e){
-                        e.printStackTrace();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
+    }
+
+
+    public void checkTouch(ALMemory memory){
+        try {
+           memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
+                @Override
+                public void onEvent(Float val) throws InterruptedException, CallError {
+                    float touchState = val;
+                    if (touchState == 1.0) {
+                        System.out.println("Front head bumper has been touched.");
                     }
                 }
-            };
-            temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
 
+            });
+            memory.subscribeToEvent("MiddleTactilTouched", new EventCallback<Float>() {
+                @Override
+                public void onEvent(Float val) throws InterruptedException, CallError {
+                    float touchState = val;
+                    if(touchState == 1.0){
+                        System.out.println("Middle head bumper has been touched");
+                    }
+                }
+            });
+            memory.subscribeToEvent("RearTactilTouched", new EventCallback<Float>() {
+                @Override
+                public void onEvent(Float val) throws InterruptedException, CallError {
+                    float touchState = val;
+                    if(touchState == 1.0){
+                        System.out.println("Rear head bumper has been touched");
+                    }
+
+                }
+            });
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
     }
 }
+
 
 
 
