@@ -1,10 +1,13 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.QiService;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
 import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -41,7 +45,7 @@ public class Controller {
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private static Session session;
+    private Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
@@ -124,8 +128,6 @@ public class Controller {
         if(tx_Port.getText() != null && tx_IP.getText() != null){
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
-
-
                 if (session == null){
                     session = new Session(connectionModel.getNaoUrl());                    ///TODO DISCONNECT & RECONNECT TESTEN!
                 }
@@ -133,6 +135,7 @@ public class Controller {
                     session.connect(connectionModel.getNaoUrl()).get();
                 }
                 if (session.isConnected()) onConnected();
+
             }
         }
 
@@ -160,14 +163,48 @@ public class Controller {
         String filename = lv_Sounds.getSelectionModel().getSelectedItem().toString();
         audioModel.playSound(filename/*, (float) volumeSlider.getValue()*/);
     }
+    public void moveHeadButtons(MouseEvent mouseEvent) throws Exception{
+        if (moveBodyModel == null){
+            moveBodyModel = new MoveBodyModel();
+        }
+
+        if (session.isConnected()){
+            if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
+            {   Button button = (Button) mouseEvent.getSource();
+                moveBodyModel.moveKeyboard(session,button.getText());
+
+            }
+        }
+    }
+
+    public void moveBodyButtons(MouseEvent mouseEvent) throws Exception{
+        if (moveBodyModel == null){
+            moveBodyModel = new MoveBodyModel();
+        }
+        float velocity = (float) velocitySlider.getValue();
+        float angle = (float) angleSlider.getValue();
+        float angleRound = round(angle, 5);
+        if (session.isConnected()){
+            if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
+            {
+                Button button = (Button) mouseEvent.getSource();
+                moveBodyModel.moveKeyboard(session,button.getText(),velocity,(float)((angleRound)*(Math.PI/180)));
+            }else if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_RELEASED))
+            {
+                moveBodyModel.moveKeyboard(session,"stop",0f,0f);
+                angleSlider.valueProperty().set(0);
+                if (posturesModel == null) {
+                    posturesModel = new PosturesModel();
+                }
+                posturesModel.makePosture(session, "Stand");
+            }
+        }
+    }
 
     public void moveBody(KeyEvent keyEvent) throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        System.out.println(keyEvent.getText());
-
-        System.out.println(keyEvent.getText());
         if (session!=null && session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
@@ -216,11 +253,13 @@ public class Controller {
 
     }
 
-
-
     public void disconnect(){
         session.close();
         connectCircle.setFill(Color.rgb(240,20,20));
+        dropDownPostures.getItems().removeAll(dropDownPostures.getItems());
+        dropDownLanguages.getItems().removeAll(dropDownLanguages.getItems());
+        cb_LEDS.getItems().removeAll(cb_LEDS.getItems());
+        colorBox.getItems().removeAll(colorBox.getItems());
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
     }
@@ -273,18 +312,21 @@ public class Controller {
 
     public void changeChoice(){
         String selcetedGroup = cb_LEDS.getValue().toString();
-        if (selcetedGroup.equals("BrainLEDs") || selcetedGroup.equals("EarLEDs") || selcetedGroup.equals("Left Ear LEDs") || selcetedGroup.equals("Right Ear LEDs")){
-            Object[] colorArray = {"On","Off"};
-            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
-            colorBox.setValue("");
-            colorBox.setItems(colorList);
+        if (selcetedGroup != null){
+            if (selcetedGroup.equals("BrainLEDs") || selcetedGroup.equals("EarLEDs") || selcetedGroup.equals("Left Ear LEDs") || selcetedGroup.equals("Right Ear LEDs")){
+                Object[] colorArray = {"On","Off"};
+                ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+                colorBox.setValue("");
+                colorBox.setItems(colorList);
 
-        }else {
-            Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
-            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
-            colorBox.setValue("");
-            colorBox.setItems(colorList);
+            }else {
+                Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
+                ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+                colorBox.setValue("");
+                colorBox.setItems(colorList);
+            }
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -399,61 +441,68 @@ public class Controller {
     }
 
     private void batteryCharge(){
-        Timer batteryTimer = new Timer();
-        TimerTask checkBattery = new TimerTask() {
-            @Override
-            public void run(){
-                try {
-                    ALBattery alBattery = new ALBattery(session);
-                    if (alBattery.getBatteryCharge() > 75) {
-                        batteryCircle.setFill(Color.GREEN);
-                        System.out.println(alBattery.getBatteryCharge());
-                    } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
-                        batteryCircle.setFill(Color.ORANGE);
-                        System.out.println(alBattery.getBatteryCharge());
-                    } else if (alBattery.getBatteryCharge() < 30 & alBattery.getBatteryCharge() != 0) {
-                        batteryCircle.setFill(Color.RED);
-                        System.out.println(alBattery.getBatteryCharge());
-                    } else {
-                        batteryCircle.setFill(Color.BLACK);
-                        System.out.println("No battery detected.");
+            Timer batteryTimer = new Timer();
+            TimerTask checkBattery = new TimerTask() {
+                @Override
+                public void run(){
+                    try {
+                        if (session.isConnected()){
+                            ALBattery alBattery = new ALBattery(session);
+                            if (alBattery.getBatteryCharge() > 75) {
+                                batteryCircle.setFill(Color.GREEN);
+                            } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
+                                batteryCircle.setFill(Color.ORANGE);
+                            } else if (alBattery.getBatteryCharge() < 30 & alBattery.getBatteryCharge() != 0) {
+                                batteryCircle.setFill(Color.RED);
+                            } else {
+                                batteryCircle.setFill(Color.BLACK);
+                                System.out.println("No battery detected.");
+                            }
+                            ObservableValue<Integer> obsInt = new SimpleIntegerProperty((alBattery.getBatteryCharge()/100)).asObject();
+                            batteryPercentage.progressProperty().bind(obsInt);
+                        }
+
+
+                    }catch(Exception e) {
+                        e.printStackTrace();
                     }
-                    batteryPercentage.progressProperty().set(alBattery.getBatteryCharge() / 100);
-                }catch(Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        };
-        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
+            };
+            batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
+
+
     }
 
     private void checkTemperature(){
-        Timer temperatureTimer = new Timer();
-        TimerTask checkTemp = new TimerTask() {
-            @Override
-            public void run() {
-                try{
-                    ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
-                    if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
-                        ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
-                        if(tempEvent.get(0).equals(1)){
-                            temperatureText.setText("Warm");
-                            temperatureText.setFill(Color.ORANGE);
-                        }else{
-                            temperatureText.setText("Heiß");
-                            temperatureText.setFill(Color.RED);
+            Timer temperatureTimer = new Timer();
+            TimerTask checkTemp = new TimerTask() {
+                @Override
+                public void run() {
+                    try{
+                        if (session.isConnected()){
+                            ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
+                            if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
+                                ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
+                                if(tempEvent.get(0).equals(1)){
+                                    temperatureText.setText("Warm");
+                                    temperatureText.setFill(Color.ORANGE);
+                                }else{
+                                    temperatureText.setText("Heiß");
+                                    temperatureText.setFill(Color.RED);
+                                }
+                            }else{
+                                temperatureText.setText("Kühl");
+                                temperatureText.setFill(Color.GREEN);
+                            }
                         }
-                    }else{
-                        temperatureText.setText("Kühl");
-                        temperatureText.setFill(Color.GREEN);
-                    }
 
-                }catch(Exception e){
-                    e.printStackTrace();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
-            }
-        };
-        temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
+            };
+            temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
+
     }
 }
 

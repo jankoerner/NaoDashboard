@@ -54,15 +54,15 @@
       <Button layoutX="315.0" layoutY="497.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
       <Label layoutX="16.0" layoutY="570.0" text="Akkustand:" />
       <Circle fx:id="batteryCircle" fill="#1fff5e" layoutX="104.0" layoutY="578.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
-      <Button layoutX="53.0" layoutY="109.0" mnemonicParsing="false" text="w" />
-      <Button layoutX="82.0" layoutY="135.0" mnemonicParsing="false" text="d" />
-      <Button layoutX="25.0" layoutY="135.0" mnemonicParsing="false" text="a" />
-      <Button layoutX="55.0" layoutY="135.0" mnemonicParsing="false" text="s" />
-      <Button layoutX="53.0" layoutY="241.0" mnemonicParsing="false" text="i" />
-      <Button layoutX="50.0" layoutY="267.0" mnemonicParsing="false" text="m" />
-      <Button layoutX="81.0" layoutY="267.0" mnemonicParsing="false" text="l" />
-      <Button layoutX="53.0" layoutY="293.0" mnemonicParsing="false" text="k" />
-      <Button layoutX="29.0" layoutY="267.0" mnemonicParsing="false" text="j" />
+      <Button layoutX="53.0" layoutY="109.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="w" />
+      <Button layoutX="82.0" layoutY="135.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="d" />
+      <Button layoutX="25.0" layoutY="135.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="a" />
+      <Button layoutX="55.0" layoutY="135.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="s" />
+      <Button layoutX="53.0" layoutY="241.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="i" />
+      <Button layoutX="50.0" layoutY="267.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="m" />
+      <Button layoutX="81.0" layoutY="267.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="l" />
+      <Button layoutX="53.0" layoutY="293.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="k" />
+      <Button layoutX="29.0" layoutY="267.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="j" />
       <ComboBox fx:id="cb_LEDS" layoutX="407.0" layoutY="514.0" onAction="#changeChoice" prefHeight="26.0" prefWidth="171.0" promptText="Select LED Group" />
       <Slider fx:id="voiceSpeedSlider" blockIncrement="1.0" layoutX="373.0" layoutY="340.0" majorTickUnit="0.1" max="400.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
       <Label layoutX="347.0" layoutY="408.0" text="VoiceSpeed" />

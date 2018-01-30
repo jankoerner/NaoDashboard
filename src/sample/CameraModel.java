@@ -17,9 +17,8 @@ public class CameraModel {
 
     }
     public void takePhoto(ImageView photoView, Session session)throws Exception{
-        if (alPhotoCapture == null){
-            alPhotoCapture = new ALPhotoCapture(session);
-        }
+
+        alPhotoCapture = new ALPhotoCapture(session);
         System.out.println("test");
         System.out.println(alPhotoCapture.getCameraID());
         alPhotoCapture.setResolution(2);
