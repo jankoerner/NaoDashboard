@@ -8,15 +8,15 @@ public class MoveBodyModel {
 
     }
     private ALMotion alMotion;
-    private double upDown = 0;
-    private double leftRight=0;
-    private long lastStrokeProcessed = 0;
+    private boolean up = false;
+    private boolean down = false;
+    private boolean left = false;
+    private boolean right = false;
 
     public void moveKeyboard(Session session, String direction, Float velocity, Float angle)throws Exception {
-        if (alMotion == null){
-            alMotion = new ALMotion(session);
-        }
-        switch (direction) {
+        alMotion = new ALMotion(session);
+        System.out.println(direction);
+            switch (direction) {
             case "w":
                 alMotion.move(velocity, 0f, angle);
                 break;
@@ -36,10 +36,9 @@ public class MoveBodyModel {
     }
 
     public void moveKeyboard(Session session, String direction)throws Exception{
-        if (alMotion == null){
-            alMotion = new ALMotion(session);
-        }
-        alMotion.setStiffnesses("Head", 1f);
+        alMotion = new ALMotion(session);
+        System.out.println(direction);
+        //alMotion.setStiffnesses("Head", 1f);
         switch (direction) {
             case "i":
                alMotion.changeAngles("HeadPitch", -0.015, 1f);
@@ -58,25 +57,47 @@ public class MoveBodyModel {
                 alMotion.setAngles("HeadPitch", 0f, 1f);
                 break;
         }
-        alMotion.setStiffnesses("Head", 0f);
+        //alMotion.setStiffnesses("Head", 0f);
+
+    }
+
+    public void moveHeadButtons(Session session, String direction) throws  Exception{
+        alMotion = new ALMotion(session);
+
+        System.out.println(direction);
+        //alMotion.setStiffnesses("Head", 1f);
+        switch (direction) {
+            case "i":
+                alMotion.changeAngles("HeadPitch", -0.75, 1f);
+                break;
+            case "k":
+                alMotion.changeAngles("HeadPitch", 0.75, 1f);
+                break;
+            case "l":
+                alMotion.changeAngles("HeadYaw", -0.75, 1f);
+                break;
+            case "j":
+                alMotion.changeAngles("HeadYaw", 0.75, 1f);
+                break;
+            case "m":
+                alMotion.setAngles("HeadYaw", 0f, 1f);
+                alMotion.setAngles("HeadPitch", 0f, 1f);
+                break;
+        }
 
     }
 
 
 
     public void turn(Session session, float degree) throws Exception{
-        if (alMotion == null){
-            alMotion = new ALMotion(session);
-        }
+        alMotion = new ALMotion(session);
         alMotion.moveTo(0f,0f,degree);
         alMotion.waitUntilMoveIsFinished();
     }
 
     public void mode(Session session, String mode) throws Exception{
-        if (alMotion == null){
             alMotion = new ALMotion(session);
-        }
-        switch (mode){
+            switch (mode){
             case "Relax":
                 alMotion.rest();
                 break;
@@ -87,9 +108,7 @@ public class MoveBodyModel {
     }
 
     public boolean getMode(Session session) throws Exception{
-        if (alMotion == null){
-            alMotion = new ALMotion(session);
-        }
+        alMotion = new ALMotion(session);
         return alMotion.robotIsWakeUp();
     }
 }
