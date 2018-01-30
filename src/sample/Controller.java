@@ -31,7 +31,7 @@ public class Controller {
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
     @FXML Circle connectCircle, batteryCircle;
-    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox;
+    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP, cb_Port;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText;
@@ -50,6 +50,16 @@ public class Controller {
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
+    private ALConnectionManager alConnectionManager;
+    private static String[] IP = new String[5];
+    private static String[] Port = new String[5];
+
+    private String[] getPort(){
+        return Port;
+    }
+    private String[] getIP(){
+        return IP;
+    }
 
     public Session getSession() {
         return session;
@@ -61,7 +71,6 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
-
         //alConnectionManager.
         //Main.logger.info("Dies ist ein Test");
         //setLogger();
@@ -74,12 +83,30 @@ public class Controller {
     //    logViewer.start(primaryStage);
     //}
 
-    private void write(String ip,String port) throws IOException {
+
+    private void write(String[] ip,String[] port) throws IOException {
         try {
             writer=new BufferedWriter(new FileWriter(new File("connectionlog.txt")));
-            writer.write(ip);
-            writer.newLine();
-            writer.write(port);
+            if(tx_IP.getText()!=IP[0]){
+                IP[4]=IP[3];
+                IP[3]=IP[2];
+                IP[2]=IP[1];
+                IP[1]=IP[0];
+                IP[0]=tx_IP.getText();
+            }
+            if(tx_Port.getText()!=Port[0]){
+                Port[4]=Port[3];
+                Port[3]=Port[2];
+                Port[2]=Port[1];
+                Port[1]=Port[0];
+                Port[0]=tx_Port.getText();
+            }
+            for(Integer I =0; I<ip.length; I++) {
+                writer.write(ip[I]);
+                writer.newLine();
+                writer.write(port[I]);
+                writer.newLine();
+            }
         } catch (Exception e){
             e.printStackTrace();
         }finally {
@@ -89,14 +116,16 @@ public class Controller {
     }
 
     private void read() {
-        String IP = "";
-        String port = "";
         try {
             try {
                 file = new FileInputStream("connectionlog.txt");
                 reader = new BufferedReader(new InputStreamReader(file));
-                port = reader.readLine();
-                IP = reader.readLine();
+                for(Integer I=0; I<IP.length; I++){
+                    Port[I] = reader.readLine();
+                    IP[I] = reader.readLine();
+                }
+                cb_IP.setItems(FXCollections.observableArrayList(IP));
+                cb_Port.setItems(FXCollections.observableArrayList(Port));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,8 +139,8 @@ public class Controller {
             }
         }
         try {
-            tx_IP.setText(IP);
-            tx_Port.setText(port);
+            tx_IP.setText(IP[0]);
+            tx_Port.setText(Port[0]);
             disconnectButton.setDisable(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,7 +318,7 @@ public class Controller {
 
     @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
-        this.write(tx_Port.getText(),tx_IP.getText());
+        this.write(getPort(),getIP());
         connectCircle.setFill(Color.rgb(60,230,30));
         connectButton.setDisable(true);
         disconnectButton.setDisable(false);

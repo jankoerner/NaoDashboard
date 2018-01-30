@@ -27,7 +27,6 @@ public class Main extends Application {
         root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("NaoDashboard");
         javafx.geometry.Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        scene = new Scene(root,1280,700);
         // Platz der Buttons soll zur Laufzeit berechnet werden:
         // old X Position/1366 = new X Position/primaryScreenBounds.getMinX()
         // also: newXPosition = (oldXPosition*primaryScreenBounds.getMinX)/1366

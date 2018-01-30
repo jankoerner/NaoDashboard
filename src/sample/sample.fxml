@@ -36,6 +36,8 @@
 
                           <TextField fx:id="tx_IP" layoutX="196.0" layoutY="38.0" promptText="Enter Nao IP" />
                           <TextField fx:id="tx_Port" layoutX="196.0" layoutY="85.0" promptText="Enter Nao Port" />
+                        <ComboBox fx:id="cb_IP" layoutX="387.0" layoutY="38.0" prefWidth="150.0" />
+                        <ComboBox fx:id="cb_Port" layoutX="387.0" layoutY="85.0" prefWidth="150.0" />
                      </children>
                   </AnchorPane>
             </content>
@@ -44,7 +46,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="853.0" prefWidth="1920.0">
                      <children>
-                        <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="62.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="819.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
                            <viewport>
                               <Rectangle2D />
                            </viewport>
@@ -57,7 +59,7 @@
                         <ComboBox fx:id="dropDownLanguages" layoutX="410.0" layoutY="209.0" prefHeight="26.0" prefWidth="171.0" promptText="Select Language" />
                         <Slider fx:id="voiceSlider" layoutX="622.0" layoutY="248.0" majorTickUnit="0.1" max="4.0" min="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="1.0" />
                         <Label layoutX="351.0" layoutY="214.0" text="Volume" />
-                        <Button fx:id="btn_play" layoutX="234.0" layoutY="392.0" mnemonicParsing="false" text="Button" />
+                        <Button fx:id="btn_play" layoutX="234.0" layoutY="392.0" mnemonicParsing="false" text="Play" />
                         <Label layoutX="596.0" layoutY="214.0" text="VoicePitch" />
                         <Button layoutX="315.0" layoutY="451.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                         <ListView fx:id="lv_Sounds" layoutX="31.0" layoutY="305.0" prefHeight="200.0" prefWidth="200.0" />
@@ -83,9 +85,8 @@
                         <Button layoutX="243.0" layoutY="222.0" mnemonicParsing="false" text="j" />
                         <Button layoutX="100.0" layoutY="226.0" mnemonicParsing="false" text="k" />
                           <Label layoutX="66.0" layoutY="180.0" text="Steuerung Kopf" />
-                         <ProgressBar fx:id="batteryPercentage" layoutX="115.0" layoutY="568.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
-                         <Slider fx:id="angleSlider" layoutX="26.0" layoutY="76.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
-
+                         <Slider fx:id="angleSlider" layoutX="805.0" layoutY="59.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
+                        <ComboBox fx:id="colorBox" layoutX="555.0" layoutY="505.0" prefWidth="150.0" />
                      </children>
                   </AnchorPane>
             </content>
