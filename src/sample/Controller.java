@@ -50,7 +50,6 @@ public class Controller {
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
-    private ALConnectionManager alConnectionManager;
 
     public Session getSession() {
         return session;
@@ -62,6 +61,8 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
+
+        //alConnectionManager.
         //Main.logger.info("Dies ist ein Test");
         //setLogger();
     }
@@ -293,7 +294,7 @@ public class Controller {
         connectButton.setDisable(true);
         disconnectButton.setDisable(false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
-        //alAnimatedSpeech.say("You are connected");
+        alAnimatedSpeech.say("You are connected");
 
         if(audioModel==null){
             audioModel = new AudioModel();
