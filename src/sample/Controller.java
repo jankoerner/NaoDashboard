@@ -1,10 +1,10 @@
 package sample;
 
 import com.aldebaran.qi.Application;
+import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
-import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
-import com.aldebaran.qi.helper.proxies.ALBattery;
-import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
+import com.aldebaran.qi.helper.EventCallback;
+import com.aldebaran.qi.helper.proxies.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -295,6 +295,7 @@ public class Controller {
         disconnectButton.setDisable(false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
         alAnimatedSpeech.say("You are connected");
+        ALMemory memory = new ALMemory(session);
 
         if(audioModel==null){
             audioModel = new AudioModel();
@@ -379,6 +380,7 @@ public class Controller {
 
         batteryCharge();
         checkTemperature();
+        checkTouch(memory);
     }
 
     private boolean isNumber(String number){
@@ -455,7 +457,45 @@ public class Controller {
         };
         temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
+
+
+    public void checkTouch(ALMemory memory){
+        try {
+           memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
+                @Override
+                public void onEvent(Float val) throws InterruptedException, CallError {
+                    float touchState = val;
+                    if (touchState == 1.0) {
+                        System.out.println("Front head bumper has been touched.");
+                    }
+                }
+
+            });
+            memory.subscribeToEvent("MiddleTactilTouched", new EventCallback<Float>() {
+                @Override
+                public void onEvent(Float val) throws InterruptedException, CallError {
+                    float touchState = val;
+                    if(touchState == 1.0){
+                        System.out.println("Middle head bumper has been touched");
+                    }
+                }
+            });
+            memory.subscribeToEvent("RearTactilTouched", new EventCallback<Float>() {
+                @Override
+                public void onEvent(Float val) throws InterruptedException, CallError {
+                    float touchState = val;
+                    if(touchState == 1.0){
+                        System.out.println("Rear head bumper has been touched");
+                    }
+
+                }
+            });
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+    }
 }
+
 
 
 
