@@ -351,8 +351,8 @@ public class Controller {
             ledModel = new LEDModel();
         }
         List SoundFiles=null;
-        if(audioModel.getSoundFiles()!=null){
-            SoundFiles = audioModel.getSoundFiles();
+        if(audioModel.getSoundFiles(session)!=null){
+            SoundFiles = audioModel.getSoundFiles(session);
         }
         if (SoundFiles!=null){
             lv_Sounds.setItems(FXCollections.observableList(SoundFiles));

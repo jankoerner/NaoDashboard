@@ -1,5 +1,6 @@
 package sample;
 
+import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAudioPlayer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
@@ -10,11 +11,11 @@ public class AudioModel {
     private Controller controller = new Controller();
     private ALAudioPlayer alAudioPlayer;
 
-    public List getSoundFiles() throws Exception{
+    public List getSoundFiles(Session session) throws Exception{
         List Soundfiles = null;
         try {
             if (alAudioPlayer == null) {
-                alAudioPlayer = new ALAudioPlayer(controller.getSession());
+                alAudioPlayer = new ALAudioPlayer(session);
             }
         } catch (Exception e){
             e.printStackTrace();
