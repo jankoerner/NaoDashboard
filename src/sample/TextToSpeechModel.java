@@ -23,9 +23,7 @@ public class TextToSpeechModel {
 
 
     public List getLanguages(Session session)throws Exception{
-        if (alTextToSpeech == null){
-            alTextToSpeech = new ALTextToSpeech(session);
-        }
+        alTextToSpeech = new ALTextToSpeech(session);
         return alTextToSpeech.getAvailableLanguages();
     }
 }

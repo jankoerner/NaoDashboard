@@ -7,17 +7,29 @@ import javafx.scene.control.Slider;
 import java.util.List;
 
 public class AudioModel {
-    @FXML Slider volumeSlider;
     private Controller controller = new Controller();
     private ALAudioPlayer alAudioPlayer;
 
-    public List getSoundFiles() throws  Exception{
-        if (alAudioPlayer==null){
-            alAudioPlayer = new ALAudioPlayer(controller.getSession());
+    public List getSoundFiles() throws Exception{
+        List Soundfiles = null;
+        try {
+            if (alAudioPlayer == null) {
+                alAudioPlayer = new ALAudioPlayer(controller.getSession());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+        try{
+            // NAOs die keine Soundfiles haben haben auch nicht die Methode "getSoundSetFileNames"
+            // so kommt es zu keiner Exception
+            if (alAudioPlayer.getMethodList().contains("getSoundSetFileNames"))
+            Soundfiles = alAudioPlayer.getSoundSetFileNames("Aldebaran");
 
-        List Soundfiles = alAudioPlayer.getSoundSetFileNames("Aldebaran");
+        } catch (com.aldebaran.qi.CallError e){
+            e.printStackTrace();
+        }
         return Soundfiles;
+
     }
 
     public void playSound(String filename/*,float Volume*/){
@@ -26,7 +38,7 @@ public class AudioModel {
             if (alAudioPlayer == null) {
                 alAudioPlayer = new ALAudioPlayer(controller.getSession());
             }
-            //alAudioPlayer.setMasterVolume(Volume);
+            //alAudioPlayer.setMasterVolume(Volume); //
             alAudioPlayer.playSoundSetFile(filename);
         } catch (Exception e){
             e.printStackTrace();

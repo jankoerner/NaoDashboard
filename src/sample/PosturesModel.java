@@ -14,9 +14,7 @@ public class PosturesModel {
     private ALRobotPosture robotPosture;
     private Image image;
     public void makePosture(Session session, String posture) throws Exception{
-        if (robotPosture == null){
-            robotPosture = new ALRobotPosture(session);
-        }
+        robotPosture = new ALRobotPosture(session);
 
         switch (posture){
             case"Crouch":
@@ -50,10 +48,9 @@ public class PosturesModel {
     }
 
     public List getPostures(Session session)throws Exception{
-        if (robotPosture == null){
-            robotPosture = new ALRobotPosture(session);
-        }
+        robotPosture = new ALRobotPosture(session);
         return robotPosture.getPostureList();
+
     }
 
     public void changeImage(String posture, ImageView imageView) {
