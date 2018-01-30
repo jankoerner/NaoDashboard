@@ -1,13 +1,13 @@
 package sample;
 
 import com.aldebaran.qi.Application;
-import com.aldebaran.qi.QiService;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
 import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
+import com.aldebaran.qi.helper.proxies.ALConnectionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,7 +32,7 @@ public class Controller {
     @FXML ToggleGroup mode;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech;
-    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton;
+    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -62,8 +62,10 @@ public class Controller {
 
     }
 
-    public void initialize() {
+    public void initialize()throws Exception {
         read();
+
+        //alConnectionManager.
         //Main.logger.info("Dies ist ein Test");
         //setLogger();
     }
@@ -348,14 +350,22 @@ public class Controller {
         if (ledModel == null){
             ledModel = new LEDModel();
         }
-        /*List SoundFiles = audioModel.getSoundFiles();
-        if (!SoundFiles.isEmpty()){
+        List SoundFiles=null;
+        if(audioModel.getSoundFiles()!=null){
+            SoundFiles = audioModel.getSoundFiles();
+        }
+        if (SoundFiles!=null){
             lv_Sounds.setItems(FXCollections.observableList(SoundFiles));
             lv_Sounds.setDisable(false);
+            lv_Sounds.setVisible(true);
+            btn_play.setVisible(true);
+            btn_play.setDisable(false);
         }else{
+            btn_play.setDisable(true);
+            btn_play.setVisible(false);
             lv_Sounds.setDisable(true);
             lv_Sounds.setVisible(false);
-        }*/
+        }
 
         List ledList1 = ledModel.getLEDs(session);
         ObservableList ledList = FXCollections.observableList(ledList1);
