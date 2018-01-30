@@ -31,16 +31,13 @@ public class Main extends Application {
         // Platz der Buttons soll zur Laufzeit berechnet werden:
         // old X Position/1366 = new X Position/primaryScreenBounds.getMinX()
         // also: newXPosition = (oldXPosition*primaryScreenBounds.getMinX)/1366
+        scene = new Scene(root,1080,720);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setMaximized(true);
         primaryStage.getIcons().add(new Image("file:/home/vl/IdeaProjects/NaoDashboard/default_app.png"));
 
-        //for (Node test:anchor.getChildren()) {
-        //    test.setLayoutX((test.getLayoutX()*primaryScreenBounds.getMinX())/1366);
-        //    test.setLayoutY((test.getLayoutY()*primaryScreenBounds.getMinY())/768);
-        //}
-        //primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("default_app.png")));
+
     }
 
     public static void main(String[] args) {

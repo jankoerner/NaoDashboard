@@ -1,5 +1,6 @@
 package sample;
 
+import com.aldebaran.qi.Application;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALBattery;
@@ -19,22 +20,25 @@ import javafx.scene.text.Text;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Controller {
-    @FXML ComboBox cb_LEDS;
     @FXML ToggleGroup mode;
-    @FXML Slider velocitySlider, volumeSlider, voiceSlider;
+    @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
     @FXML Circle connectCircle, batteryCircle;
-    @FXML ComboBox dropDownPostures, dropDownLanguages;
+    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText;
     @FXML ListView lv_Sounds;
+    @FXML ProgressBar batteryPercentage;
+
+
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
@@ -58,8 +62,6 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
-
-        //alConnectionManager.
         //Main.logger.info("Dies ist ein Test");
         //setLogger();
     }
@@ -138,7 +140,7 @@ public class Controller {
 
     }
 
-    public void move()throws Exception{
+    public void turn()throws Exception{
        if (session.isConnected()){
            if (moveBodyModel == null){
                moveBodyModel = new MoveBodyModel();
@@ -170,10 +172,13 @@ public class Controller {
                     || keyEvent.getText().equals("d")){
 
                 float velocity = (float) velocitySlider.getValue();
+                float angle = (float) angleSlider.getValue();
+                float angleRound = round(angle, 5);
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity);
+                    moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity,(float)((angleRound)*(Math.PI/180)));
                 } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
-                    moveBodyModel.moveKeyboard(session, "stop", velocity);
+                    moveBodyModel.moveKeyboard(session, "stop", velocity,angleRound);
+                    angleSlider.valueProperty().set(0);
                     if (posturesModel == null) {
                         posturesModel = new PosturesModel();
                     }
@@ -200,10 +205,11 @@ public class Controller {
                textToSpeechModel = new TextToSpeechModel();
            }
            if (textToSpeech.getText() != null){
+               Float volume = (float) volumeSlider.getValue();
                String language =(String) dropDownLanguages.getValue();
-               float volume = (float) volumeSlider.getValue();
-               float voice = (float) voiceSlider.getValue();
-               textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice);
+               String voice = String.valueOf((int)voiceSlider.getValue());
+               String speed = String.valueOf((int)voiceSpeedSlider.getValue());
+               textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice, speed);
            }
        }
 
@@ -253,6 +259,30 @@ public class Controller {
                 cameraModel = new CameraModel();
             }
             cameraModel.takePhoto(imageView, session);
+        }
+    }
+
+    public void changeColor()throws Exception{
+        ledModel = new LEDModel();
+        if(colorBox.getValue() != null){
+            ledModel.changeColor(session, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
+        }
+
+    }
+
+    public void changeChoice(){
+        String selcetedGroup = cb_LEDS.getValue().toString();
+        if (selcetedGroup.equals("BrainLEDs") || selcetedGroup.equals("EarLEDs") || selcetedGroup.equals("Left Ear LEDs") || selcetedGroup.equals("Right Ear LEDs")){
+            Object[] colorArray = {"On","Off"};
+            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+            colorBox.setValue("");
+            colorBox.setItems(colorList);
+
+        }else {
+            Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
+            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+            colorBox.setValue("");
+            colorBox.setItems(colorList);
         }
     }
 
@@ -332,11 +362,27 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-
-        moveBodyModel.mode(session,"Relax");
+        boolean isWakeUp = moveBodyModel.getMode(session);
         List list = mode.getToggles();
-        Toggle toggle = (Toggle) list.get(1);
-        mode.selectToggle(toggle);
+        Toggle toggle;
+        if (isWakeUp){
+            moveBodyModel.mode(session,"Stand");
+            toggle = (Toggle) list.get(0);
+            mode.selectToggle(toggle);
+        }else{
+            moveBodyModel.mode(session,"Relax");
+            toggle = (Toggle) list.get(1);
+            mode.selectToggle(toggle);
+        }
+
+        if (ledModel == null){
+            ledModel = new LEDModel();
+        }
+        ObservableList ledGroups = FXCollections.observableArrayList(ledModel.getLEDs(session));
+        cb_LEDS.setItems(ledGroups);
+        Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
+        ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+        colorBox.setItems(colorList);
 
         batteryCharge();
         checkTemperature();
@@ -353,6 +399,10 @@ public class Controller {
             return false;
         }
         return d >= (-180) && d <= 180;
+    }
+
+    private float round(double i, int v){
+        return (float) (Math.round(i/v) * v);
     }
 
     private void batteryCharge(){
@@ -374,8 +424,8 @@ public class Controller {
                     } else {
                         batteryCircle.setFill(Color.BLACK);
                         System.out.println("No battery detected.");
-
                     }
+                    batteryPercentage.progressProperty().set(alBattery.getBatteryCharge() / 100);
                 }catch(Exception e) {
                     e.printStackTrace();
                 }

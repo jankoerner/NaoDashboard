@@ -10,22 +10,16 @@ import java.util.List;
 
 public class TextToSpeechModel {
     private ALTextToSpeech alTextToSpeech;
-    private ALAnimatedSpeech alAnimatedSpeech;
 
     public static void main(String[] args) {
 
     }
 
-    public void say(Session session, String text, float volume, String language, float pitch) throws Exception {
-        if (alTextToSpeech == null) {
-            alTextToSpeech = new ALTextToSpeech(session);
-        }
-        alTextToSpeech.setVolume(volume);
-        alTextToSpeech.setParameter("pitchShift", pitch );
-        System.out.println(alTextToSpeech.getAvailableVoices());
-        //alAnimatedSpeech.say(text);
-        alTextToSpeech.say(text, language);
-        }
+    public void say(Session session, String text, float volume, String language, String pitch, String speed) throws Exception {
+        alTextToSpeech= new ALTextToSpeech(session);
+        alTextToSpeech.async().setVolume(volume);
+        alTextToSpeech.say("\\rspd="+speed+"\\\\vct="+pitch+"\\"+text,language);
+    }
 
 
     public List getLanguages(Session session)throws Exception{
