@@ -38,9 +38,6 @@ public class Controller {
     @FXML ListView lv_Sounds;
     @FXML ProgressBar batteryPercentage;
 
-    public Button getW(){
-        return w;
-    }
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -490,7 +487,7 @@ public class Controller {
 
     private void setBatteryPercentage(double percentage){
         batteryPercentage.setProgress(percentage/100);
-        }
+    }
 
     private void checkTemperature(){
             Timer temperatureTimer = new Timer();
@@ -523,6 +520,12 @@ public class Controller {
         temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 
+    public void test() throws Exception{
+        if (moveBodyModel == null){
+            moveBodyModel = new MoveBodyModel();
+        }
+        moveBodyModel.dab(session);
+    }
 
     public void checkTouch(ALMemory memory){
         try {
@@ -531,7 +534,11 @@ public class Controller {
                 public void onEvent(Float val) throws InterruptedException, CallError {
                     float touchState = val;
                     if (touchState == 1.0) {
-                        System.out.println("Front head bumper has been touched.");
+                           try {
+                               test();
+                           }catch (Exception e){
+                               System.out.println(e);
+                           }
                     }
                 }
 
