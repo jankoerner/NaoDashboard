@@ -5,6 +5,8 @@ import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.*;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -30,7 +33,7 @@ public class Controller {
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
     @FXML Circle connectCircle, batteryCircle;
-    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP, cb_Port;
+    @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText;
@@ -41,7 +44,7 @@ public class Controller {
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private Session session;
+    private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
@@ -50,6 +53,7 @@ public class Controller {
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
     private ALConnectionManager alConnectionManager;
+    private ALMemory memory;
     private static String[] IP = new String[5];
     private static String[] Port = new String[5];
 
@@ -124,8 +128,6 @@ public class Controller {
                     IP[I] = reader.readLine();
                 }
                 cb_IP.setItems(FXCollections.observableArrayList(IP));
-                cb_Port.setItems(FXCollections.observableArrayList(Port));
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -146,6 +148,16 @@ public class Controller {
         }
     }
 
+    @FXML
+    private void setTextFields(ActionEvent actionEvent){
+       if((actionEvent.getSource().equals(cb_IP))){
+            Integer Selected = cb_IP.getSelectionModel().getSelectedIndex();
+            tx_IP.setText(cb_IP.getSelectionModel().getSelectedItem().toString());
+            //cb_IP.getSelectionModel().clearSelection(); //wäre nice aber löst actionevent neu aus und führt zu fehler -> informieren wie man dies unterbinden kann
+            tx_Port.setText(Port[Selected]);
+        }
+    }
+
 
     public void btn_ConnectIsPressed() throws Exception {
         if (connectionModel == null){
@@ -156,7 +168,7 @@ public class Controller {
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
                 if (session == null){
-                    session = new Session(connectionModel.getNaoUrl());                    ///TODO DISCONNECT & RECONNECT TESTEN!
+                    session = new Session(connectionModel.getNaoUrl());
                 }
                 if (!session.isConnected()){
                     session.connect(connectionModel.getNaoUrl()).get();
@@ -456,7 +468,7 @@ public class Controller {
 
         batteryCharge();
         checkTemperature();
-        checkTouch(memory);
+        checkTouch();
     }
 
     private boolean isNumber(String number){
@@ -506,7 +518,6 @@ public class Controller {
             };
             batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
 
-
     }
 
     private void checkTemperature(){
@@ -541,8 +552,9 @@ public class Controller {
     }
 
 
-    public void checkTouch(ALMemory memory){
+    public void checkTouch(){
         try {
+            ALMemory memory = new ALMemory(getSession());
            memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
                 @Override
                 public void onEvent(Float val) throws InterruptedException, CallError {
