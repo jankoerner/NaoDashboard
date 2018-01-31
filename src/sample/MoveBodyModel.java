@@ -17,7 +17,6 @@ public class MoveBodyModel {
             switch (direction) {
             case "w":
                 Controller controller = new Controller();
-                System.out.println(controller.getW());
                 alMotion.move(velocity, 0f, angle);
                 break;
             case "s":
