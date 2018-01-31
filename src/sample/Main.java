@@ -34,8 +34,6 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.getIcons().add(new Image("file:./default_app.png"));
-
-
     }
 
     public static void main(String[] args) {

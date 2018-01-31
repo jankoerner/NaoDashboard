@@ -8,6 +8,7 @@ public class MoveBodyModel {
     public static void main(String[] args) {
 
     }
+    private Controller controller;
     private ALMotion alMotion;
 
 

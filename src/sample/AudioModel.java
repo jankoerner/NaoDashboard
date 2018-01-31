@@ -14,9 +14,7 @@ public class AudioModel {
     public List getSoundFiles(Session session) throws Exception{
         List Soundfiles = null;
         try {
-            if (alAudioPlayer == null) {
-                alAudioPlayer = new ALAudioPlayer(session);
-            }
+            alAudioPlayer = new ALAudioPlayer(session);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -36,9 +34,7 @@ public class AudioModel {
     public void playSound(String filename/*,float Volume*/){
 
         try {
-            if (alAudioPlayer == null) {
-                alAudioPlayer = new ALAudioPlayer(controller.getSession());
-            }
+            alAudioPlayer = new ALAudioPlayer(controller.getSession());
             //alAudioPlayer.setMasterVolume(Volume); //
             alAudioPlayer.playSoundSetFile(filename);
         } catch (Exception e){
