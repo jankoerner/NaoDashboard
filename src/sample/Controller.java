@@ -44,7 +44,7 @@ public class Controller {
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private static Session session;
+    private Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
@@ -74,7 +74,6 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
-        //alConnectionManager.
         //Main.logger.info("Dies ist ein Test");
         //setLogger();
     }
@@ -168,7 +167,7 @@ public class Controller {
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
                 if (session == null){
-                    session = new Session(connectionModel.getNaoUrl());
+                    session = new Session(connectionModel.getNaoUrl());                    ///TODO DISCONNECT & RECONNECT TESTEN!
                 }
                 if (!session.isConnected()){
                     session.connect(connectionModel.getNaoUrl()).get();
@@ -223,10 +222,11 @@ public class Controller {
         float velocity = (float) velocitySlider.getValue();
         float angle = (float) angleSlider.getValue();
         float angleRound = round(angle, 5);
+        Button button = (Button) mouseEvent.getSource();
         if (session.isConnected()){
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {
-                Button button = (Button) mouseEvent.getSource();
+
                 moveBodyModel.moveKeyboard(session,button.getText(),velocity,(float)((angleRound)*(Math.PI/180)));
             }else if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_RELEASED))
             {
@@ -339,6 +339,9 @@ public class Controller {
             }
             cameraModel.takePhoto(imageView, session);
         }
+    }
+    public void colorView(){
+        System.out.println(colorBox.valueProperty().get());
     }
 
     public void changeColor()throws Exception{
@@ -465,10 +468,10 @@ public class Controller {
         Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
         ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
         colorBox.setItems(colorList);
-
+        memory = new ALMemory(session);
         batteryCharge();
         checkTemperature();
-        checkTouch();
+        checkTouch(memory);
     }
 
     private boolean isNumber(String number){
@@ -506,8 +509,7 @@ public class Controller {
                                 batteryCircle.setFill(Color.BLACK);
                                 System.out.println("No battery detected.");
                             }
-                            ObservableValue<Integer> obsInt = new SimpleIntegerProperty((alBattery.getBatteryCharge()/100)).asObject();
-                            batteryPercentage.progressProperty().bind(obsInt);
+                            setBatteryPercentage(alBattery.getBatteryCharge());
                         }
 
 
@@ -519,6 +521,10 @@ public class Controller {
             batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
 
     }
+
+    private void setBatteryPercentage(double percentage){
+        batteryPercentage.setProgress(percentage/100);
+        }
 
     private void checkTemperature(){
             Timer temperatureTimer = new Timer();
@@ -552,9 +558,8 @@ public class Controller {
     }
 
 
-    public void checkTouch(){
+    public void checkTouch(ALMemory memory){
         try {
-            ALMemory memory = new ALMemory(getSession());
            memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
                 @Override
                 public void onEvent(Float val) throws InterruptedException, CallError {

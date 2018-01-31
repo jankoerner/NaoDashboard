@@ -1,9 +1,7 @@
 package sample;
 
 
-import com.aldebaran.qi.Application;
 import com.aldebaran.qi.Session;
-import com.aldebaran.qi.helper.proxies.ALAnimatedSpeech;
 import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 
 import java.util.List;
