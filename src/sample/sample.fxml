@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -54,7 +53,7 @@
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640" prefWidth="1080">
                                        <children>
                                            <Label layoutX="30.0" layoutY="20.0" text="Steuerung Fortbewegung" />
-                                           <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="690.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true"></ImageView>
+                                           <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="690.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
                                            <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="122.0" layoutY="93.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
                                            <Label layoutX="152.0" layoutY="124.0" text="Velocity" />
                                            <TextField fx:id="degreeField" layoutX="25.0" layoutY="181.0" prefHeight="26.0" prefWidth="42.0" promptText="Degree" />
@@ -89,13 +88,13 @@
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
                                           <Slider fx:id="volumeSlider" layoutX="588.0" layoutY="249.0" majorTickUnit="0.1" max="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.1" />
-                                           <ListView fx:id="lv_Sounds" layoutX="30.0" layoutY="405.0" prefHeight="200.0" prefWidth="200.0" />
+                                           <ListView fx:id="lv_Sounds" layoutX="14.0" layoutY="208.0" prefHeight="200.0" prefWidth="200.0" />
                                            <Slider fx:id="voiceSpeedSlider" layoutX="358.0" layoutY="249.0" majorTickUnit="0.1" max="400.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
                                            <Button id="say" fx:id="sayButton" layoutX="586.0" layoutY="330.0" mnemonicParsing="false" onAction="#say" text="Say" />
                                            <ComboBox fx:id="dropDownLanguages" layoutX="410.0" layoutY="330.0" prefHeight="26.0" prefWidth="171.0" promptText="Select Language" />
                                            <Slider fx:id="voiceSlider" layoutX="384.0" layoutY="248.0" majorTickUnit="0.1" max="4.0" min="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="1.0" />
                                            <Label layoutX="571.0" layoutY="227.0" text="Volume" />
-                                           <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" onAction="#playSounds" text="Button" />
+                                           <Button fx:id="btn_play" layoutX="214.0" layoutY="382.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
                                            <Label layoutX="366.0" layoutY="227.0" text="VoicePitch" />
                                            <TextArea fx:id="textToSpeech" layoutX="410.0" layoutY="248.0" prefHeight="77.0" prefWidth="171.0" promptText="Enter Something and let the Nao say it" />
 
@@ -108,6 +107,11 @@
                                        <children>
                                           <Button layoutX="77.0" layoutY="44.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                                            <ImageView fx:id="photoView" fitHeight="150.0" fitWidth="200.0" layoutX="769.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ToggleButton layoutX="512.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedBallTracker" text="Enabled">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="redBallTracker" />
+                                             </toggleGroup></ToggleButton>
+                                          <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedBallTracker" selected="true" text="Disabled" toggleGroup="$redBallTracker" />
                                        </children>
                                     </AnchorPane>
                                 </content>

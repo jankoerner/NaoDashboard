@@ -28,7 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Controller {
-    @FXML ToggleGroup mode;
+    @FXML ToggleGroup mode, redBallTracker;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
@@ -56,6 +56,7 @@ public class Controller {
     private ALMemory memory;
     private static String[] IP = new String[5];
     private static String[] Port = new String[5];
+    private static boolean redBallActivated = false;
 
     private String[] getPort(){
         return Port;
@@ -487,6 +488,16 @@ public class Controller {
         return (float) (Math.round(i/v) * v);
     }
 
+
+    public void setRedBallTracker(){
+        ToggleButton toggle =(ToggleButton) redBallTracker.getSelectedToggle();
+        if (toggle.getText().equals("Enabled")){
+            redBallActivated = true;
+        }else {
+            redBallActivated=false;
+        }
+    }
+
     private void batteryCharge(){
             Timer batteryTimer = new Timer();
             TimerTask checkBattery = new TimerTask() {
@@ -560,6 +571,7 @@ public class Controller {
         moveBodyModel.frontTouched(session);
     }
     
+
 
     public void checkTouch(ALMemory memory){
         try {
