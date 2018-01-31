@@ -13,6 +13,7 @@ public class MoveBodyModel {
 
     public void moveKeyboard(Session session, String direction, Float velocity, Float angle)throws Exception {
         alMotion = new ALMotion(session);
+        System.out.println(direction);
             switch (direction) {
             case "w":
                 alMotion.move(velocity, 0f, angle);
