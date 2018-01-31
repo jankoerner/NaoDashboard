@@ -16,7 +16,6 @@ public class MoveBodyModel {
         System.out.println(direction);
             switch (direction) {
             case "w":
-                Controller controller = new Controller();
                 alMotion.move(velocity, 0f, angle);
                 break;
             case "s":
@@ -109,5 +108,11 @@ public class MoveBodyModel {
     public boolean getMode(Session session) throws Exception{
         alMotion = new ALMotion(session);
         return alMotion.robotIsWakeUp();
+    }
+
+    public void dab(Session session)throws Exception{
+        alMotion = new ALMotion(session);
+        alMotion.changeAngles("HeadPitch", 1.75, 1f);
+        System.out.println(alMotion.getAngles("Arm", true));
     }
 }

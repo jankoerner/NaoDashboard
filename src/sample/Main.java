@@ -33,7 +33,7 @@ public class Main extends Application {
         scene = new Scene(root,1080,720);
         primaryStage.setScene(scene);
         primaryStage.show();
-        //primaryStage.getIcons().add(new Image("file:/home/vl/IdeaProjects/NaoDashboard/default_app.png"));
+        primaryStage.getIcons().add(new Image("file:./default_app.png"));
 
 
     }
