@@ -22,8 +22,8 @@
     <children>
       <Label layoutX="15.0" layoutY="685.0" text="Akkustand:" />
       <Circle fx:id="batteryCircle" fill="#1fff5e" layoutX="103.0" layoutY="693.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="200.0" layoutY="685.0" text="Körpertemperatur:" />
-      <Text fx:id="temperatureText" layoutX="334.0" layoutY="696.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+      <Label layoutX="267.0" layoutY="683.0" text="Körpertemperatur:" />
+      <Text fx:id="temperatureText" layoutX="389.0" layoutY="698.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
       <TabPane prefHeight="680.0" prefWidth="1080.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Connection">
@@ -57,7 +57,7 @@
                                            <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="122.0" layoutY="93.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
                                            <Label layoutX="152.0" layoutY="124.0" text="Velocity" />
                                            <TextField fx:id="degreeField" layoutX="25.0" layoutY="181.0" prefHeight="26.0" prefWidth="42.0" promptText="Degree" />
-                                           <ComboBox fx:id="cb_LEDS" layoutX="429.0" layoutY="514.0" prefWidth="150.0" />
+                                           <ComboBox fx:id="cb_LEDS" layoutX="429.0" layoutY="514.0" onAction="#changeChoice" prefWidth="150.0" />
                                            <ComboBox fx:id="colorBox" layoutX="579.0" layoutY="514.0" onAction="#changeColor" prefWidth="150.0" promptText="Select Color" />
                                            <Button layoutX="80.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="m" />
                                            <Button layoutX="121.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="l" />
@@ -79,6 +79,7 @@
                                            <ComboBox fx:id="dropDownPostures" layoutX="698.0" layoutY="343.0" onAction="#postures" prefHeight="26.0" prefWidth="171.0" promptText="Select Posture" visibleRowCount="5" />
                                            <Button fx:id="poseButton" layoutX="869.0" layoutY="343.0" mnemonicParsing="false" onAction="#postures" text="Pose" />
                                            <Slider fx:id="angleSlider" layoutX="18.0" layoutY="57.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
+                                          <Button fx:id="test" layoutX="442.0" layoutY="300.0" mnemonicParsing="false" onAction="#test" text="test" />
                                        </children></AnchorPane>
                               </content>
                             </Tab>
@@ -93,7 +94,7 @@
                                            <ComboBox fx:id="dropDownLanguages" layoutX="410.0" layoutY="330.0" prefHeight="26.0" prefWidth="171.0" promptText="Select Language" />
                                            <Slider fx:id="voiceSlider" layoutX="384.0" layoutY="248.0" majorTickUnit="0.1" max="4.0" min="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="1.0" />
                                            <Label layoutX="571.0" layoutY="227.0" text="Volume" />
-                                           <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" text="Button" />
+                                           <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" onAction="#playSounds" text="Button" />
                                            <Label layoutX="366.0" layoutY="227.0" text="VoicePitch" />
                                            <TextArea fx:id="textToSpeech" layoutX="410.0" layoutY="248.0" prefHeight="77.0" prefWidth="171.0" promptText="Enter Something and let the Nao say it" />
 
@@ -124,8 +125,8 @@
           </Tab>
         </tabs>
       </TabPane>
-        <ProgressBar fx:id="batteryPercentage" layoutX="516.0" layoutY="681.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
-        <Circle fx:id="connectCircle" fill="#f01414" layoutX="447.0" layoutY="691.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="355.0" layoutY="683.0" text="Connected:" />
+        <ProgressBar fx:id="batteryPercentage" layoutX="121.0" layoutY="683.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
+        <Circle fx:id="connectCircle" fill="#f01414" layoutX="548.0" layoutY="691.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="446.0" layoutY="683.0" text="Connected:" />
     </children>
 </AnchorPane>

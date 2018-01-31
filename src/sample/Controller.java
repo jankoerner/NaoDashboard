@@ -205,11 +205,10 @@ public class Controller {
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-
         if (session.isConnected()){
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {   Button button = (Button) mouseEvent.getSource();
-                moveBodyModel.moveKeyboard(session,button.getText());
+                moveBodyModel.moveHeadButtons(session,button.getText());
 
             }
         }
@@ -339,9 +338,6 @@ public class Controller {
             }
             cameraModel.takePhoto(imageView, session);
         }
-    }
-    public void colorView(){
-        System.out.println(colorBox.valueProperty().get());
     }
 
     public void changeColor()throws Exception{
