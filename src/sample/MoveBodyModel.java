@@ -2,22 +2,22 @@ package sample;
 
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALMotion;
+import javafx.scene.control.Button;
 
 public class MoveBodyModel {
     public static void main(String[] args) {
 
     }
     private ALMotion alMotion;
-    private boolean up = false;
-    private boolean down = false;
-    private boolean left = false;
-    private boolean right = false;
+
 
     public void moveKeyboard(Session session, String direction, Float velocity, Float angle)throws Exception {
         alMotion = new ALMotion(session);
         System.out.println(direction);
             switch (direction) {
             case "w":
+                Controller controller = new Controller();
+                System.out.println(controller.getW());
                 alMotion.move(velocity, 0f, angle);
                 break;
             case "s":

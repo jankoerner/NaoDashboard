@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -37,6 +38,9 @@ public class Controller {
     @FXML ListView lv_Sounds;
     @FXML ProgressBar batteryPercentage;
 
+    public Button getW(){
+        return w;
+    }
 
     private BufferedWriter writer;
     private FileInputStream file;
@@ -49,6 +53,7 @@ public class Controller {
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
+    private ALMemory memory;
 
     public Session getSession() {
         return session;
@@ -182,10 +187,11 @@ public class Controller {
         float velocity = (float) velocitySlider.getValue();
         float angle = (float) angleSlider.getValue();
         float angleRound = round(angle, 5);
+        Button button = (Button) mouseEvent.getSource();
         if (session.isConnected()){
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {
-                Button button = (Button) mouseEvent.getSource();
+
                 moveBodyModel.moveKeyboard(session,button.getText(),velocity,(float)((angleRound)*(Math.PI/180)));
             }else if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_RELEASED))
             {
@@ -298,6 +304,9 @@ public class Controller {
             }
             cameraModel.takePhoto(imageView, session);
         }
+    }
+    public void colorView(){
+        System.out.println(colorBox.valueProperty().get());
     }
 
     public void changeColor()throws Exception{
@@ -424,7 +433,7 @@ public class Controller {
         Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
         ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
         colorBox.setItems(colorList);
-
+        memory = new ALMemory(session);
         batteryCharge();
         checkTemperature();
         checkTouch(memory);
@@ -465,8 +474,7 @@ public class Controller {
                                 batteryCircle.setFill(Color.BLACK);
                                 System.out.println("No battery detected.");
                             }
-                            ObservableValue<Integer> obsInt = new SimpleIntegerProperty((alBattery.getBatteryCharge()/100)).asObject();
-                            batteryPercentage.progressProperty().bind(obsInt);
+                            setBatteryPercentage(alBattery.getBatteryCharge());
                         }
 
 
@@ -479,6 +487,10 @@ public class Controller {
 
 
     }
+
+    private void setBatteryPercentage(double percentage){
+        batteryPercentage.setProgress(percentage/100);
+        }
 
     private void checkTemperature(){
             Timer temperatureTimer = new Timer();

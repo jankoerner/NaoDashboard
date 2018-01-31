@@ -41,9 +41,9 @@
           </Tab>
           <Tab text="NAO">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="853.0" prefWidth="1920.0" >
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="853.0" prefWidth="1920.0">
                      <children>
-                        <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="690.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="690.0" layoutY="180.0" pickOnBounds="true" preserveRatio="true">
                            <viewport>
                               <Rectangle2D />
                            </viewport>
@@ -57,7 +57,7 @@
                         <ComboBox fx:id="dropDownLanguages" layoutX="410.0" layoutY="330.0" prefHeight="26.0" prefWidth="171.0" promptText="Select Language" />
                         <Slider fx:id="voiceSlider" layoutX="384.0" layoutY="248.0" majorTickUnit="0.1" max="4.0" min="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="1.0" />
                         <Label layoutX="571.0" layoutY="227.0" text="Volume" />
-                        <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" text="Button" />
+                        <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" onAction="#playSounds" text="Button" />
                         <Label layoutX="366.0" layoutY="227.0" text="VoicePitch" />
                         <Button layoutX="971.0" layoutY="514.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                         <ListView fx:id="lv_Sounds" layoutX="30.0" layoutY="405.0" prefHeight="200.0" prefWidth="200.0" />
@@ -69,10 +69,10 @@
                         </ToggleButton>
                         <ToggleButton layoutX="496.0" layoutY="23.0" mnemonicParsing="false" onAction="#mode" selected="true" text="Relax" toggleGroup="$mode" />
                         <Button layoutX="71.0" layoutY="181.0" mnemonicParsing="false" onAction="#turn" text="Turn" />
-                        <Button layoutX="82.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="d" />
-                        <Button layoutX="57.0" layoutY="96.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="w" />
-                        <Button layoutX="59.0" layoutY="144.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="s" />
-                        <Button layoutX="31.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="a" />
+                        <Button fx:id="d" layoutX="82.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="d" />
+                        <Button fx:id="w" layoutX="57.0" layoutY="96.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="w" />
+                        <Button fx:id="s" layoutX="59.0" layoutY="144.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="s" />
+                        <Button fx:id="a" layoutX="31.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" text="a" />
                           <Label layoutX="30.0" layoutY="20.0" text="Steuerung Fortbewegung" />
                         <TextField fx:id="degreeField" layoutX="25.0" layoutY="181.0" prefHeight="26.0" prefWidth="42.0" promptText="Degree" />
                           <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="122.0" layoutY="93.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
@@ -84,7 +84,7 @@
                         <Button layoutX="82.0" layoutY="317.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" text="k" />
                           <Label layoutX="44.0" layoutY="219.0" text="Steuerung Kopf" />
                          <Slider fx:id="angleSlider" layoutX="10.0" layoutY="54.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
-                         <ComboBox fx:id="colorBox" layoutX="579.0" layoutY="514.0" onAction="#changeColor" prefWidth="150.0" promptText="Select Color" />
+                         <ComboBox fx:id="colorBox" layoutX="579.0" layoutY="514.0" onAction="#changeColor" onContextMenuRequested="#colorView" prefWidth="150.0" promptText="Select Color" />
                         <Slider fx:id="voiceSpeedSlider" layoutX="358.0" layoutY="249.0" majorTickUnit="0.1" max="400.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
 
                      </children>
