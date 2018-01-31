@@ -553,12 +553,13 @@ public class Controller {
         temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 
-    public void test() throws Exception{
+    public void dance() throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        moveBodyModel.dab(session);
+        moveBodyModel.frontTouched(session);
     }
+    
 
     public void checkTouch(ALMemory memory){
         try {
@@ -568,7 +569,7 @@ public class Controller {
                     float touchState = val;
                     if (touchState == 1.0) {
                            try {
-                               test();
+                               dance();
                            }catch (Exception e){
                                System.out.println(e);
                            }
