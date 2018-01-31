@@ -56,14 +56,11 @@ public class Controller {
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
     private ALConnectionManager alConnectionManager;
-    private ALMemory memory;
+    private CheckerModel checkerModel = new CheckerModel();
     private static String[] IP = new String[5];
     private static String[] Port = new String[IP.length];
     private static String[] URL = new String[Port.length];
 
-    public void BaseGui(){
-
-    }
 
     private String[] getPort(){
         return Port;
@@ -276,7 +273,7 @@ public class Controller {
         if (session.isConnected()){
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {   Button button = (Button) mouseEvent.getSource();
-                moveBodyModel.moveKeyboard(session,button.getText());
+                moveBodyModel.moveHeadButtons(session,button.getText());
                 Log("Nao moves his head. ACTION");
             }
         }
@@ -293,6 +290,7 @@ public class Controller {
         if (session.isConnected()){
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {
+
                 moveBodyModel.moveKeyboard(session,button.getText(),velocity,(float)((angleRound)*(Math.PI/180)));
             }else if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_RELEASED))
             {
@@ -379,6 +377,8 @@ public class Controller {
         colorBox.getItems().removeAll(colorBox.getItems());
         connectButton.setDisable(false);
         disconnectButton.setDisable(true);
+        checkerModel.killCheckers();
+
     }
 
 
@@ -417,9 +417,6 @@ public class Controller {
             }
             cameraModel.takePhoto(imageView, session);
         }
-    }
-    public void colorView(){
-        System.out.println(colorBox.valueProperty().get());
     }
 
     public void changeColor()throws Exception{
@@ -547,10 +544,10 @@ public class Controller {
         Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
         ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
         colorBox.setItems(colorList);
-        memory = new ALMemory(session);
-        batteryCharge();
-        checkTemperature();
-        checkTouch(memory);
+        checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage);
+        checkerModel.checkTemperature(session, temperatureText);
+        checkerModel.checkTouch(session);
+
     }
 
     private boolean isNumber(String number){
@@ -571,108 +568,16 @@ public class Controller {
         return (float) (Math.round(i/v) * v);
     }
 
-    private void batteryCharge(){
-            Timer batteryTimer = new Timer();
-            TimerTask checkBattery = new TimerTask() {
-                @Override
-                public void run(){
-                    try {
-                        if (session.isConnected()){
-                            ALBattery alBattery = new ALBattery(session);
-                            if (alBattery.getBatteryCharge() > 75) {
-                                batteryCircle.setFill(Color.GREEN);
-                            } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
-                                batteryCircle.setFill(Color.ORANGE);
-                            } else if (alBattery.getBatteryCharge() < 30 & alBattery.getBatteryCharge() != 0) {
-                                batteryCircle.setFill(Color.RED);
-                            } else {
-                                batteryCircle.setFill(Color.BLACK);
-                                System.out.println("No battery detected.");
-                            }
-                            setBatteryPercentage(alBattery.getBatteryCharge());
-                        }
 
 
-                    }catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
 
-    }
-
-    private void setBatteryPercentage(double percentage){
-        batteryPercentage.setProgress(percentage/100);
+    public void test() throws Exception{
+        if (moveBodyModel == null){
+            moveBodyModel = new MoveBodyModel();
         }
-
-    private void checkTemperature(){
-            Timer temperatureTimer = new Timer();
-            TimerTask checkTemp = new TimerTask() {
-                @Override
-                public void run() {
-                    try{
-                        if (session.isConnected()){
-                            ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
-                            if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
-                                ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
-                                if(tempEvent.get(0).equals(1)){
-                                    temperatureText.setText("Warm");
-                                    temperatureText.setFill(Color.ORANGE);
-                                }else{
-                                    temperatureText.setText("Heiß");
-                                    temperatureText.setFill(Color.RED);
-                                }
-                            }else{
-                                temperatureText.setText("Kühl");
-                                temperatureText.setFill(Color.GREEN);
-                            }
-                        }
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
+        moveBodyModel.dab(session);
     }
 
-
-    public void checkTouch(ALMemory memory){
-        try {
-           memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
-                @Override
-                public void onEvent(Float val) throws InterruptedException, CallError {
-                    float touchState = val;
-                    if (touchState == 1.0) {
-                        System.out.println("Front head bumper has been touched.");
-                    }
-                }
-
-            });
-            memory.subscribeToEvent("MiddleTactilTouched", new EventCallback<Float>() {
-                @Override
-                public void onEvent(Float val) throws InterruptedException, CallError {
-                    float touchState = val;
-                    if(touchState == 1.0){
-                        System.out.println("Middle head bumper has been touched");
-                    }
-                }
-            });
-            memory.subscribeToEvent("RearTactilTouched", new EventCallback<Float>() {
-                @Override
-                public void onEvent(Float val) throws InterruptedException, CallError {
-                    float touchState = val;
-                    if(touchState == 1.0){
-                        System.out.println("Rear head bumper has been touched");
-                    }
-
-                }
-            });
-        }catch (Exception exception){
-            exception.printStackTrace();
-        }
-    }
 }
 
 
