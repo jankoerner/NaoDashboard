@@ -6,6 +6,7 @@ import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -42,7 +43,9 @@ public class Controller {
     @FXML ProgressBar batteryPercentage;
     @FXML TextFlow tf_log;
     @FXML ScrollPane sp_log;
+    @FXML ListView lv_log;
 
+    private static  Integer ListIndex=0;
     private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
     private BufferedWriter writer;
     private FileInputStream file;
@@ -80,17 +83,7 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
-        tf_log.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-style: solid;");
-        /*tf_log.getChildren().addListener((ListChangeListener<Node>)
-                ((change)->{
-                    tf_log.layout();
-                    sp_log.layout();
-                    sp_log.setVvalue(1.0f);
-                    if(tf_log.getChildren().lastIndexOf("")>10){
-                        sp_log.layout();
-                    }
-                }));
-        sp_log.setContent(tf_log);*/
+        lv_log.scrollTo(7);
     }
 
     public synchronized void addTimestamp(String message, String context) {
@@ -108,7 +101,12 @@ public class Controller {
             if(context.equals("ACTION")){
                 text.setStyle("-fx-fill: black; -fx-font-weight: 500");
             }
-            tf_log.getChildren().add(text);
+            lv_log.getItems().add(text);
+            ListIndex++;
+            ObservableList observableList = FXCollections.observableList(lv_log.getItems());
+            lv_log.scrollTo(ListIndex+4);
+            System.out.println(ListIndex);
+            //tf_log.getChildren().add(text);
 
         });
     }

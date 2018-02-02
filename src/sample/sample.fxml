@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -18,16 +17,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane id="Relax" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
-      <ScrollPane fx:id="sp_log" fitToHeight="true" fitToWidth="true" hvalue="1.0" layoutX="80.0" layoutY="500.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="152.0" prefWidth="918.0" vbarPolicy="AS_NEEDED" vvalue="1.0">
-         <content>
-              <TextFlow fx:id="tf_log" maxHeight="150" maxWidth="900" minHeight="150" minWidth="900" prefHeight="150.0" prefWidth="900.0">
-               </TextFlow>
-         </content>
-      </ScrollPane>
         <Label layoutX="15.0" layoutY="685.0" text="Akkustand:" />
       <Circle fx:id="batteryCircle" fill="#1fff5e" layoutX="103.0" layoutY="693.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="267.0" layoutY="683.0" text="Körpertemperatur:" />
@@ -136,5 +128,6 @@
         <ProgressBar fx:id="batteryPercentage" layoutX="121.0" layoutY="683.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
         <Circle fx:id="connectCircle" fill="#f01414" layoutX="548.0" layoutY="691.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="446.0" layoutY="683.0" text="Connected:" />
+      <ListView fx:id="lv_log" layoutX="52.0" layoutY="495.0" prefHeight="160.0" prefWidth="766.0" />
     </children>
 </AnchorPane>
