@@ -83,14 +83,14 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
-        lv_log.scrollTo(7);
+        lv_log.setFixedCellSize(20);
     }
 
     public synchronized void addTimestamp(String message, String context) {
         Platform.runLater(() -> {
             Date timestamp = new Date();
             String time = timestampFormatter.format(timestamp);
-            String log = time + ">> "+message+" <<"+"\r"+"\n";
+            String log = "\r"+"\n"+ time + ">> "+message+" <<"+"\r"+"\n";
             Text text = new Text(log);
             if(context.equals("INFO")){
                 text.setStyle("-fx-fill:green; -fx-font-weight:bold");
@@ -103,11 +103,8 @@ public class Controller {
             }
             lv_log.getItems().add(text);
             ListIndex++;
-            ObservableList observableList = FXCollections.observableList(lv_log.getItems());
             lv_log.scrollTo(ListIndex+4);
             System.out.println(ListIndex);
-            //tf_log.getChildren().add(text);
-
         });
     }
 
