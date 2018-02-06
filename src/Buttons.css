@@ -1,0 +1,33 @@
+.button{
+    -fx-background-color: lightblue;
+    -fx-border-color: none;
+    -fx-padding: 10px 12px;
+    -fx-text-align: center;
+    -fx-text-fill: black;
+    -fx-display: inline-block;
+    -fx-font-size: 12px;
+}
+.button:hover{
+    -fx-display: inline-block;
+    -fx-border-color: lightblue;
+    -fx-background-color: none;
+    -fx-text-fill: black;
+}
+.anchor{
+    -fx-background-color: white;
+    -fx-border-color: lightblue;
+}
+.tab-pane{
+    -fx-background-color: white;
+}
+.list-view{
+    -fx-border-color: lightblue;
+}
+.combo-box{
+    -fx-background-color: lightblue;
+    -fx-border-color: none ;
+    -fx-padding: 6px 12px;
+    -fx-text-alignment: left;
+    -fx-text-fill: black;
+    -fx-font-size: 12px;
+}

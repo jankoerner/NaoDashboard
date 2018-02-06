@@ -1,18 +1,11 @@
 package sample;
-import com.aldebaran.qi.Application;
-import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
-import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.*;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -21,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,11 +30,10 @@ public class Controller {
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText;
-    @FXML ListView lv_Sounds;
+    @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
-    @FXML TextFlow tf_log;
-    @FXML ScrollPane sp_log;
 
+    private static  Integer ListIndex=0;
     private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
     private BufferedWriter writer;
     private FileInputStream file;
@@ -55,7 +46,6 @@ public class Controller {
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
-    private ALConnectionManager alConnectionManager;
     private CheckerModel checkerModel = new CheckerModel();
     private static String[] IP = new String[5];
     private static String[] Port = new String[IP.length];
@@ -80,24 +70,22 @@ public class Controller {
 
     public void initialize()throws Exception {
         read();
-        tf_log.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-style: solid;");
-        /*tf_log.getChildren().addListener((ListChangeListener<Node>)
-                ((change)->{
-                    tf_log.layout();
-                    sp_log.layout();
-                    sp_log.setVvalue(1.0f);
-                    if(tf_log.getChildren().lastIndexOf("")>10){
-                        sp_log.layout();
-                    }
-                }));
-        sp_log.setContent(tf_log);*/
+        lv_log.setFixedCellSize(20);
+        WelcomeMessage();
+        UpdateItems(false, true);
     }
 
-    public synchronized void addTimestamp(String message, String context) {
+    private void WelcomeMessage() {
+        Log("Welcome to the \"Nao Dashboard\", a dashboard which lets you control NAOs. INFO");
+        Log("To start, please enter the IP address and the port of the NAO you wish to connect to. INFO");
+        Log("The dashboard was created and designed by Jan Körner, Jonathan Schindler and Valentin Lechner. INFO");
+    }
+
+    private synchronized void addTimestampandColor(String message, String context) {
         Platform.runLater(() -> {
             Date timestamp = new Date();
             String time = timestampFormatter.format(timestamp);
-            String log = time + ">> "+message+" <<"+"\r"+"\n";
+            String log = "\r"+"\n"+ time + ">> "+message+" <<"+"\r"+"\n";
             Text text = new Text(log);
             if(context.equals("INFO")){
                 text.setStyle("-fx-fill:green; -fx-font-weight:bold");
@@ -108,28 +96,29 @@ public class Controller {
             if(context.equals("ACTION")){
                 text.setStyle("-fx-fill: black; -fx-font-weight: 500");
             }
-            tf_log.getChildren().add(text);
-
+            lv_log.getItems().add(text);
+            ListIndex++;
+            lv_log.scrollTo(ListIndex+4);
         });
     }
 
-    public synchronized void LogLevel(String message){
+    private synchronized void FilterLogLevel(String message){
             if(message.contains("INFO")){
                 message = message.replaceAll(" INFO","");
-                addTimestamp(message,"INFO");
+                addTimestampandColor(message,"INFO");
             }
             if(message.contains("WARN")){
                 message=message.replaceAll(" WARN","");
-                addTimestamp(message,"WARN");
+                addTimestampandColor(message,"WARN");
             }
             if(message.contains("ACTION")){
                 message=message.replaceAll("ACTION","");
-                addTimestamp(message,"ACTION");
+                addTimestampandColor(message,"ACTION");
             }
     }
 
     public void Log(String message){
-        LogLevel(message);
+        FilterLogLevel(message);
     }
 
 
@@ -198,7 +187,6 @@ public class Controller {
         try {
             tx_IP.setText(IP[0]);
             tx_Port.setText(Port[0]);
-            disconnectButton.setDisable(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -363,20 +351,12 @@ public class Controller {
                }
            }
        }
-
     }
 
     public void disconnect(){
         session.close();
         Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
-        tb_NAO.setDisable(true);
-        connectCircle.setFill(Color.rgb(240,20,20));
-        dropDownPostures.getItems().removeAll(dropDownPostures.getItems());
-        dropDownLanguages.getItems().removeAll(dropDownLanguages.getItems());
-        cb_LEDS.getItems().removeAll(cb_LEDS.getItems());
-        colorBox.getItems().removeAll(colorBox.getItems());
-        connectButton.setDisable(false);
-        disconnectButton.setDisable(true);
+        UpdateItems(true, false);
         checkerModel.killCheckers();
 
     }
@@ -449,106 +429,132 @@ public class Controller {
     @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
         this.write(getPort(),getIP());
-        tb_NAO.setDisable(false);
-        connectCircle.setFill(Color.rgb(60,230,30));
-        connectButton.setDisable(true);
-        disconnectButton.setDisable(false);
+        UpdateItems(false, false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
         alAnimatedSpeech.say("You are connected");
-
-        if(audioModel==null){
-            audioModel = new AudioModel();
-        }
-
-        if (posturesModel == null){
-            posturesModel = new PosturesModel();
-        }
-        if (ledModel == null){
-            ledModel = new LEDModel();
-        }
-        List SoundFiles=null;
-        if(audioModel.getSoundFiles(session)!=null){
-            SoundFiles = audioModel.getSoundFiles(session);
-        }
-        if (SoundFiles!=null){
-            lv_Sounds.setItems(FXCollections.observableList(SoundFiles));
-            lv_Sounds.setDisable(false);
-            lv_Sounds.setVisible(true);
-            btn_play.setVisible(true);
-            btn_play.setDisable(false);
-        }else{
-            btn_play.setDisable(true);
-            btn_play.setVisible(false);
-            lv_Sounds.setDisable(true);
-            lv_Sounds.setVisible(false);
-        }
-
-        List ledList1 = ledModel.getLEDs(session);
-        ObservableList ledList = FXCollections.observableList(ledList1);
-        if (!ledList.isEmpty()){
-            cb_LEDS.setItems(ledList);
-            cb_LEDS.setDisable(false);
-        }else
-            {
-            cb_LEDS.setDisable(true);
-        }
-
-        List postureList1 = posturesModel.getPostures(session);
-        ObservableList postureList = FXCollections.observableArrayList(postureList1);
-        if (!postureList.isEmpty()){
-            dropDownPostures.setItems(postureList);
-            poseButton.setDisable(false);
-        }else
-        {
-            dropDownPostures.setDisable(true);
-            poseButton.setDisable(true);
-
-        }
-
-        if(textToSpeechModel == null) {
-            textToSpeechModel = new TextToSpeechModel();
-        }
-        List languagesList1 = textToSpeechModel.getLanguages(session);
-        ObservableList languagesList = FXCollections.observableArrayList(languagesList1);
-        if (!languagesList.isEmpty()){
-            dropDownLanguages.setItems(languagesList);
-            dropDownLanguages.setValue(languagesList.get(0));
-            sayButton.setDisable(false);
-        }
-        else {
-            dropDownLanguages.setDisable(true);
-            sayButton.setDisable(true);
-        }
-
-        if (moveBodyModel == null){
-            moveBodyModel = new MoveBodyModel();
-        }
-        boolean isWakeUp = moveBodyModel.getMode(session);
-        List list = mode.getToggles();
-        Toggle toggle;
-        if (isWakeUp){
-            moveBodyModel.mode(session,"Stand");
-            toggle = (Toggle) list.get(0);
-            mode.selectToggle(toggle);
-        }else{
-            moveBodyModel.mode(session,"Relax");
-            toggle = (Toggle) list.get(1);
-            mode.selectToggle(toggle);
-        }
-
-        if (ledModel == null){
-            ledModel = new LEDModel();
-        }
-        ObservableList ledGroups = FXCollections.observableArrayList(ledModel.getLEDs(session));
-        cb_LEDS.setItems(ledGroups);
-        Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
-        ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
-        colorBox.setItems(colorList);
         checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage);
         checkerModel.checkTemperature(session, temperatureText);
         checkerModel.checkTouch(session);
 
     }
+
+    @SuppressWarnings("unchecked")
+    private void UpdateItems(Boolean ClearBoxes, Boolean Startup) {
+          if(session!=null) {
+              tb_NAO.setDisable(!session.isConnected());
+              connectButton.setDisable(session.isConnected());
+              disconnectButton.setDisable(!session.isConnected());
+              if (session.isConnected()) {
+                  connectCircle.setFill(Color.rgb(60, 230, 30));
+              } else connectCircle.setFill(Color.rgb(240, 20, 20));
+              if (ClearBoxes) {
+                  dropDownPostures.getItems().removeAll(dropDownPostures.getItems());
+                  dropDownLanguages.getItems().removeAll(dropDownLanguages.getItems());
+                  cb_LEDS.getItems().removeAll(cb_LEDS.getItems());
+                  colorBox.getItems().removeAll(colorBox.getItems());
+              } else
+                  getBoxes();
+          } else if(Startup){
+              tb_NAO.setDisable(true);
+              connectButton.setDisable(false);
+              disconnectButton.setDisable(true);
+          }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void getBoxes() {
+        try {
+            if (audioModel == null) {
+                audioModel = new AudioModel();
+            }
+
+            if (posturesModel == null) {
+                posturesModel = new PosturesModel();
+            }
+            if (ledModel == null) {
+                ledModel = new LEDModel();
+            }
+            List SoundFiles = null;
+            if (audioModel.getSoundFiles(session) != null) {
+                SoundFiles = audioModel.getSoundFiles(session);
+            }
+            if (SoundFiles != null) {
+                lv_Sounds.setItems(FXCollections.observableList(SoundFiles));
+                lv_Sounds.setDisable(false);
+                lv_Sounds.setVisible(true);
+                btn_play.setVisible(true);
+                btn_play.setDisable(false);
+            } else {
+                btn_play.setDisable(true);
+                btn_play.setVisible(false);
+                lv_Sounds.setDisable(true);
+                lv_Sounds.setVisible(false);
+            }
+
+            List ledList1 = ledModel.getLEDs(session);
+            ObservableList ledList = FXCollections.observableList(ledList1);
+            if (!ledList.isEmpty()) {
+                cb_LEDS.setItems(ledList);
+                cb_LEDS.setDisable(false);
+            } else {
+                cb_LEDS.setDisable(true);
+            }
+
+            List postureList1 = posturesModel.getPostures(session);
+            ObservableList postureList = FXCollections.observableArrayList(postureList1);
+            if (!postureList.isEmpty()) {
+                dropDownPostures.setItems(postureList);
+                poseButton.setDisable(false);
+            } else {
+                dropDownPostures.setDisable(true);
+                poseButton.setDisable(true);
+
+            }
+
+            if (textToSpeechModel == null) {
+                textToSpeechModel = new TextToSpeechModel();
+            }
+            List languagesList1 = textToSpeechModel.getLanguages(session);
+            ObservableList languagesList = FXCollections.observableArrayList(languagesList1);
+            if (!languagesList.isEmpty()) {
+                dropDownLanguages.setItems(languagesList);
+                dropDownLanguages.setValue(languagesList.get(0));
+                sayButton.setDisable(false);
+            } else {
+                dropDownLanguages.setDisable(true);
+                sayButton.setDisable(true);
+            }
+
+            if (moveBodyModel == null) {
+                moveBodyModel = new MoveBodyModel();
+            }
+            boolean isWakeUp = moveBodyModel.getMode(session);
+            List list = mode.getToggles();
+            Toggle toggle;
+            if (isWakeUp) {
+                moveBodyModel.mode(session, "Stand");
+                toggle = (Toggle) list.get(0);
+                mode.selectToggle(toggle);
+            } else {
+                moveBodyModel.mode(session, "Relax");
+                toggle = (Toggle) list.get(1);
+                mode.selectToggle(toggle);
+            }
+
+            if (ledModel == null) {
+                ledModel = new LEDModel();
+            }
+            ObservableList ledGroups = FXCollections.observableArrayList(ledModel.getLEDs(session));
+            cb_LEDS.setItems(ledGroups);
+            Object[] colorArray = {"White", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan"};
+            ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
+            colorBox.setItems(colorList);
+        }catch (Exception e){
+            Log("An error has occured while setting the boxes. WARN");
+            e.printStackTrace();
+        }
+    }
+
 
     private boolean isNumber(String number){
         float d;
