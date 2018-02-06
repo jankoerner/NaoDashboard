@@ -1,5 +1,8 @@
 package sample;
+
+
 import com.aldebaran.qi.Session;
+
 import com.aldebaran.qi.helper.proxies.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -17,11 +20,13 @@ import javafx.scene.text.TextFlow;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Controller {
+    @FXML ToggleGroup mode, landmarkTracker;
     @FXML Tab tb_NAO;
-    @FXML ToggleGroup mode;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
@@ -53,6 +58,7 @@ public class Controller {
     private static String[] URL = new String[Port.length];
 
 
+
     private String[] getPort(){
         return Port;
     }
@@ -60,8 +66,7 @@ public class Controller {
         return IP;
     }
 
-
-    public Session getSession() {
+    public static Session getSession() {
         return session;
     }
 
@@ -243,6 +248,7 @@ public class Controller {
                    Log("Nao turns by "+degree+" degrees. ACTION");
                    moveBodyModel.turn(session,degree/(45f));
                }
+
            }
         }
 
@@ -579,14 +585,30 @@ public class Controller {
     }
 
 
+    public void setLandmarkTracker() throws Exception {
+        ToggleButton toggle =(ToggleButton) landmarkTracker.getSelectedToggle();
+        if (toggle.getText().equals("Enabled")){
+            checkerModel.setLandmarkTrackerActive(true);
+            checkerModel.enableLandmarkTracker(session);
+            checkerModel.LandmarkTracker(session);
+        }else {
+            checkerModel.setLandmarkTrackerActive(false);
+        }
+    }
+    public void test()throws Exception{
+        checkerModel.test();
+    }
 
 
-    public void test() throws Exception{
+
+    public void dance() throws Exception{
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
-        moveBodyModel.dab(session);
+        moveBodyModel.frontTouched(session);
     }
+
+
 
 }
 

@@ -2,7 +2,10 @@ package sample;
 
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALMotion;
+import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import javafx.scene.control.Button;
+
+import java.util.Random;
 
 public class MoveBodyModel {
     public static void main(String[] args) {
@@ -111,9 +114,17 @@ public class MoveBodyModel {
         return alMotion.robotIsWakeUp();
     }
 
-    public void dab(Session session)throws Exception{
+    public void frontTouched(Session session)throws Exception{
         alMotion = new ALMotion(session);
-        alMotion.changeAngles("HeadPitch", 1.75, 1f);
-        System.out.println(alMotion.getAngles("Arm", true));
+        dab();
     }
+        private void dab()throws Exception{
+            alMotion.setAngles("HeadPitch", 2, 1f);
+            alMotion.setAngles("RShoulderPitch", 0, 1f);
+            alMotion.setAngles("LShoulderPitch", -0.25, 1f);
+            alMotion.setAngles("LShoulderRoll", 1.3, 1f);
+            alMotion.setAngles("RElbowRoll", 1.5, 1f);
+            alMotion.setAngles("RElbowYaw", 0, 1f);
+        }
+
 }
