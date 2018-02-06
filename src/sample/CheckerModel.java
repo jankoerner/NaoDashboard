@@ -32,8 +32,11 @@ public class CheckerModel {
         batteryPercentage.setProgress(percentage/100);
     }
 
-    public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage){
+    public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage, Boolean end){
         try{
+            if(end){
+                memory.unsubscribeAllEvents();
+            }
             memory = new ALMemory(session);
             ALBattery alBattery = new ALBattery(session);
 
@@ -90,7 +93,6 @@ public class CheckerModel {
                             temperatureText.setFill(Color.GREEN);
                         }
                     }
-
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -99,8 +101,11 @@ public class CheckerModel {
         temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 
-    public void checkTouch(Session session){
+    public void checkTouch(Session session, Boolean end){
         try {
+            if(end){
+                memory.unsubscribeAllEvents();
+            }
             memory = new ALMemory(session);
             memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
                 @Override
@@ -137,8 +142,8 @@ public class CheckerModel {
     }
 
     public void killCheckers() {
-        memory = null;
         timerKiller = true;
 
     }
+
 }

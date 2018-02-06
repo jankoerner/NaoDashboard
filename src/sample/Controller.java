@@ -357,6 +357,8 @@ public class Controller {
         session.close();
         Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
+        checkerModel.checkTouch(session,true);
+        checkerModel.checkBatteryCharge(session, batteryCircle,batteryPercentage, true);
         checkerModel.killCheckers();
 
     }
@@ -435,7 +437,6 @@ public class Controller {
         checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage);
         checkerModel.checkTemperature(session, temperatureText);
         checkerModel.checkTouch(session);
-
     }
 
     @SuppressWarnings("unchecked")
