@@ -37,42 +37,44 @@ public class CheckerModel {
 
     }
 
-    public void checkBatteryCharge(Session session, Circle batteryCircle, ProgressBar batteryPercentage){
-        Timer batteryTimer = new Timer();
-        TimerTask checkBattery = new TimerTask() {
-            @Override
-            public void run(){
-                try {
-                    if(timerKiller){
-                        batteryTimer.cancel();
-                    }
-                    if (session.isConnected()){
-                        ALBattery alBattery = new ALBattery(session);
-                        if (alBattery.getBatteryCharge() > 75) {
-                            batteryCircle.setFill(Color.GREEN);
-                        } else if (alBattery.getBatteryCharge() < 75 & alBattery.getBatteryCharge() > 30) {
-                            batteryCircle.setFill(Color.ORANGE);
-                        } else if (alBattery.getBatteryCharge() < 30 & alBattery.getBatteryCharge() != 0) {
-                            batteryCircle.setFill(Color.RED);
-                        } else {
-                            batteryCircle.setFill(Color.BLACK);
-                            System.out.println("No battery detected.");
-                        }
-                        setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
-                    }
 
-
-                }catch(Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        batteryTimer.scheduleAtFixedRate(checkBattery, 1000, 6000);
-    }
 
 
     public void setBatteryPercentage(double percentage, ProgressBar batteryPercentage){
         batteryPercentage.setProgress(percentage/100);
+    }
+
+    public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage){
+        try{
+            memory = new ALMemory(session);
+            ALBattery alBattery = new ALBattery(session);
+
+            if(alBattery.getBatteryCharge() == 0){
+                batteryCicle.setFill(Color.BLACK);
+                System.out.println("No battery detected.");
+            }
+            memory.subscribeToEvent("BatteryChargeChanged", new EventCallback<Integer>() {
+                @Override
+                public void onEvent(Integer percentage) throws InterruptedException, CallError {
+                    int charge = percentage;
+                    if (charge > 75){
+                        batteryCicle.setFill(Color.GREEN);
+                        System.out.println("Battery remaining " + charge);
+                    }else if (charge < 75 & charge > 30){
+                        batteryCicle.setFill(Color.ORANGE);
+                        System.out.println("Battery remaining " + charge);
+                    }else if (charge < 30 & charge != 0 ){
+                        batteryCicle.setFill(Color.RED);
+                        System.out.println("Battery remaining " + charge);
+                    }
+                    setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
+                }
+            });
+
+
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
     }
 
     public void checkTemperature(Session session, Text temperatureText){
@@ -92,11 +94,11 @@ public class CheckerModel {
                                 temperatureText.setText("Warm");
                                 temperatureText.setFill(Color.ORANGE);
                             }else{
-                                temperatureText.setText("Heiß");
+                                temperatureText.setText("Hot");
                                 temperatureText.setFill(Color.RED);
                             }
                         }else{
-                            temperatureText.setText("Kühl");
+                            temperatureText.setText("Cool");
                             temperatureText.setFill(Color.GREEN);
                         }
                     }
