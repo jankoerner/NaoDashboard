@@ -33,12 +33,13 @@ public class Controller {
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
 
+    private VideoController videoController;
     private static  Integer ListIndex=0;
     private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private Session session;
+    private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
@@ -357,8 +358,8 @@ public class Controller {
         session.close();
         Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
-        checkerModel.checkTouch(session,true);
-        checkerModel.checkBatteryCharge(session, batteryCircle,batteryPercentage, true);
+        checkerModel.checkTouch(session);
+        checkerModel.checkBatteryCharge(session, batteryCircle,batteryPercentage);
         checkerModel.killCheckers();
 
     }
@@ -430,6 +431,8 @@ public class Controller {
 
     @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
+        videoController= new VideoController();
+        videoController.startup(session);
         this.write(getPort(),getIP());
         UpdateItems(false, false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
