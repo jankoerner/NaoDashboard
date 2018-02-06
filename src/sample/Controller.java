@@ -23,7 +23,7 @@ public class Controller {
     @FXML Tab tb_NAO;
     @FXML ToggleGroup mode;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
-    @FXML TextArea textToSpeech;
+    @FXML TextArea textToSpeech, midButtonText, rearButtonText;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
@@ -174,7 +174,7 @@ public class Controller {
                          actualEntries = I;
                     }
                 }
-                Log("Your connectionlog might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
+                Log("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
             }
         } finally {
             try {
@@ -434,7 +434,8 @@ public class Controller {
         alAnimatedSpeech.say("You are connected");
         checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage);
         checkerModel.checkTemperature(session, temperatureText);
-        checkerModel.checkTouch(session);
+        checkerModel.checkTouch(session, midButtonText, rearButtonText, volumeSlider, voiceSlider, voiceSpeedSlider,
+                dropDownLanguages);
 
     }
 

@@ -49,7 +49,7 @@
                      <children>
                          <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="1080.0" stylesheets="@../Buttons.css" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
-                            <Tab text="Steuerung">
+                            <Tab text="Controls">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640" prefWidth="1080">
                                        <children>
@@ -97,6 +97,9 @@
                                            <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" onAction="#playSounds" styleClass="button" stylesheets="@../Buttons.css" text="Play" />
                                            <Label layoutX="366.0" layoutY="227.0" text="Voice Pitch" />
                                            <TextArea fx:id="textToSpeech" layoutX="410.0" layoutY="248.0" prefHeight="77.0" prefWidth="171.0" promptText="Enter something for Nao to say!" />
+                                          <TextArea fx:id="rearButtonText" layoutX="55.0" layoutY="300.0" prefHeight="53.0" prefWidth="151.0" promptText="Bind a phrase to the rear button!" />
+                                          <TextArea fx:id="midButtonText" layoutX="55.0" layoutY="223.0" prefHeight="53.0" prefWidth="151.0" promptText="Bind a phrase to the middle button!" />
+                                          <Label layoutX="86.0" layoutY="150.0" text="Head Buttons" />
 
                                        </children></AnchorPane>
                               </content>
