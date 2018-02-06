@@ -21,6 +21,7 @@
 <?import javafx.scene.text.TextFlow?>
 
 <AnchorPane id="Relax" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    stylesheets = "/sample/sample.css"
     <children>
       <ScrollPane fx:id="sp_log" fitToHeight="true" fitToWidth="true" hvalue="1.0" layoutX="80.0" layoutY="500.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="152.0" prefWidth="918.0" vbarPolicy="AS_NEEDED" vvalue="1.0">
          <content>
