@@ -22,8 +22,8 @@ public class AudioModel {
         try{
             // NAOs die keine Soundfiles haben haben auch nicht die Methode "getSoundSetFileNames"
             // so kommt es zu keiner Exception
-            if (alAudioPlayer.getMethodList().contains("getSoundSetFileNames"))
-            Soundfiles = alAudioPlayer.getSoundSetFileNames("Aldebaran");
+            if (alAudioPlayer.getMethodList().contains("getSoundSetFileNames") && alAudioPlayer.getInstalledSoundSetsList().contains("Aldebaran"))
+                Soundfiles = alAudioPlayer.getSoundSetFileNames("Aldebaran");
 
         } catch (com.aldebaran.qi.CallError e){
             e.printStackTrace();

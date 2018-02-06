@@ -1,12 +1,9 @@
 package sample;
 
-import com.aldebaran.qi.Application;
-import com.aldebaran.qi.CallError;
+
 import com.aldebaran.qi.Session;
-import com.aldebaran.qi.helper.EventCallback;
+
 import com.aldebaran.qi.helper.proxies.*;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,17 +15,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
 import java.io.*;
-import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class Controller {
-    @FXML ToggleGroup mode, redBallTracker;
+    @FXML ToggleGroup mode, landmarkTracker;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech;
     @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
@@ -44,7 +37,7 @@ public class Controller {
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
-    private Session session;
+    private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel;
     private TextToSpeechModel textToSpeechModel;
@@ -56,7 +49,7 @@ public class Controller {
     private CheckerModel checkerModel = new CheckerModel();
     private static String[] IP = new String[5];
     private static String[] Port = new String[5];
-    private static boolean redBallActivated = false;
+
 
     private String[] getPort(){
         return Port;
@@ -65,7 +58,7 @@ public class Controller {
         return IP;
     }
 
-    public Session getSession() {
+    public static Session getSession() {
         return session;
     }
 
@@ -491,13 +484,18 @@ public class Controller {
     }
 
 
-    public void setRedBallTracker(){
-        ToggleButton toggle =(ToggleButton) redBallTracker.getSelectedToggle();
+    public void setLandmarkTracker() throws Exception {
+        ToggleButton toggle =(ToggleButton) landmarkTracker.getSelectedToggle();
         if (toggle.getText().equals("Enabled")){
-            redBallActivated = true;
+            checkerModel.setLandmarkTrackerActive(true);
+            checkerModel.enableLandmarkTracker(session);
+            checkerModel.LandmarkTracker(session);
         }else {
-            redBallActivated=false;
+            checkerModel.setLandmarkTrackerActive(false);
         }
+    }
+    public void test()throws Exception{
+        checkerModel.test();
     }
 
 

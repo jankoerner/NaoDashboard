@@ -114,14 +114,8 @@ public class MoveBodyModel {
     }
 
     public void frontTouched(Session session)throws Exception{
-        Random ran = new Random();
-        int random = ran.nextInt(2);
         alMotion = new ALMotion(session);
-        if (random == 0){
-            dab();
-        }else{
-            taiChi();
-        }
+        dab();
     }
         private void dab()throws Exception{
             alMotion.setAngles("HeadPitch", 2, 1f);
@@ -132,7 +126,4 @@ public class MoveBodyModel {
             alMotion.setAngles("RElbowYaw", 0, 1f);
         }
 
-        private void taiChi()throws Exception{
-
-        }
 }

@@ -6,6 +6,7 @@ import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.ALBattery;
 import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
 import com.aldebaran.qi.helper.proxies.ALMemory;
+import com.aldebaran.qi.helper.proxies.ALTracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.paint.Color;
@@ -20,6 +21,17 @@ public class CheckerModel {
 
     private ALMemory memory;
     private boolean timerKiller = false;
+    private boolean LandmarkTrackerActive = false;
+    private TextToSpeechModel textToSpeechModel = new TextToSpeechModel();
+    private TrackerModel trackerModel = new TrackerModel();
+    private ALTracker alTracker;
+    public void setLandmarkTrackerActive(boolean isActive){
+        LandmarkTrackerActive = isActive;
+        System.out.println(LandmarkTrackerActive);
+    }
+    private String landmarkID;
+    boolean tracked = false;
+
 
     public static void main(String[] args) {
 
@@ -105,7 +117,13 @@ public class CheckerModel {
                 public void onEvent(Float val) throws InterruptedException, CallError {
                     float touchState = val;
                     if (touchState == 1.0) {
-                        System.out.println("Front head bumper has been touched.");
+                        try {
+                            MoveBodyModel moveBodyModel = new MoveBodyModel();
+                            moveBodyModel.frontTouched(session);
+                        }catch (Exception e){
+                            System.out.println(e);
+                        }
+
                     }
                 }
 
@@ -133,6 +151,40 @@ public class CheckerModel {
             exception.printStackTrace();
         }
     }
+
+    public void LandmarkTracker(Session session)throws Exception{
+        /*ALVideoDevice alVideoDevice = new ALVideoDevice(session);
+        alVideoDevice.openCamera(0);
+        ALVisionRecognition alVisionRecognition = new ALVisionRecognition(session);
+        alVisionRecognition.subscribe("LandmarkDetected");*/
+        if (LandmarkTrackerActive){
+            TrackerModel trackerModel = new TrackerModel();
+            memory.subscribeToEvent("LandmarkDetected", new EventCallback<ArrayList>() {
+                @Override
+                public void onEvent(ArrayList o) throws InterruptedException, CallError {
+                    try {
+                        if (tracked==false){
+                            trackerModel.trackLandmark(session,o,alTracker);
+                            tracked = true;
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
+            });
+        }
+    }
+
+    public void enableLandmarkTracker(Session session)throws Exception{
+        if (LandmarkTrackerActive){
+            alTracker = new ALTracker(session);
+            alTracker.trackEvent("LandmarkDetected");
+        }
+    }
+    public void test()throws Exception{
+        System.out.println(memory.getDataListName());
+    }
+
 
     public void killCheckers() {
         memory = null;

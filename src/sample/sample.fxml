@@ -79,7 +79,7 @@
                                            <ComboBox fx:id="dropDownPostures" layoutX="698.0" layoutY="343.0" onAction="#postures" prefHeight="26.0" prefWidth="171.0" promptText="Select Posture" visibleRowCount="5" />
                                            <Button fx:id="poseButton" layoutX="869.0" layoutY="343.0" mnemonicParsing="false" onAction="#postures" text="Pose" />
                                            <Slider fx:id="angleSlider" layoutX="18.0" layoutY="57.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
-                                          <Button fx:id="test" layoutX="442.0" layoutY="300.0" mnemonicParsing="false" onAction="#dance" text="test" />
+                                          <Button fx:id="test" layoutX="442.0" layoutY="300.0" mnemonicParsing="false" onAction="#test" text="test" />
                                        </children></AnchorPane>
                               </content>
                             </Tab>
@@ -107,11 +107,11 @@
                                        <children>
                                           <Button layoutX="77.0" layoutY="44.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                                            <ImageView fx:id="photoView" fitHeight="150.0" fitWidth="200.0" layoutX="769.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
-                                          <ToggleButton layoutX="512.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedBallTracker" text="Enabled">
+                                          <ToggleButton layoutX="512.0" layoutY="44.0" mnemonicParsing="false" onAction="#setLandmarkTracker" text="Enabled">
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="redBallTracker" />
+                                                <ToggleGroup fx:id="landmarkTracker" />
                                              </toggleGroup></ToggleButton>
-                                          <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedBallTracker" selected="true" text="Disabled" toggleGroup="$redBallTracker" />
+                                          <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setLandmarkTracker" selected="true" text="Disabled" toggleGroup="$landmarkTracker" />
                                        </children>
                                     </AnchorPane>
                                 </content>
