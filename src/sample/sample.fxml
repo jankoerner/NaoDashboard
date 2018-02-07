@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -42,7 +43,7 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab fx:id="tb_NAO" text="NAO">
+          <Tab fx:id="tb_NAO" onSelectionChanged="#naoTab" text="NAO">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="853.0" prefWidth="1920.0">
                      <children>
@@ -52,35 +53,34 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640" prefWidth="1080">
                                        <children>
-                                           <Label layoutX="30.0" layoutY="20.0" text="Steuerung Fortbewegung" />
-                                           <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="690.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
+                                           <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="271.0" layoutY="145.0" pickOnBounds="true" preserveRatio="true" />
                                            <Label layoutX="30.0" layoutY="20.0" text="Movement controls" />
                                            <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="122.0" layoutY="93.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
                                            <Label layoutX="152.0" layoutY="124.0" text="Velocity" />
                                            <TextField fx:id="degreeField" layoutX="25.0" layoutY="181.0" prefHeight="26.0" prefWidth="42.0" promptText="Degree" />
-                                           <ComboBox fx:id="cb_LEDS" layoutX="429.0" layoutY="514.0" onAction="#changeChoice" prefWidth="150.0" />
-                                           <ComboBox fx:id="colorBox" layoutX="579.0" layoutY="514.0" onAction="#changeColor" prefWidth="150.0" promptText="Select Color" />
+                                           <ComboBox fx:id="cb_LEDS" layoutX="687.0" layoutY="335.0" onAction="#changeChoice" prefHeight="35.0" prefWidth="190.0" promptText="Select Led Group" />
+                                           <ComboBox fx:id="colorBox" layoutX="877.0" layoutY="335.0" onAction="#changeColor" prefWidth="150.0" promptText="Select Color" />
                                            <Button layoutX="57.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="m" />
                                            <Button layoutX="90.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="l" />
                                            <Button layoutX="62.0" layoutY="254.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="i" />
                                            <Button layoutX="33.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="j" />
                                            <Button layoutX="60.0" layoutY="317.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="k" />
                                            <Label layoutX="44.0" layoutY="219.0" text="Head controls" />
-                                           <ToggleButton id="Stand" layoutX="551.0" layoutY="23.0" mnemonicParsing="false" onAction="#mode" text="Stand">
+                                           <ToggleButton id="Stand" layoutX="961.0" layoutY="44.0" mnemonicParsing="false" onAction="#mode" text="Stand">
                                                <toggleGroup>
                                                    <ToggleGroup fx:id="mode" />
                                                </toggleGroup>
                                            </ToggleButton>
-                                           <ToggleButton layoutX="496.0" layoutY="23.0" mnemonicParsing="false" onAction="#mode" selected="true" text="Relax" toggleGroup="$mode" />
+                                           <ToggleButton layoutX="906.0" layoutY="44.0" mnemonicParsing="false" onAction="#mode" selected="true" text="Relax" toggleGroup="$mode" />
                                            <Button layoutX="71.0" layoutY="181.0" mnemonicParsing="false" onAction="#turn" styleClass="button" stylesheets="@../Buttons.css" text="Turn" />
                                            <Button layoutX="82.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" styleClass="button" stylesheets="@../Buttons.css" text="d" />
                                            <Button layoutX="57.0" layoutY="96.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" styleClass="button" stylesheets="@../Buttons.css" text="w" />
                                            <Button layoutX="59.0" layoutY="144.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" styleClass="button" stylesheets="@../Buttons.css" text="s" />
                                            <Button layoutX="31.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" styleClass="button" stylesheets="@../Buttons.css" text="a" />
-                                           <ComboBox fx:id="dropDownPostures" layoutX="698.0" layoutY="343.0" onAction="#postures" prefHeight="26.0" prefWidth="171.0" promptText="Select Posture" visibleRowCount="5" />
-                                           <Button fx:id="poseButton" layoutX="869.0" layoutY="343.0" mnemonicParsing="false" onAction="#postures" styleClass="button" stylesheets="@../Buttons.css" text="Pose" />
+                                           <ComboBox fx:id="dropDownPostures" layoutX="271.0" layoutY="335.0" onAction="#postures" prefHeight="26.0" prefWidth="171.0" promptText="Select Posture" visibleRowCount="5" />
+                                           <Button fx:id="poseButton" layoutX="446.0" layoutY="335.0" mnemonicParsing="false" onAction="#postures" styleClass="button" stylesheets="@../Buttons.css" text="Pose" />
                                            <Slider fx:id="angleSlider" layoutX="18.0" layoutY="57.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
-                                          <Button fx:id="test" layoutX="442.0" layoutY="300.0" mnemonicParsing="false" onAction="#test" styleClass="button" stylesheets="@../Buttons.css" text="test" />
+                                          <Label layoutX="906.0" layoutY="20.0" text="Mode" />
                                        </children></AnchorPane>
                               </content>
                             </Tab>
@@ -101,6 +101,7 @@
                                           <TextArea fx:id="rearButtonText" layoutX="55.0" layoutY="300.0" prefHeight="53.0" prefWidth="151.0" promptText="Bind a phrase to the rear button!" />
                                           <TextArea fx:id="midButtonText" layoutX="55.0" layoutY="223.0" prefHeight="53.0" prefWidth="151.0" promptText="Bind a phrase to the middle button!" />
                                           <Label layoutX="86.0" layoutY="150.0" text="Head Buttons" />
+                                          <Label layoutX="267.0" layoutY="279.0" prefHeight="16.0" prefWidth="123.0" text="Voice Speed" />
 
                                        </children></AnchorPane>
                               </content>
@@ -116,6 +117,15 @@
                                                 <ToggleGroup fx:id="landmarkTracker" />
                                              </toggleGroup></ToggleButton>
                                           <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setLandmarkTracker" selected="true" text="Disabled" toggleGroup="$landmarkTracker" />
+                                          <Label layoutX="512.0" layoutY="21.0" text="Landmark Tracker" />
+                                          <RadioButton fx:id="headRadio" layoutX="518.0" layoutY="110.0" mnemonicParsing="false" onAction="#changeTrackingMode" selected="true" text="Head only">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="landmarkMode" />
+                                             </toggleGroup></RadioButton>
+                                          <RadioButton fx:id="bodyRadio" layoutX="518.0" layoutY="130.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Whole Body" toggleGroup="$landmarkMode" />
+                                          <RadioButton fx:id="moveRadio" layoutX="518.0" layoutY="150.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Move" toggleGroup="$landmarkMode" />
+                                          <Label layoutX="515.0" layoutY="87.0" text="Tracking Mode" />
+                                          <Button fx:id="searchMarkButton" layoutX="509.0" layoutY="191.0" mnemonicParsing="false" onAction="#searchLandmarks" text="Search for Marks" />
                                        </children>
                                     </AnchorPane>
                                 </content>

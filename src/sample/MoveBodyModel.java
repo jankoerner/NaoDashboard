@@ -2,10 +2,6 @@ package sample;
 
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.proxies.ALMotion;
-import com.aldebaran.qi.helper.proxies.ALRobotPosture;
-import javafx.scene.control.Button;
-
-import java.util.Random;
 
 public class MoveBodyModel {
     public static void main(String[] args) {
@@ -17,7 +13,6 @@ public class MoveBodyModel {
 
     public void moveKeyboard(Session session, String direction, Float velocity, Float angle)throws Exception {
         alMotion = new ALMotion(session);
-        System.out.println(direction);
             switch (direction) {
             case "w":
                 alMotion.move(velocity, 0f, angle);
@@ -39,8 +34,6 @@ public class MoveBodyModel {
 
     public void moveKeyboard(Session session, String direction)throws Exception{
         alMotion = new ALMotion(session);
-        System.out.println(direction);
-        //alMotion.setStiffnesses("Head", 1f);
         switch (direction) {
             case "i":
                alMotion.changeAngles("HeadPitch", -0.015, 1f);
@@ -59,15 +52,11 @@ public class MoveBodyModel {
                 alMotion.setAngles("HeadPitch", 0f, 1f);
                 break;
         }
-        //alMotion.setStiffnesses("Head", 0f);
-
     }
 
     public void moveHeadButtons(Session session, String direction) throws  Exception{
         alMotion = new ALMotion(session);
 
-        System.out.println(direction);
-        //alMotion.setStiffnesses("Head", 1f);
         switch (direction) {
             case "i":
                 alMotion.changeAngles("HeadPitch", -0.75, 1f);
