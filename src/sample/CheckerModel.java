@@ -33,7 +33,6 @@ public class CheckerModel {
     private ALTracker alTracker;
     public void setLandmarkTrackerActive(boolean isActive){
         LandmarkTrackerActive = isActive;
-        System.out.println(LandmarkTrackerActive);
     }
     private String landmarkID;
     boolean tracked = false;
@@ -244,19 +243,16 @@ public class CheckerModel {
         }
     }
 
-    public void LandmarkTracker(Session session)throws Exception{
-        /*ALVideoDevice alVideoDevice = new ALVideoDevice(session);
-        alVideoDevice.openCamera(0);
-        ALVisionRecognition alVisionRecognition = new ALVisionRecognition(session);
-        alVisionRecognition.subscribe("LandmarkDetected");*/
+    public void LandmarkTracker(Session session, String mode)throws Exception{
         if (LandmarkTrackerActive){
             TrackerModel trackerModel = new TrackerModel();
             memory.subscribeToEvent("LandmarkDetected", new EventCallback<ArrayList>() {
                 @Override
-                public void onEvent(ArrayList o) throws InterruptedException, CallError {
+                public void onEvent(ArrayList info ) throws InterruptedException, CallError {
                     try {
                         if (tracked==false){
-                            trackerModel.trackLandmark(session,o,alTracker);
+                            trackerModel.trackLandmark(session,info,alTracker);
+                            trackerModel.setMode(mode);
                             tracked = true;
                         }
                     }catch (Exception e){
@@ -273,10 +269,6 @@ public class CheckerModel {
             alTracker.trackEvent("LandmarkDetected");
         }
     }
-    public void test()throws Exception{
-        System.out.println(memory.getDataListName());
-    }
-
 
     public void killCheckers() {
         end = true;
