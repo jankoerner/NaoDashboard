@@ -137,18 +137,27 @@ public class CheckerModel {
                                 }
 
                             }
-                            /*if(tempEvent.get(0).equals(1) & tempEvent.get(1).equals("LArm")){
+                            if(tempEvent.get(0).equals(1)){
                                 temperatureText.setText("Warm");
                                 temperatureText.setFill(Color.ORANGE);
                             }else if(tempEvent.get(0).equals(2)){
                                 temperatureText.setText("Hot");
                                 temperatureText.setFill(Color.RED);
-                            }*/
+                            }
                         }else{
                             temperatureText.setText("Cool");
                             temperatureText.setFill(Color.GREEN);
-                            temperatureText.setText("Cool");
-                            temperatureText.setFill(Color.GREEN);
+                            rightArmTempText.setText("Cool");
+                            rightArmTempText.setFill(Color.GREEN);
+                            leftArmTempText.setText("Cool");
+                            leftArmTempText.setFill(Color.GREEN);
+                            rightLegTempText.setText("Cool");
+                            rightLegTempText.setFill(Color.GREEN);
+                            leftLegTempText.setText("Cool");
+                            leftLegTempText.setFill(Color.GREEN);
+                            headTempText.setText("Cool");
+                            headTempText.setFill(Color.GREEN);
+
                         }
                     }
 

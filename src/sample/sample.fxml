@@ -82,26 +82,8 @@
                                            <Button fx:id="poseButton" layoutX="869.0" layoutY="343.0" mnemonicParsing="false" onAction="#postures" styleClass="button" stylesheets="@../Buttons.css" text="Pose" />
                                            <Slider fx:id="angleSlider" layoutX="18.0" layoutY="57.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
                                           <Button fx:id="test" layoutX="155.0" layoutY="287.0" mnemonicParsing="false" onAction="#test" styleClass="button" stylesheets="@../Buttons.css" text="test" />
-                                          <ImageView fitHeight="283.0" fitWidth="187.0" layoutX="413.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../Nao/Stand.jpg" />
-                                             </image></ImageView>
-                                          <Line endX="100.0" layoutX="334.0" layoutY="231.0" startX="-10.0" />
-                                          <Line endX="100.0" layoutX="564.0" layoutY="231.0" startX="-10.0" />
-                                          <Line endX="100.0" layoutX="540.0" layoutY="280.0" rotate="180.0" scaleX="1.25" startX="-5.0" strokeWidth="1.5" />
-                                          <Line endX="100.0" layoutX="340.0" layoutY="280.0" scaleX="1.25" startX="-5.0" strokeWidth="1.5" />
-                                          <Line endX="100.0" layoutX="550.0" layoutY="125.0" scaleX="1.5" startX="-10.0" />
-                                          <Text fx:id="rightArmTempText" layoutX="377.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
-                                          <Label layoutX="324.0" layoutY="212.0" text="RArm:" />
-                                          <Label layoutX="576.0" layoutY="106.0" text="Head:" />
-                                          <Text fx:id="headTempText" layoutX="628.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
-                                          <Label layoutX="575.0" layoutY="211.0" text="LArm:" />
-                                          <Text fx:id="leftArmTempText" layoutX="630.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
-                                          <Label layoutX="321.0" layoutY="258.0" text="RLeg:" />
-                                          <Text fx:id="rightLegTempText" layoutX="377.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
-                                          <Label layoutX="575.0" layoutY="264.0" text="LLeg:" />
-                                          <Text fx:id="leftLegTempText" layoutX="630.0" layoutY="279.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
-                                       </children></AnchorPane>
+                                       </children>
+                                </AnchorPane>
                               </content>
                             </Tab>
                             <Tab text="Audio">
@@ -138,6 +120,35 @@
                                           <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setLandmarkTracker" selected="true" text="Disabled" toggleGroup="$landmarkTracker" />
                                        </children>
                                     </AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="System Status">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                      <children>
+                                          <ImageView fx:id="tempPic" fitHeight="283.0" fitWidth="187.0" layoutX="413.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+                                              <image>
+                                                  <Image url="@../Nao/Stand.jpg" />
+                                              </image></ImageView>
+                                          <Line endX="100.0" layoutX="334.0" layoutY="231.0" startX="-10.0" />
+                                          <Line endX="100.0" layoutX="564.0" layoutY="231.0" startX="-10.0" />
+                                          <Line endX="100.0" layoutX="545.0" layoutY="280.0" rotate="180.0" scaleX="1.25" startX="-5.0" strokeWidth="1.5" />
+                                          <Line endX="100.0" layoutX="340.0" layoutY="280.0" scaleX="1.25" startX="-5.0" strokeWidth="1.5" />
+                                          <Line endX="100.0" layoutX="550.0" layoutY="125.0" scaleX="1.5" startX="-10.0" />
+                                          <Text fx:id="rightArmTempText" layoutX="377.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="324.0" layoutY="212.0" text="RArm:" />
+                                          <Label layoutX="576.0" layoutY="106.0" text="Head:" />
+                                          <Text fx:id="headTempText" layoutX="628.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="575.0" layoutY="211.0" text="LArm:" />
+                                          <Text fx:id="leftArmTempText" layoutX="630.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="321.0" layoutY="258.0" text="RLeg:" />
+                                          <Text fx:id="rightLegTempText" layoutX="377.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="575.0" layoutY="264.0" text="LLeg:" />
+                                          <Text fx:id="leftLegTempText" layoutX="628.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="400.0" layoutY="51.0" text="Body Temperature Readout" />
+                                          <Label layoutX="88.0" layoutY="126.0" text="Remaining Battery % :" />
+                                      </children>
+                                  </AnchorPane>
                                 </content>
                               </Tab>
                           </tabs>
