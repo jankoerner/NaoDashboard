@@ -12,9 +12,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane id="Relax" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="700.0" prefWidth="1080.0" styleClass="anchor" stylesheets="@../Buttons.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
@@ -52,7 +54,6 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640" prefWidth="1080">
                                        <children>
-                                           <Label layoutX="30.0" layoutY="20.0" text="Steuerung Fortbewegung" />
                                            <ImageView fx:id="imageView" fitHeight="181.0" fitWidth="228.0" layoutX="690.0" layoutY="175.0" pickOnBounds="true" preserveRatio="true" />
                                            <Label layoutX="30.0" layoutY="20.0" text="Movement controls" />
                                            <Slider fx:id="velocitySlider" accessibleText="Velocity" blockIncrement="0.001" layoutX="122.0" layoutY="93.0" majorTickUnit="0.1" max="0.1" minorTickCount="1" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="0.01" />
@@ -66,12 +67,12 @@
                                            <Button layoutX="33.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="j" />
                                            <Button layoutX="60.0" layoutY="317.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="k" />
                                            <Label layoutX="44.0" layoutY="219.0" text="Head controls" />
-                                           <ToggleButton id="Stand" layoutX="551.0" layoutY="23.0" mnemonicParsing="false" onAction="#mode" text="Stand">
+                                           <ToggleButton id="Stand" layoutX="205.0" layoutY="186.0" mnemonicParsing="false" onAction="#mode" text="Stand">
                                                <toggleGroup>
                                                    <ToggleGroup fx:id="mode" />
                                                </toggleGroup>
                                            </ToggleButton>
-                                           <ToggleButton layoutX="496.0" layoutY="23.0" mnemonicParsing="false" onAction="#mode" selected="true" text="Relax" toggleGroup="$mode" />
+                                           <ToggleButton layoutX="151.0" layoutY="186.0" mnemonicParsing="false" onAction="#mode" selected="true" text="Relax" toggleGroup="$mode" />
                                            <Button layoutX="71.0" layoutY="181.0" mnemonicParsing="false" onAction="#turn" styleClass="button" stylesheets="@../Buttons.css" text="Turn" />
                                            <Button layoutX="82.0" layoutY="121.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" styleClass="button" stylesheets="@../Buttons.css" text="d" />
                                            <Button layoutX="57.0" layoutY="96.0" mnemonicParsing="false" onMousePressed="#moveBodyButtons" onMouseReleased="#moveBodyButtons" styleClass="button" stylesheets="@../Buttons.css" text="w" />
@@ -80,7 +81,26 @@
                                            <ComboBox fx:id="dropDownPostures" layoutX="698.0" layoutY="343.0" onAction="#postures" prefHeight="26.0" prefWidth="171.0" promptText="Select Posture" visibleRowCount="5" />
                                            <Button fx:id="poseButton" layoutX="869.0" layoutY="343.0" mnemonicParsing="false" onAction="#postures" styleClass="button" stylesheets="@../Buttons.css" text="Pose" />
                                            <Slider fx:id="angleSlider" layoutX="18.0" layoutY="57.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
-                                          <Button fx:id="test" layoutX="442.0" layoutY="300.0" mnemonicParsing="false" onAction="#test" styleClass="button" stylesheets="@../Buttons.css" text="test" />
+                                          <Button fx:id="test" layoutX="155.0" layoutY="287.0" mnemonicParsing="false" onAction="#test" styleClass="button" stylesheets="@../Buttons.css" text="test" />
+                                          <ImageView fitHeight="283.0" fitWidth="187.0" layoutX="413.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Nao/Stand.jpg" />
+                                             </image></ImageView>
+                                          <Line endX="100.0" layoutX="334.0" layoutY="231.0" startX="-10.0" />
+                                          <Line endX="100.0" layoutX="564.0" layoutY="231.0" startX="-10.0" />
+                                          <Line endX="100.0" layoutX="540.0" layoutY="280.0" rotate="180.0" scaleX="1.25" startX="-5.0" strokeWidth="1.5" />
+                                          <Line endX="100.0" layoutX="340.0" layoutY="280.0" scaleX="1.25" startX="-5.0" strokeWidth="1.5" />
+                                          <Line endX="100.0" layoutX="550.0" layoutY="125.0" scaleX="1.5" startX="-10.0" />
+                                          <Text fx:id="rightArmTempText" layoutX="377.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="324.0" layoutY="212.0" text="RArm:" />
+                                          <Label layoutX="576.0" layoutY="106.0" text="Head:" />
+                                          <Text fx:id="headTempText" layoutX="628.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="575.0" layoutY="211.0" text="LArm:" />
+                                          <Text fx:id="leftArmTempText" layoutX="630.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="321.0" layoutY="258.0" text="RLeg:" />
+                                          <Text fx:id="rightLegTempText" layoutX="377.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
+                                          <Label layoutX="575.0" layoutY="264.0" text="LLeg:" />
+                                          <Text fx:id="leftLegTempText" layoutX="630.0" layoutY="279.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
                                        </children></AnchorPane>
                               </content>
                             </Tab>

@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,9 +28,7 @@ public class CheckerModel {
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
     private boolean end = false;
-
     private boolean LandmarkTrackerActive = false;
-    private TextToSpeechModel textToSpeechModel = new TextToSpeechModel();
     private TrackerModel trackerModel = new TrackerModel();
     private ALTracker alTracker;
     public void setLandmarkTrackerActive(boolean isActive){
@@ -87,7 +86,8 @@ public class CheckerModel {
         }
     }
 
-    public void checkTemperature(Session session, Text temperatureText){
+    public void checkTemperature(Session session, Text temperatureText, Text rightArmTempText, Text leftArmTempText,
+                                 Text rightLegTempText, Text leftLegTempText, Text headTempText){
         Timer temperatureTimer = new Timer();
         TimerTask checkTemp = new TimerTask() {
             @Override
@@ -100,14 +100,53 @@ public class CheckerModel {
                         ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
                         if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
                             ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
-                            if(tempEvent.get(0).equals(1)){
+                            for (int i = 0; i < tempEvent.size() ; i++) {
+                                if(tempEvent.get(i) instanceof ArrayList){
+                                    ArrayList tempe = (ArrayList) tempEvent.get(i);
+                                    if(tempe.get(0).equals(1) & tempe.get(1).equals("LArm")){
+                                        leftArmTempText.setText("Warm");
+                                        leftArmTempText.setFill(Color.ORANGE);
+                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LArm")){
+                                        leftArmTempText.setText("Hot");
+                                        leftArmTempText.setFill(Color.RED);
+                                    }else if(tempe.get(0).equals(1) & tempe.get(1).equals("RArm")){
+                                        rightArmTempText.setText("Warm");
+                                        rightArmTempText.setFill(Color.ORANGE);
+                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("RArm")) {
+                                        rightArmTempText.setText("Hot");
+                                        rightArmTempText.setFill(Color.RED);
+                                    }else if(tempe.get(0).equals(1) & tempe.get(1).equals("LLeg")) {
+                                        leftLegTempText.setText("Warm");
+                                        leftLegTempText.setFill(Color.ORANGE);
+                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LLeg")) {
+                                        leftLegTempText.setText("Hot");
+                                        leftLegTempText.setFill(Color.RED);
+                                    }else if (tempe.get(0).equals(1) & tempe.get(1).equals("RLeg")){
+                                        rightLegTempText.setText("Warm");
+                                        rightLegTempText.setFill(Color.ORANGE);
+                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LLeg")) {
+                                        rightLegTempText.setText("Hot");
+                                        rightLegTempText.setFill(Color.RED);
+                                    }else if (tempe.get(0).equals(1) & tempe.get(1).equals("Head")){
+                                        headTempText.setText("Warm");
+                                        headTempText.setFill(Color.ORANGE);
+                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("Head")) {
+                                        headTempText.setText("Hot");
+                                        headTempText.setFill(Color.RED);
+                                    }
+                                }
+
+                            }
+                            /*if(tempEvent.get(0).equals(1) & tempEvent.get(1).equals("LArm")){
                                 temperatureText.setText("Warm");
                                 temperatureText.setFill(Color.ORANGE);
-                            }else{
+                            }else if(tempEvent.get(0).equals(2)){
                                 temperatureText.setText("Hot");
                                 temperatureText.setFill(Color.RED);
-                            }
+                            }*/
                         }else{
+                            temperatureText.setText("Cool");
+                            temperatureText.setFill(Color.GREEN);
                             temperatureText.setText("Cool");
                             temperatureText.setFill(Color.GREEN);
                         }
