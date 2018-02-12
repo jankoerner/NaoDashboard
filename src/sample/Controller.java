@@ -366,7 +366,7 @@ public class Controller {
         session.close();
         Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
-        checkerModel.killCheckers();
+        checkerModel.killCheckers(batteryPercentage, temperatureText);
 
     }
 

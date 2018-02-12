@@ -54,12 +54,15 @@ public class CheckerModel {
             memory = new ALMemory(session);
             ALBattery alBattery = new ALBattery(session);
 
+
             if(end){
                 memory.unsubscribeAllEvents();
+
             }
             if(alBattery.getBatteryCharge() == 0){
                 batteryCicle.setFill(Color.BLACK);
                 System.out.println("No battery detected.");
+                batteryPercentage.setStyle("-fx-background-color: black");
             }
             memory.subscribeToEvent("BatteryChargeChanged", new EventCallback<Integer>() {
                 @Override
@@ -68,12 +71,15 @@ public class CheckerModel {
                     if (charge > 75){
                         batteryCicle.setFill(Color.GREEN);
                         System.out.println("Battery remaining " + charge);
+                        batteryPercentage.setStyle("fx-background-color: green");
                     }else if (charge < 75 & charge > 30){
                         batteryCicle.setFill(Color.ORANGE);
                         System.out.println("Battery remaining " + charge);
+                        batteryPercentage.setStyle("fx-background-color: orange");
                     }else if (charge < 30 & charge != 0 ){
                         batteryCicle.setFill(Color.RED);
                         System.out.println("Battery remaining " + charge);
+                        batteryPercentage.setStyle("fx-background-color: red");
                     }
                     setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
                 }
@@ -270,9 +276,11 @@ public class CheckerModel {
         }
     }
 
-    public void killCheckers() {
+    public void killCheckers(ProgressBar batteryPercentage, Text temperatureText) {
         end = true;
         timerKiller = true;
+        batteryPercentage.setStyle("-fx-background-color: transparent");
+        temperatureText.setText("-");
 
     }
 }

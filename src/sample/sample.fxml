@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -170,7 +171,11 @@
           </Tab>
         </tabs>
       </TabPane>
-        <ProgressBar fx:id="batteryPercentage" layoutX="188.0" layoutY="680.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" />
+        <ProgressBar fx:id="batteryPercentage" layoutX="188.0" layoutY="680.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" stylesheets="@../ProgressBar.css">
+         <styleClass>
+            <String fx:value="bar" />
+            <String fx:value="track" />
+         </styleClass></ProgressBar>
         <Circle fx:id="connectCircle" fill="#f01414" layoutX="616.0" layoutY="691.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="523.0" layoutY="683.0" text="Connected:" />
         <ListView fx:id="lv_log" layoutX="21.0" layoutY="495.0" prefHeight="160.0" prefWidth="1037.0" />
