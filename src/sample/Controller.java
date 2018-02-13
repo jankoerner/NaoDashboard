@@ -23,11 +23,11 @@ import java.util.List;
 
 
 public class Controller {
-    @FXML ToggleGroup mode, landmarkTracker, landmarkMode;
+    @FXML ToggleGroup mode, redBallTracker, redballMode;
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
-    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play, searchMarkButton;
+    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -591,16 +591,17 @@ public class Controller {
     }
 
 
-    public void setLandmarkTracker() throws Exception {
-        ToggleButton toggle =(ToggleButton) landmarkTracker.getSelectedToggle();
+    public void setRedballTracker() throws Exception {
+        ToggleButton toggle =(ToggleButton) redBallTracker.getSelectedToggle();
         if (toggle.getText().equals("Enabled")){
-            checkerModel.setLandmarkTrackerActive(true);
-            checkerModel.enableLandmarkTracker(session);
-            checkerModel.LandmarkTracker(session, landmarkMode.getSelectedToggle().selectedProperty().getName());
+            checkerModel.setRedballTrackerActive(true);
+            checkerModel.enableRedballTracker(session);
+            checkerModel.RedballTracker(session, redballMode.getSelectedToggle().selectedProperty().getName());
             setTrackButtons(false);
 
         }else {
-            checkerModel.setLandmarkTrackerActive(false);
+            checkerModel.setRedballTrackerActive(false);
+            checkerModel.setTracked(false);
             if (trackerModel == null)
             {
                 trackerModel = new TrackerModel();
@@ -610,29 +611,22 @@ public class Controller {
         }
     }
     private void setTrackButtons(Boolean enabled){
-            searchMarkButton.setDisable(enabled);
             bodyRadio.setDisable(enabled);
             headRadio.setDisable(enabled);
             moveRadio.setDisable(enabled);
 
     }
-    public void searchLandmarks() throws Exception {
-        if (trackerModel == null){
-            trackerModel = new TrackerModel();
-        }
-        trackerModel.searchLandmark(session);
-    }
     public void changeTrackingMode() throws Exception {
         if (trackerModel == null){
             trackerModel = new TrackerModel();
         }
-        System.out.println(landmarkMode.selectedToggleProperty());
-        if (landmarkMode.getSelectedToggle().getClass().equals(RadioButton.class))
+        System.out.println(redballMode.selectedToggleProperty());
+        if (redballMode.getSelectedToggle().getClass().equals(RadioButton.class))
         {
-            RadioButton button = (RadioButton)landmarkMode.getSelectedToggle();
+            RadioButton button = (RadioButton)redballMode.getSelectedToggle();
             System.out.println(button.getText());
         }
-        //trackerModel.setMode(landmarkMode.getSelectedToggle().getUserData().toString());
+        trackerModel.setMode(redballMode.getSelectedToggle().getUserData().toString());
     }
 }
 

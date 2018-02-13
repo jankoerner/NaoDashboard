@@ -115,20 +115,19 @@
                                        <children>
                                           <Button layoutX="77.0" layoutY="44.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                                            <ImageView fx:id="photoView" fitHeight="150.0" fitWidth="200.0" layoutX="769.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
-                                          <ToggleButton layoutX="512.0" layoutY="44.0" mnemonicParsing="false" onAction="#setLandmarkTracker" text="Enabled">
+                                          <ToggleButton layoutX="512.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedballTracker" text="Enabled">
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="landmarkTracker" />
+                                                <ToggleGroup fx:id="redBallTracker" />
                                              </toggleGroup></ToggleButton>
-                                          <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setLandmarkTracker" selected="true" text="Disabled" toggleGroup="$landmarkTracker" />
-                                          <Label layoutX="512.0" layoutY="21.0" text="Landmark Tracker" />
+                                          <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedballTracker" selected="true" text="Disabled" toggleGroup="$redBallTracker" />
+                                          <Label layoutX="512.0" layoutY="21.0" text="Redball Tracker" />
                                           <RadioButton fx:id="headRadio" layoutX="518.0" layoutY="110.0" mnemonicParsing="false" onAction="#changeTrackingMode" selected="true" text="Head only">
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="landmarkMode" />
+                                                <ToggleGroup fx:id="redballMode" />
                                              </toggleGroup></RadioButton>
-                                          <RadioButton fx:id="bodyRadio" layoutX="518.0" layoutY="130.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Whole Body" toggleGroup="$landmarkMode" />
-                                          <RadioButton fx:id="moveRadio" layoutX="518.0" layoutY="150.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Move" toggleGroup="$landmarkMode" />
+                                          <RadioButton fx:id="bodyRadio" layoutX="518.0" layoutY="130.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Whole Body" toggleGroup="$redballMode" />
+                                          <RadioButton fx:id="moveRadio" layoutX="518.0" layoutY="150.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Move" toggleGroup="$redballMode" />
                                           <Label layoutX="515.0" layoutY="87.0" text="Tracking Mode" />
-                                          <Button fx:id="searchMarkButton" layoutX="509.0" layoutY="191.0" mnemonicParsing="false" onAction="#searchLandmarks" text="Search for Marks" />
                                           <ImageView fx:id="iv_camera" fitHeight="150.0" fitWidth="200.0" layoutX="77.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" />
                                        </children>
                                     </AnchorPane>

@@ -11,7 +11,7 @@ public class TrackerModel {
     public static void main(String[] args) {
 
     }
-    private String mode;
+    private String mode = "";
     private ALTracker alTracker;
     public void setMode(String mode) throws Exception {
         if (alTracker == null){
@@ -28,33 +28,14 @@ public class TrackerModel {
                 this.mode="Move";
                 break;
         }
-    }
-
-    public void trackLandmark(Session session, ArrayList landMarkInfos, ALTracker tracker)throws Exception{
-        if (!alTracker.equals(tracker)){
-            alTracker = tracker;
-        }
-        Object[] strings = {"0.1", 68 };
         alTracker.setMode(mode);
-        alTracker.registerTarget("LandMark",strings);
-        alTracker.track("LandMark");
-        while(alTracker.isActive()){
-            if (alTracker.isTargetLost());
-            alTracker.stopTracker();
-        }
     }
 
-    public void searchLandmark(Session session)throws Exception{
-        if (alTracker == null){
-            alTracker = new ALTracker(session);
-        }
-        alTracker.toggleSearch(true);
-        while(alTracker.isSearchEnabled()){
-            if (alTracker.isNewTargetDetected()){
-                alTracker.toggleSearch(false);
-            }
-        }
-
+    public void trackRedball(Session session, ArrayList redBallinfo, ALTracker tracker)throws Exception{
+        alTracker = tracker;
+        tracker.registerTarget("RedBall",0.1f);
+        tracker.setMode(mode);
+        tracker.track("Redball");
     }
 
     public void stopTraker()throws Exception{

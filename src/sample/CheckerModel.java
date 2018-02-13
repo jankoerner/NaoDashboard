@@ -4,7 +4,6 @@ import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.*;
-import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
@@ -13,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,11 +23,11 @@ public class CheckerModel {
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
     private boolean end = false;
-    private boolean LandmarkTrackerActive = false;
+    private boolean RedballTrackerActive = false;
     private TrackerModel trackerModel = new TrackerModel();
     private ALTracker alTracker;
-    public void setLandmarkTrackerActive(boolean isActive){
-        LandmarkTrackerActive = isActive;
+    public void setRedballTrackerActive(boolean isActive){
+        RedballTrackerActive = isActive;
     }
     private String landmarkID;
     boolean tracked = false;
@@ -38,10 +36,9 @@ public class CheckerModel {
     public static void main(String[] args) {
 
     }
-
-
-
-
+    public void setTracked(boolean tracked2){
+        tracked = tracked2;
+    }
     public void setBatteryPercentage(double percentage, ProgressBar batteryPercentage){
         batteryPercentage.setProgress(percentage/100);
     }
@@ -106,7 +103,7 @@ public class CheckerModel {
                             ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
                             for (int i = 0; i < tempEvent.size() ; i++) {
                                 if(tempEvent.get(i) instanceof ArrayList){
-                                    ArrayList tempe = (ArrayList) tempEvent.get(i);
+                                    ArrayList tempe = (ArrayList) tempEvent;
                                     if(tempe.get(0).equals(1) & tempe.get(1).equals("LArm")){
                                         leftArmTempText.setText("Warm");
                                         leftArmTempText.setFill(Color.ORANGE);
@@ -248,47 +245,35 @@ public class CheckerModel {
         }
     }
 
-    public void LandmarkTracker(Session session, String mode)throws Exception{
-        if (LandmarkTrackerActive){
+    public void RedballTracker(Session session, String mode)throws Exception{
+        if (RedballTrackerActive){
             TrackerModel trackerModel = new TrackerModel();
-            memory.subscribeToEvent("LandmarkDetected", new EventCallback<ArrayList>() {
-
+            memory.subscribeToEvent("redBallDetected", new EventCallback<ArrayList>() {
                 @Override
                 public void onEvent(ArrayList info ) throws InterruptedException, CallError {
                     try {
-                        if (tracked == false){
-                            trackerModel.setMode(mode);
-                            trackerModel.trackLandmark(session,info,alTracker);
+                        if (tracked==false){
+                            trackerModel.trackRedball(session,info,alTracker);
                             tracked = true;
-                            System.out.println(tracked);
+                            System.out.println("RedBall detected");
                         }
-                        System.out.println(tracked);
-                    }catch (Exception e){
-                        System.out.println(e.getCause());
-                    }
-                }
-            });
-            memory.subscribeToEvent("ALTracker/TargetLost", new EventCallback<ArrayList>() {
-                @Override
-                public void onEvent(ArrayList info ) throws InterruptedException, CallError {
-                    try {
-                        System.out.println("lost");
-                        tracked = false;
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-                }
-            });
 
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         }
     }
 
-    public void enableLandmarkTracker(Session session)throws Exception{
-        if (LandmarkTrackerActive){
+    public void enableRedballTracker(Session session)throws Exception{
+        if (RedballTrackerActive){
             alTracker = new ALTracker(session);
-            alTracker.trackEvent("LandmarkDetected");
+            ALRedBallDetection redBallDetection = new ALRedBallDetection(session);
+            redBallDetection.subscribe("redBallDetected");
         }
+
     }
 
     public void systemInfo(Session session, Text systemText)throws Exception{

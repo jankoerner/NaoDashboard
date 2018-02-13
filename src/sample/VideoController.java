@@ -45,7 +45,6 @@ public class VideoController {
 @SuppressWarnings("unchecked")
     private void getNaoFrames(ALVideoDevice alVideoDevice, String subscribeCamera, ImageView iv_camera) {
 
-
     Runnable frameGrabber = new Runnable() {
 
         @Override
