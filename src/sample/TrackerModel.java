@@ -1,8 +1,6 @@
 package sample;
 
-import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
-import com.aldebaran.qi.helper.proxies.ALRobotPosture;
 import com.aldebaran.qi.helper.proxies.ALTracker;
 
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ public class TrackerModel {
     public static void main(String[] args) {
 
     }
-    private String mode = "";
+    private String mode = "Head";
     private ALTracker alTracker;
     public void setMode(String mode) throws Exception {
         if (alTracker == null){
@@ -31,11 +29,16 @@ public class TrackerModel {
         alTracker.setMode(mode);
     }
 
-    public void trackRedball(Session session, ArrayList redBallinfo, ALTracker tracker)throws Exception{
-        alTracker = tracker;
-        tracker.registerTarget("RedBall",0.1f);
-        tracker.setMode(mode);
-        tracker.track("Redball");
+    public void trackRedball(Session session, ArrayList redBallinfo)throws Exception{
+        alTracker = new ALTracker(session);
+        alTracker.registerTarget("RedBall",0.05f);
+        alTracker.setMode(mode);
+        alTracker.track("RedBall");
+        while (alTracker.isActive()){
+            if (alTracker.isTargetLost()){
+                alTracker.stopTracker();
+            }
+        }
     }
 
     public void stopTraker()throws Exception{

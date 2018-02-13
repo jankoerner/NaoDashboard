@@ -24,21 +24,16 @@ public class CheckerModel {
     private boolean timerKiller = false;
     private boolean end = false;
     private boolean RedballTrackerActive = false;
-    private TrackerModel trackerModel = new TrackerModel();
-    private ALTracker alTracker;
     public void setRedballTrackerActive(boolean isActive){
         RedballTrackerActive = isActive;
     }
-    private String landmarkID;
     boolean tracked = false;
 
 
     public static void main(String[] args) {
 
     }
-    public void setTracked(boolean tracked2){
-        tracked = tracked2;
-    }
+
     public void setBatteryPercentage(double percentage, ProgressBar batteryPercentage){
         batteryPercentage.setProgress(percentage/100);
     }
@@ -101,43 +96,45 @@ public class CheckerModel {
                         ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
                         if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
                             ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
-                            for (int i = 0; i < tempEvent.size() ; i++) {
+                            //ArrayList tempe = (ArrayList) tempEvent.get(0);
+                            ArrayList tempe1 = (ArrayList) tempEvent.get(1);
+
+                            /*for (int i = 0; i < tempEvent.size() ; i++) {
                                 if(tempEvent.get(i) instanceof ArrayList){
-                                    ArrayList tempe = (ArrayList) tempEvent;
-                                    if(tempe.get(0).equals(1) & tempe.get(1).equals("LArm")){
+                                    if(tempe.equals(1) && tempe1.get(i).equals("LArm")){
                                         leftArmTempText.setText("Warm");
                                         leftArmTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LArm")){
+                                    }else if(tempe.equals(2) && tempe1.get(i).equals("LArm")){
                                         leftArmTempText.setText("Hot");
                                         leftArmTempText.setFill(Color.RED);
-                                    }else if(tempe.get(0).equals(1) & tempe.get(1).equals("RArm")){
+                                    }else if(tempe.get(i).equals(1) && tempe1.get(i).equals("RArm")){
                                         rightArmTempText.setText("Warm");
                                         rightArmTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("RArm")) {
+                                    }else if(tempe.get(i).equals(2) && tempe1.get(i).equals("RArm")) {
                                         rightArmTempText.setText("Hot");
                                         rightArmTempText.setFill(Color.RED);
-                                    }else if(tempe.get(0).equals(1) & tempe.get(1).equals("LLeg")) {
+                                    }else if(tempe.get(i).equals(1) && tempe1.get(i).equals("LLeg")) {
                                         leftLegTempText.setText("Warm");
                                         leftLegTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LLeg")) {
+                                    }else if(tempe.get(i).equals(2) && tempe1.get(i).equals("LLeg")) {
                                         leftLegTempText.setText("Hot");
                                         leftLegTempText.setFill(Color.RED);
-                                    }else if (tempe.get(0).equals(1) & tempe.get(1).equals("RLeg")){
+                                    }else if (tempe.get(i).equals(1) && tempe1.get(i).equals("RLeg")){
                                         rightLegTempText.setText("Warm");
                                         rightLegTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LLeg")) {
+                                    }else if(tempe.get(i).equals(2) && tempe1.get(i).equals("LLeg")) {
                                         rightLegTempText.setText("Hot");
                                         rightLegTempText.setFill(Color.RED);
-                                    }else if (tempe.get(0).equals(1) & tempe.get(1).equals("Head")){
+                                    }else if (tempe.get(i).equals(1) && tempe1.get(i).equals("Head")){
                                         headTempText.setText("Warm");
                                         headTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("Head")) {
+                                    }else if(tempe.get(i).equals(2) && tempe1.get(i).equals("Head")) {
                                         headTempText.setText("Hot");
                                         headTempText.setFill(Color.RED);
                                     }
                                 }
 
-                            }
+                            }*/
                             if(tempEvent.get(0).equals(1)){
                                 temperatureText.setText("Warm");
                                 temperatureText.setFill(Color.ORANGE);
@@ -245,17 +242,18 @@ public class CheckerModel {
         }
     }
 
-    public void RedballTracker(Session session, String mode)throws Exception{
+    public void RedballTracker(Session session)throws Exception{
         if (RedballTrackerActive){
             TrackerModel trackerModel = new TrackerModel();
+            System.out.println(memory.getEventList());
             memory.subscribeToEvent("redBallDetected", new EventCallback<ArrayList>() {
                 @Override
                 public void onEvent(ArrayList info ) throws InterruptedException, CallError {
                     try {
                         if (tracked==false){
-                            trackerModel.trackRedball(session,info,alTracker);
-                            tracked = true;
-                            System.out.println("RedBall detected");
+                            trackerModel.trackRedball(session, info);
+                            tracked=true;
+                            System.out.println(tracked);
                         }
 
                     }catch (Exception e){
@@ -269,7 +267,6 @@ public class CheckerModel {
 
     public void enableRedballTracker(Session session)throws Exception{
         if (RedballTrackerActive){
-            alTracker = new ALTracker(session);
             ALRedBallDetection redBallDetection = new ALRedBallDetection(session);
             redBallDetection.subscribe("redBallDetected");
         }

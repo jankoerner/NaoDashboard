@@ -596,12 +596,11 @@ public class Controller {
         if (toggle.getText().equals("Enabled")){
             checkerModel.setRedballTrackerActive(true);
             checkerModel.enableRedballTracker(session);
-            checkerModel.RedballTracker(session, redballMode.getSelectedToggle().selectedProperty().getName());
+            checkerModel.RedballTracker(session);
             setTrackButtons(false);
 
         }else {
             checkerModel.setRedballTrackerActive(false);
-            checkerModel.setTracked(false);
             if (trackerModel == null)
             {
                 trackerModel = new TrackerModel();
@@ -625,8 +624,8 @@ public class Controller {
         {
             RadioButton button = (RadioButton)redballMode.getSelectedToggle();
             System.out.println(button.getText());
+            trackerModel.setMode(button.getText());
         }
-        trackerModel.setMode(redballMode.getSelectedToggle().getUserData().toString());
     }
 }
 
