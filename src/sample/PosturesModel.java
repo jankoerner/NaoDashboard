@@ -55,6 +55,7 @@ public class PosturesModel {
 
     public void changeImage(String posture, ImageView imageView) {
         try {
+            System.out.println(posture);
             switch (posture) {
                 case "Crouch":
                     image = new Image("/Nao/Crouch.jpg", true);

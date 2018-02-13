@@ -1,6 +1,7 @@
 package sample;
 
 
+import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 
 import com.aldebaran.qi.helper.proxies.*;
@@ -25,11 +26,11 @@ import java.util.List;
 
 
 public class Controller {
-    @FXML ToggleGroup mode, landmarkTracker;
+    @FXML ToggleGroup mode, landmarkTracker, landmarkMode;
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
-    @FXML TextArea textToSpeech;
-    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
+    @FXML TextArea textToSpeech, midButtonText, rearButtonText;
+    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play, searchMarkButton;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -37,6 +38,7 @@ public class Controller {
     @FXML Text temperatureText;
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
+    @FXML RadioButton headRadio, bodyRadio, moveRadio;
 
     private VideoController videoController;
     private static  Integer ListIndex=0;
@@ -52,6 +54,7 @@ public class Controller {
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
     private CameraModel cameraModel;
+    private TrackerModel trackerModel;
     private CheckerModel checkerModel = new CheckerModel();
     private static String[] IP = new String[5];
     private static String[] Port = new String[IP.length];
@@ -180,7 +183,7 @@ public class Controller {
                          actualEntries = I;
                     }
                 }
-                Log("Your connectionlog might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
+                Log("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
             }
         } finally {
             try {
@@ -364,8 +367,6 @@ public class Controller {
         session.close();
         Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
-        checkerModel.checkTouch(session);
-        checkerModel.checkBatteryCharge(session, batteryCircle,batteryPercentage);
         checkerModel.killCheckers();
 
     }
@@ -445,7 +446,8 @@ public class Controller {
         alAnimatedSpeech.say("You are connected");
         checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage);
         checkerModel.checkTemperature(session, temperatureText);
-        checkerModel.checkTouch(session);
+        checkerModel.checkTouch(session, midButtonText, rearButtonText, volumeSlider, voiceSlider, voiceSpeedSlider,dropDownLanguages);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -462,13 +464,17 @@ public class Controller {
                   dropDownLanguages.getItems().removeAll(dropDownLanguages.getItems());
                   cb_LEDS.getItems().removeAll(cb_LEDS.getItems());
                   colorBox.getItems().removeAll(colorBox.getItems());
-              } else
-                  getBoxes();
+              } //else
+                  //getBoxes();
           } else if(Startup){
               tb_NAO.setDisable(true);
               connectButton.setDisable(false);
               disconnectButton.setDisable(true);
           }
+    }
+
+    public void naoTab(){
+        getBoxes();
     }
 
     @SuppressWarnings("unchecked")
@@ -559,6 +565,7 @@ public class Controller {
             Object[] colorArray = {"White", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan"};
             ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
             colorBox.setItems(colorList);
+            setTrackButtons(true);
         }catch (Exception e){
             Log("An error has occured while setting the boxes. WARN");
             e.printStackTrace();
@@ -590,26 +597,44 @@ public class Controller {
         if (toggle.getText().equals("Enabled")){
             checkerModel.setLandmarkTrackerActive(true);
             checkerModel.enableLandmarkTracker(session);
-            checkerModel.LandmarkTracker(session);
+            checkerModel.LandmarkTracker(session, landmarkMode.getSelectedToggle().selectedProperty().getName());
+            setTrackButtons(false);
+
         }else {
             checkerModel.setLandmarkTrackerActive(false);
+            if (trackerModel == null)
+            {
+                trackerModel = new TrackerModel();
+            }
+            trackerModel.stopTraker();
+            setTrackButtons(true);
         }
     }
-    public void test()throws Exception{
-        checkerModel.test();
+    private void setTrackButtons(Boolean enabled){
+            searchMarkButton.setDisable(enabled);
+            bodyRadio.setDisable(enabled);
+            headRadio.setDisable(enabled);
+            moveRadio.setDisable(enabled);
+
     }
-
-
-
-    public void dance() throws Exception{
-        if (moveBodyModel == null){
-            moveBodyModel = new MoveBodyModel();
+    public void searchLandmarks() throws Exception {
+        if (trackerModel == null){
+            trackerModel = new TrackerModel();
         }
-        moveBodyModel.frontTouched(session);
+        trackerModel.searchLandmark(session);
     }
-
-
-
+    public void changeTrackingMode() throws Exception {
+        if (trackerModel == null){
+            trackerModel = new TrackerModel();
+        }
+        System.out.println(landmarkMode.selectedToggleProperty());
+        if (landmarkMode.getSelectedToggle().getClass().equals(RadioButton.class))
+        {
+            RadioButton button = (RadioButton)landmarkMode.getSelectedToggle();
+            System.out.println(button.getText());
+        }
+        //trackerModel.setMode(landmarkMode.getSelectedToggle().getUserData().toString());
+    }
 }
 
 

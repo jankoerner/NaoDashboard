@@ -6,9 +6,13 @@ import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.ALBattery;
 import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
 import com.aldebaran.qi.helper.proxies.ALMemory;
+import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
 import com.aldebaran.qi.helper.proxies.ALTracker;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -20,14 +24,15 @@ import java.util.TimerTask;
 public class CheckerModel {
 
     private ALMemory memory;
+    private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
+    private boolean end = false;
+
     private boolean LandmarkTrackerActive = false;
-    private TextToSpeechModel textToSpeechModel = new TextToSpeechModel();
     private TrackerModel trackerModel = new TrackerModel();
     private ALTracker alTracker;
     public void setLandmarkTrackerActive(boolean isActive){
         LandmarkTrackerActive = isActive;
-        System.out.println(LandmarkTrackerActive);
     }
     private String landmarkID;
     boolean tracked = false;
@@ -49,6 +54,9 @@ public class CheckerModel {
             memory = new ALMemory(session);
             ALBattery alBattery = new ALBattery(session);
 
+            if(end){
+                memory.unsubscribeAllEvents();
+            }
             if(alBattery.getBatteryCharge() == 0){
                 batteryCicle.setFill(Color.BLACK);
                 System.out.println("No battery detected.");
@@ -102,6 +110,7 @@ public class CheckerModel {
                             temperatureText.setFill(Color.GREEN);
                         }
                     }
+
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -110,9 +119,18 @@ public class CheckerModel {
         temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 
-    public void checkTouch(Session session ){
+    public void checkTouch(Session session, TextArea midButtonText, TextArea rearButtonText, Slider volumeSlider,
+                           Slider voiceSlider, Slider voiceSpeedSlider, ComboBox dropDownLanguages){
         try {
             memory = new ALMemory(session);
+
+            if(textToSpeechModel == null){
+                textToSpeechModel = new TextToSpeechModel();
+            }
+
+            if(end){
+                memory.unsubscribeAllEvents();
+            }
             memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
                 @Override
                 public void onEvent(Float val) throws InterruptedException, CallError {
@@ -135,6 +153,17 @@ public class CheckerModel {
                     float touchState = val;
                     if(touchState == 1.0){
                         System.out.println("Middle head bumper has been touched");
+                        if(midButtonText.getText() != null){
+                            Float volume = (float) volumeSlider.getValue();
+                            String language =(String) dropDownLanguages.getValue();
+                            String voice = String.valueOf((int)voiceSlider.getValue());
+                            String speed = String.valueOf((int)voiceSpeedSlider.getValue());
+                            try{
+                                textToSpeechModel.say(session, midButtonText.getText(),volume, language, voice, speed);
+                            }catch(Exception exception){
+                                exception.printStackTrace();
+                            }
+                        }
                     }
                 }
             });
@@ -144,6 +173,18 @@ public class CheckerModel {
                     float touchState = val;
                     if(touchState == 1.0){
                         System.out.println("Rear head bumper has been touched");
+                        if(rearButtonText.getText() != null){
+                            Float volume = (float) volumeSlider.getValue();
+                            String language =(String) dropDownLanguages.getValue();
+                            String voice = String.valueOf((int)voiceSlider.getValue());
+                            String speed = String.valueOf((int)voiceSpeedSlider.getValue());
+                            try{
+                                textToSpeechModel.say(session, rearButtonText.getText(),volume, language, voice, speed);
+                            }catch(Exception exception){
+                                exception.printStackTrace();
+                            }
+                        }
+
                     }
 
                 }
@@ -153,19 +194,16 @@ public class CheckerModel {
         }
     }
 
-    public void LandmarkTracker(Session session)throws Exception{
-        /*ALVideoDevice alVideoDevice = new ALVideoDevice(session);
-        alVideoDevice.openCamera(0);
-        ALVisionRecognition alVisionRecognition = new ALVisionRecognition(session);
-        alVisionRecognition.subscribe("LandmarkDetected");*/
+    public void LandmarkTracker(Session session, String mode)throws Exception{
         if (LandmarkTrackerActive){
             TrackerModel trackerModel = new TrackerModel();
             memory.subscribeToEvent("LandmarkDetected", new EventCallback<ArrayList>() {
                 @Override
-                public void onEvent(ArrayList o) throws InterruptedException, CallError {
+                public void onEvent(ArrayList info ) throws InterruptedException, CallError {
                     try {
                         if (tracked==false){
-                            trackerModel.trackLandmark(session,o,alTracker);
+                            trackerModel.trackLandmark(session,info,alTracker);
+                            trackerModel.setMode(mode);
                             tracked = true;
                         }
                     }catch (Exception e){
@@ -182,14 +220,10 @@ public class CheckerModel {
             alTracker.trackEvent("LandmarkDetected");
         }
     }
-    public void test()throws Exception{
-        System.out.println(memory.getDataListName());
-    }
-
 
     public void killCheckers() {
+        end = true;
         timerKiller = true;
 
     }
-
 }
