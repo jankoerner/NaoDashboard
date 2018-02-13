@@ -1,9 +1,7 @@
 package sample;
 
 
-import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
-
 import com.aldebaran.qi.helper.proxies.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -17,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -441,7 +438,7 @@ public class Controller {
         this.write(getPort(),getIP());
         UpdateItems(false, false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
-        alAnimatedSpeech.say("You are connected");
+        //alAnimatedSpeech.say("You are connected");
         checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage, batteryPercentText);
         checkerModel.checkTemperature(session, temperatureText, rightArmTempText, leftArmTempText, rightLegTempText,
                 leftLegTempText, headTempText);

@@ -28,14 +28,20 @@ public class TrackerModel {
                 this.mode="Move";
                 break;
         }
-        System.out.println(alTracker.getMode());
     }
 
     public void trackLandmark(Session session, ArrayList landMarkInfos, ALTracker tracker)throws Exception{
-        alTracker = tracker;
-        alTracker.registerTarget("LandMark",landMarkInfos);
+        if (!alTracker.equals(tracker)){
+            alTracker = tracker;
+        }
+        Object[] strings = {"0.1", 68 };
         alTracker.setMode(mode);
+        alTracker.registerTarget("LandMark",strings);
         alTracker.track("LandMark");
+        while(alTracker.isActive()){
+            if (alTracker.isTargetLost());
+            alTracker.stopTracker();
+        }
     }
 
     public void searchLandmark(Session session)throws Exception{
@@ -43,15 +49,19 @@ public class TrackerModel {
             alTracker = new ALTracker(session);
         }
         alTracker.toggleSearch(true);
-        if (alTracker.isNewTargetDetected()){
-            alTracker.toggleSearch(false);
+        while(alTracker.isSearchEnabled()){
+            if (alTracker.isNewTargetDetected()){
+                alTracker.toggleSearch(false);
+            }
         }
+
     }
 
     public void stopTraker()throws Exception{
         if (alTracker == null){
             alTracker = new ALTracker(Controller.getSession());
         }
+        alTracker.toggleSearch(false);
         alTracker.stopTracker();
     }
 

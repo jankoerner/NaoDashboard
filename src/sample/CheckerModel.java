@@ -252,19 +252,35 @@ public class CheckerModel {
         if (LandmarkTrackerActive){
             TrackerModel trackerModel = new TrackerModel();
             memory.subscribeToEvent("LandmarkDetected", new EventCallback<ArrayList>() {
+
                 @Override
                 public void onEvent(ArrayList info ) throws InterruptedException, CallError {
                     try {
-                        if (tracked==false){
-                            trackerModel.trackLandmark(session,info,alTracker);
+                        if (tracked == false){
                             trackerModel.setMode(mode);
+                            trackerModel.trackLandmark(session,info,alTracker);
                             tracked = true;
+                            System.out.println(tracked);
                         }
+                        System.out.println(tracked);
                     }catch (Exception e){
-
+                        System.out.println(e.getCause());
                     }
                 }
             });
+            memory.subscribeToEvent("ALTracker/TargetLost", new EventCallback<ArrayList>() {
+                @Override
+                public void onEvent(ArrayList info ) throws InterruptedException, CallError {
+                    try {
+                        System.out.println("lost");
+                        tracked = false;
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                }
+            });
+
+
         }
     }
 
