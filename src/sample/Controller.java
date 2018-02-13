@@ -34,13 +34,12 @@ public class Controller {
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
-    @FXML ImageView imageView, photoView;
+    @FXML ImageView imageView, photoView,iv_camera;
     @FXML Text temperatureText, rightArmTempText, leftArmTempText, rightLegTempText, leftLegTempText, headTempText;
     @FXML Text batteryPercentText, systemText;
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
     @FXML RadioButton headRadio, bodyRadio, moveRadio;
-
     private VideoController videoController;
     private static  Integer ListIndex=0;
     private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
@@ -440,7 +439,7 @@ public class Controller {
     @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
         videoController= new VideoController();
-        videoController.startup(session);
+        videoController.startup(session, iv_camera);
         this.write(getPort(),getIP());
         UpdateItems(false, false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);

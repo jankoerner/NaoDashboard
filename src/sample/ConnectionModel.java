@@ -18,7 +18,7 @@ public class ConnectionModel {
     }
 
     public boolean connect(String ip, Integer port) {
-        if (isIPValid(ip, port, 5000)) {
+        if (isIPValid(ip, port, 3000)) {
             setNaoUrl(ip, Integer.toString(port));
             return true;
         }else {
