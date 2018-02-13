@@ -1,6 +1,5 @@
 .progress-bar > .bar{
-    -fx-accent: black;
-    -fx-background-color: black;
+    -fx-background-color: transparent;
 
 
 }
