@@ -158,6 +158,9 @@
                                           <Text fx:id="leftLegTempText" layoutX="628.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
                                           <Label layoutX="400.0" layoutY="51.0" text="Body Temperature Readout" />
                                           <Label layoutX="88.0" layoutY="126.0" text="Remaining Battery % :" />
+                                          <Text fx:id="batteryPercentText" layoutX="100.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0%" wrappingWidth="123.99999529123306" />
+                                          <Text fx:id="systemText" layoutX="820.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="System Version" wrappingWidth="123.99999529123306" />
+                                          <Label layoutX="815.0" layoutY="126.0" text="Version Information:" />
                                       </children>
                                   </AnchorPane>
                                 </content>

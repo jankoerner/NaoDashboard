@@ -36,6 +36,7 @@ public class Controller {
     @FXML TextField tx_IP, tx_Port, degreeField;
     @FXML ImageView imageView, photoView;
     @FXML Text temperatureText, rightArmTempText, leftArmTempText, rightLegTempText, leftLegTempText, headTempText;
+    @FXML Text batteryPercentText, systemText;
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
     @FXML RadioButton headRadio, bodyRadio, moveRadio;
@@ -441,10 +442,11 @@ public class Controller {
         UpdateItems(false, false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
         alAnimatedSpeech.say("You are connected");
-        checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage);
+        checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage, batteryPercentText);
         checkerModel.checkTemperature(session, temperatureText, rightArmTempText, leftArmTempText, rightLegTempText,
                 leftLegTempText, headTempText);
         checkerModel.checkTouch(session, midButtonText, rearButtonText, volumeSlider, voiceSlider, voiceSpeedSlider,dropDownLanguages);
+        checkerModel.systemInfo(session, systemText);
 
     }
 

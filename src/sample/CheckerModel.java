@@ -3,11 +3,7 @@ package sample;
 import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
-import com.aldebaran.qi.helper.proxies.ALBattery;
-import com.aldebaran.qi.helper.proxies.ALBodyTemperature;
-import com.aldebaran.qi.helper.proxies.ALMemory;
-import com.aldebaran.qi.helper.proxies.ALTextToSpeech;
-import com.aldebaran.qi.helper.proxies.ALTracker;
+import com.aldebaran.qi.helper.proxies.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
@@ -25,6 +21,7 @@ import java.util.TimerTask;
 public class CheckerModel {
 
     private ALMemory memory;
+    private ALSystem alSystem;
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
     private boolean end = false;
@@ -49,7 +46,7 @@ public class CheckerModel {
         batteryPercentage.setProgress(percentage/100);
     }
 
-    public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage){
+    public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage, Text batteryPercentText){
         try{
             memory = new ALMemory(session);
             ALBattery alBattery = new ALBattery(session);
@@ -63,6 +60,7 @@ public class CheckerModel {
                 batteryCicle.setFill(Color.BLACK);
                 System.out.println("No battery detected.");
                 batteryPercentage.setStyle("-fx-background-color: black");
+                batteryPercentText.setText("No battery detected");
             }
             memory.subscribeToEvent("BatteryChargeChanged", new EventCallback<Integer>() {
                 @Override
@@ -82,6 +80,7 @@ public class CheckerModel {
                         batteryPercentage.setStyle("fx-background-color: red");
                     }
                     setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
+                    batteryPercentText.setText(alBattery.getBatteryCharge().toString());
                 }
             });
 
@@ -276,6 +275,12 @@ public class CheckerModel {
         }
     }
 
+    public void systemInfo(Session session, Text systemText)throws Exception{
+        alSystem = new ALSystem(session);
+        String text = alSystem.systemInfo().toString();
+        System.out.println(text);
+        systemText.setText(text);
+    }
     public void killCheckers(ProgressBar batteryPercentage, Text temperatureText) {
         end = true;
         timerKiller = true;

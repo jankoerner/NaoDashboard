@@ -1,0 +1,11 @@
+.progress-bar > .bar{
+    -fx-accent: black;
+    -fx-background-color: black;
+
+
+}
+
+.progress-bar > . track{
+    -fx-background-color: transparent;
+}
+
