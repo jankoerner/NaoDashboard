@@ -129,6 +129,7 @@
                                           <RadioButton fx:id="moveRadio" layoutX="518.0" layoutY="150.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Move" toggleGroup="$landmarkMode" />
                                           <Label layoutX="515.0" layoutY="87.0" text="Tracking Mode" />
                                           <Button fx:id="searchMarkButton" layoutX="509.0" layoutY="191.0" mnemonicParsing="false" onAction="#searchLandmarks" text="Search for Marks" />
+                                          <ImageView fx:id="iv_camera" fitHeight="150.0" fitWidth="200.0" layoutX="77.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -137,9 +138,9 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                       <children>
-                                          <ImageView fx:id="tempPic" fitHeight="283.0" fitWidth="187.0" layoutX="413.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="tempPic" fitHeight="283.0" fitWidth="187.0" layoutX="397.0" layoutY="84.0" pickOnBounds="true" preserveRatio="true">
                                               <image>
-                                                  <Image url="@../Nao/Stand.jpg" />
+                                                  <Image url="@../Nao/nao.png" />
                                               </image></ImageView>
                                           <Line endX="100.0" layoutX="334.0" layoutY="231.0" startX="-10.0" />
                                           <Line endX="100.0" layoutX="564.0" layoutY="231.0" startX="-10.0" />

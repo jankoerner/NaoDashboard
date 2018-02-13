@@ -69,15 +69,15 @@ public class CheckerModel {
                     if (charge > 75){
                         batteryCicle.setFill(Color.GREEN);
                         System.out.println("Battery remaining " + charge);
-                        batteryPercentage.setStyle("fx-background-color: green");
+                        batteryPercentage.setStyle("-fx-background-color: green");
                     }else if (charge < 75 & charge > 30){
                         batteryCicle.setFill(Color.ORANGE);
                         System.out.println("Battery remaining " + charge);
-                        batteryPercentage.setStyle("fx-background-color: orange");
+                        batteryPercentage.setStyle("-fx-background-color: orange");
                     }else if (charge < 30 & charge != 0 ){
                         batteryCicle.setFill(Color.RED);
                         System.out.println("Battery remaining " + charge);
-                        batteryPercentage.setStyle("fx-background-color: red");
+                        batteryPercentage.setStyle("-fx-background-color: red");
                     }
                     setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
                     batteryPercentText.setText(alBattery.getBatteryCharge().toString());
