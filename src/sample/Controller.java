@@ -1,11 +1,7 @@
 package sample;
 
 
-import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
-
-import com.aldebaran.qi.helper.proxies.*;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,10 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,15 +32,9 @@ public class Controller {
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
     @FXML RadioButton headRadio, bodyRadio, moveRadio;
-    private VideoController videoController;
-    private static  Integer ListIndex=0;
-    private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
-    private BufferedWriter writer;
-    private FileInputStream file;
-    private BufferedReader reader;
     private static Session session;
     private LEDModel ledModel;
-    private ConnectionModel connectionModel;
+    private ConnectionModel connectionModel = new ConnectionModel();
     private TextToSpeechModel textToSpeechModel;
     private AudioModel audioModel;
     private PosturesModel posturesModel;
@@ -56,171 +42,37 @@ public class Controller {
     private CameraModel cameraModel;
     private TrackerModel trackerModel;
     private CheckerModel checkerModel = new CheckerModel();
-    private static String[] IP = new String[5];
-    private static String[] Port = new String[IP.length];
-    private static String[] URL = new String[Port.length];
-
-
-
-    private String[] getPort(){
-        return Port;
-    }
-    private String[] getIP(){
-        return IP;
-    }
-
+    private LogModel log = new LogModel();
+    private Utils utils = new Utils();
     public static Session getSession() {
         return session;
     }
 
-    public static void main(String[] args) {
-
-    }
-
-    public void initialize()throws Exception {
-        read();
-        lv_log.setFixedCellSize(20);
-        WelcomeMessage();
+    public void initialize(){
+        log.initializeLog(lv_log);
+        connectionModel.initialize(cb_IP, tx_IP, tx_Port);
         UpdateItems(false, true);
     }
 
-    private void WelcomeMessage() {
-        Log("Welcome to the \"Nao Dashboard\", a dashboard which lets you control NAOs. INFO");
-        Log("To start, please enter the IP address and the port of the NAO you wish to connect to. INFO");
-        Log("The dashboard was created and designed by Jan Körner, Jonathan Schindler and Valentin Lechner. INFO");
-    }
-
-    private synchronized void addTimestampandColor(String message, String context) {
-        Platform.runLater(() -> {
-            Date timestamp = new Date();
-            String time = timestampFormatter.format(timestamp);
-            String log = "\r"+"\n"+ time + ">> "+message+" <<"+"\r"+"\n";
-            Text text = new Text(log);
-            if(context.equals("INFO")){
-                text.setStyle("-fx-fill:green; -fx-font-weight:bold");
-            }
-            if(context.equals("WARN")){
-                text.setStyle("-fx-fill:red; -fx-font-weight: bolder");
-            }
-            if(context.equals("ACTION")){
-                text.setStyle("-fx-fill: black; -fx-font-weight: 500");
-            }
-            lv_log.getItems().add(text);
-            ListIndex++;
-            lv_log.scrollTo(ListIndex+4);
-        });
-    }
-
-    private synchronized void FilterLogLevel(String message){
-            if(message.contains("INFO")){
-                message = message.replaceAll(" INFO","");
-                addTimestampandColor(message,"INFO");
-            }
-            if(message.contains("WARN")){
-                message=message.replaceAll(" WARN","");
-                addTimestampandColor(message,"WARN");
-            }
-            if(message.contains("ACTION")){
-                message=message.replaceAll("ACTION","");
-                addTimestampandColor(message,"ACTION");
-            }
-    }
-
-    public void Log(String message){
-        FilterLogLevel(message);
-    }
-
-
-    private void write(String[] ip,String[] port) throws IOException {
-        try {
-            writer=new BufferedWriter(new FileWriter(new File("connectionlog.txt")));
-            if(tx_IP.getText()!=IP[0]){
-                IP[4]=IP[3];
-                IP[3]=IP[2];
-                IP[2]=IP[1];
-                IP[1]=IP[0];
-                IP[0]=tx_IP.getText();
-            }
-            if(tx_Port.getText()!=Port[0]){
-                Port[4]=Port[3];
-                Port[3]=Port[2];
-                Port[2]=Port[1];
-                Port[1]=Port[0];
-                Port[0]=tx_Port.getText();
-            }
-            for(Integer I =0; I<ip.length; I++) {
-                writer.write(ip[I]);
-                writer.newLine();
-                writer.write(port[I]);
-                writer.newLine();
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            writer.close();
-        }
-
-    }
-
-    private void read() {
-        try {
-            try {
-                file = new FileInputStream("connectionlog.txt");
-                reader = new BufferedReader(new InputStreamReader(file));
-                for(Integer I=0; I<IP.length; I++){
-                    Port[I] = reader.readLine();
-                    IP[I] = reader.readLine();
-                    URL[I]=IP[I]+":"+Port[I];
-                }
-                cb_IP.setItems(FXCollections.observableArrayList(URL));
-            } catch (FileNotFoundException e) {
-                Log("The text document connectionlog could not be found on your Computer. WARN");
-                Log("Please check if the file exists in the correct directory. INFO");
-            } catch (IOException e){
-                Integer actualEntries=0;
-                for (Integer I=0; I<IP.length; I++){
-                    if(IP[I].equals("")) {
-                         actualEntries = I;
-                    }
-                }
-                Log("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
-            }
-        } finally {
-            try {
-                file.close();
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            tx_IP.setText(IP[0]);
-            tx_Port.setText(Port[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
+    @FXML
+    private void setTextFields(ActionEvent actionEvent){        //set the textfields IP and Port
+       if((actionEvent.getSource().equals(cb_IP))){             //respective to the URL selected in the dropdown
+            Integer Selected = cb_IP.getSelectionModel().getSelectedIndex();
+            tx_IP.setText(connectionModel.getIP()[Selected]);
+            tx_Port.setText(connectionModel.getPort()[Selected]);
         }
     }
 
     @FXML
-    private void setTextFields(ActionEvent actionEvent){
-       if((actionEvent.getSource().equals(cb_IP))){
-            Integer Selected = cb_IP.getSelectionModel().getSelectedIndex();
-            tx_IP.setText(IP[Selected]);
-            tx_Port.setText(Port[Selected]);
-        }
-    }
-
-
-    public void btn_ConnectIsPressed() throws Exception {
+    private void btn_ConnectIsPressed() throws Exception {
         if (connectionModel == null){
             connectionModel = new ConnectionModel();
         }
-
         if(tx_Port.getText() != null && tx_IP.getText() != null){
-            Log("Connecting to tcp://"+tx_IP.getText()+":"+tx_Port.getText()+"... INFO");
+            log.write("Connecting to tcp://"+tx_IP.getText()+":"+tx_Port.getText()+"... INFO");
             if (connectionModel.connect(tx_IP.getText(), Integer.parseInt(tx_Port.getText())))
             {
-                Log("IP valid. INFO");
+                log.write("IP valid. INFO");
                 if (session == null){
                     session = new Session(connectionModel.getNaoUrl());
                 }
@@ -228,17 +80,18 @@ public class Controller {
                     session.connect(connectionModel.getNaoUrl()).get();
                 }
                 if (session.isConnected()){
-                    Log("Connected. INFO");
+                    log.write("Connected. INFO");
                     onConnected();
                 }
 
             }else
-                Log("Connection failed. Check your entered IP&Port and your Network Connection. WARN");
+                log.write("Connection failed. Check your entered IP&Port and your Network Connection. WARN");
         }
 
     }
 
-    public void turn()throws Exception{
+    @FXML
+    private void turn(){
        if (session.isConnected()){
            if (moveBodyModel == null){
                moveBodyModel = new MoveBodyModel();
@@ -246,10 +99,14 @@ public class Controller {
            if(degreeField.getText() != null){
                String degreeString = degreeField.getText();
 
-               if (isNumber(degreeString)){
+               if (utils.isNumber(degreeString)){
                    Float degree = Float.parseFloat(degreeString);
-                   Log("Nao turns by "+degree+" degrees. ACTION");
-                   moveBodyModel.turn(session,degree/(45f));
+                   log.write("Nao turns by "+degree+" degrees. ACTION");
+                   try {
+                       moveBodyModel.turn(session,degree/(45f));
+                   } catch (Exception e) {
+                       log.write("Unhandled Exception occured: "+e+". WARN");
+                   }
                }
 
            }
@@ -257,35 +114,44 @@ public class Controller {
 
     }
 
-    public void playSounds(){
-        if(lv_Sounds.getSelectionModel().getSelectedItem()!=null) {
-            String filename = lv_Sounds.getSelectionModel().getSelectedItem().toString();
-            Log("Nao will now play the sound " + filename + ". ACTION");
+    @FXML
+    private void playSounds(){
+        String filename = utils.getSelected(lv_Sounds);
+        if(filename!=null) {
+            log.write("Nao will now play the sound " + filename + ". ACTION");
             audioModel.playSound(filename/*, (float) volumeSlider.getValue()*/);
-        } else Log("Please make sure to select a file to play. INFO ");
+        } else log.write("Please make sure to select a file to play. INFO ");
     }
-    public void moveHeadButtons(MouseEvent mouseEvent) throws Exception{
+
+    @FXML
+    private void moveHeadButtons(MouseEvent mouseEvent){
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
         if (session.isConnected()){
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {   Button button = (Button) mouseEvent.getSource();
-                moveBodyModel.moveHeadButtons(session,button.getText());
-                Log("Nao moves his head. ACTION");
+                try {
+                    moveBodyModel.moveHeadButtons(session,button.getText());
+                } catch (Exception e) {
+                    log.write("Unhandled Exception occured: "+e+". WARN");
+                }
+                log.write("Nao moves his head. ACTION");
             }
         }
     }
 
-    public void moveBodyButtons(MouseEvent mouseEvent) throws Exception{
+    @FXML
+    private void moveBodyButtons(MouseEvent mouseEvent){
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
         float velocity = (float) velocitySlider.getValue();
         float angle = (float) angleSlider.getValue();
-        float angleRound = round(angle, 5);
+        float angleRound = utils.round(angle, 5);
         Button button = (Button) mouseEvent.getSource();
         if (session.isConnected()){
+            try{
             if (mouseEvent.getEventType().equals( MouseEvent.MOUSE_PRESSED))
             {
 
@@ -298,28 +164,32 @@ public class Controller {
                     posturesModel = new PosturesModel();
                 }
                 posturesModel.makePosture(session, "Stand");
+            }} catch (Exception e){
+                log.write("Unhandled Exception occured: "+e+". WARN");
             }
         }
     }
 
-    public void moveBody(KeyEvent keyEvent) throws Exception{
+    @FXML
+    private void moveBody(KeyEvent keyEvent){
         if (moveBodyModel == null){
             moveBodyModel = new MoveBodyModel();
         }
+        try{
         if (session!=null && session.isConnected()){
             if (keyEvent.getText().equals("w")|| keyEvent.getText().equals("a") || keyEvent.getText().equals("s")
                     || keyEvent.getText().equals("d")){
                 float velocity = (float) velocitySlider.getValue();
                 float angle = (float) angleSlider.getValue();
-                float angleRound = round(angle, 5);
+                float angleRound = utils.round(angle, 5);
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
                     moveBodyModel.moveKeyboard(session, keyEvent.getText(), velocity,(float)((angleRound)*(Math.PI/180)));
                     if(angleRound!=0){
-                        Log("Nao moves and turns. Speed: "+velocity+", angle: "+angleRound);
-                    } else Log("Nao moves. Speed: "+velocity);
+                        log.write("Nao moves and turns. Speed: "+velocity+", angle: "+angleRound);
+                    } else log.write("Nao moves. Speed: "+velocity);
                 } else if (keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)) {
                     moveBodyModel.moveKeyboard(session, "stop", velocity,angleRound);
-                    Log("Nao stopped moving. ACTION");
+                    log.write("Nao stopped moving. ACTION");
                     angleSlider.valueProperty().set(0);
                     if (posturesModel == null) {
                         posturesModel = new PosturesModel();
@@ -332,17 +202,20 @@ public class Controller {
                     || keyEvent.getText().equals("l") || keyEvent.getText().equals("m")){
                 if (keyEvent.getEventType().equals(KeyEvent.KEY_PRESSED)) {
                     moveBodyModel.moveKeyboard(session, keyEvent.getText());
-                    Log("Nao moves his head. ACTION");
+                    log.write("Nao moves his head. ACTION");
                 }else if(keyEvent.getEventType().equals(KeyEvent.KEY_RELEASED)){
                     moveBodyModel.moveKeyboard(session, "stop");
-                    Log("Nao stopped moving his head. ACTION");
+                    log.write("Nao stopped moving his head. ACTION");
                 }
 
             }
+        }}catch (Exception e){
+            log.write("Unhandled Exception occured: "+e+". WARN");
         }
     }
 
-    public void say(){
+    @FXML
+    private void say(){
        if (session.isConnected()){
            if (textToSpeechModel == null)
            {
@@ -356,29 +229,30 @@ public class Controller {
                try {
                    textToSpeechModel.say(session, textToSpeech.getText(),volume, language, voice, speed);
                } catch (Exception e) {
-                   Log("Nao could not say this text. INFO");
+                   log.write("Nao could not say this text. INFO");
                    e.printStackTrace();
                }
            }
        }
     }
 
-    public void disconnect(){
+    @FXML
+    private void disconnect(){
+        Utils.disconnectMessage(session);
         session.close();
-        Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
+        log.write("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
         checkerModel.killCheckers(batteryPercentage, temperatureText);
-
     }
 
-
-    public void postures(ActionEvent actionEvent) throws Exception{
+    @FXML
+    private void postures(ActionEvent actionEvent) throws Exception{
         if (posturesModel == null){
             posturesModel = new PosturesModel();
         }
-        if (dropDownPostures.getSelectionModel().getSelectedItem() != null){
-            String actualPose = (String) dropDownPostures.getValue();
-            if (actionEvent.getSource().getClass()!= Button.class ){
+        String actualPose = utils.getSelected(dropDownPostures);
+        if (actualPose != null){
+            if (actionEvent.getSource().getClass()!= Button.class){
                 posturesModel.changeImage(actualPose, imageView);
             }else{
                 posturesModel.makePosture(session,actualPose);
@@ -386,7 +260,8 @@ public class Controller {
         }
     }
 
-    public void mode() throws Exception{
+    @FXML
+    private void mode() throws Exception{
         if (session.isConnected()){
             if(moveBodyModel == null){
                 moveBodyModel = new MoveBodyModel();
@@ -400,7 +275,8 @@ public class Controller {
 
     }
 
-    public void takePhoto()throws Exception{
+    @FXML
+    private void takePhoto()throws Exception{
         if (session.isConnected()){
             if (cameraModel == null){
                 cameraModel = new CameraModel();
@@ -409,15 +285,16 @@ public class Controller {
         }
     }
 
-    public void changeColor()throws Exception{
+    @FXML
+    private void changeColor()throws Exception{
         ledModel = new LEDModel();
         if(colorBox.getValue() != null){
             ledModel.changeColor(session, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
         }
-
     }
 
-    public void changeChoice(){
+    @FXML
+    private void changeChoice(){
         String selcetedGroup = cb_LEDS.getValue().toString();
         if (selcetedGroup != null){
             if (selcetedGroup.equals("BrainLEDs") || selcetedGroup.equals("EarLEDs") || selcetedGroup.equals("Left Ear LEDs") || selcetedGroup.equals("Right Ear LEDs")){
@@ -425,7 +302,6 @@ public class Controller {
                 ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
                 colorBox.setValue("");
                 colorBox.setItems(colorList);
-
             }else {
                 Object[] colorArray = {"White","Red", "Green", "Blue", "Yellow","Magenta", "Cyan"  };
                 ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
@@ -438,12 +314,11 @@ public class Controller {
 
     @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
-        videoController= new VideoController();
+        VideoController videoController = new VideoController();
         videoController.startup(session, iv_camera);
-        this.write(getPort(),getIP());
+        connectionModel.write(tx_IP, tx_Port);
         UpdateItems(false, false);
-        ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
-        alAnimatedSpeech.say("You are connected");
+        Utils.connectedMessage(session);
         checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage, batteryPercentText);
         checkerModel.checkTemperature(session, temperatureText, rightArmTempText, leftArmTempText, rightLegTempText,
                 leftLegTempText, headTempText);
@@ -475,7 +350,8 @@ public class Controller {
           }
     }
 
-    public void naoTab(){
+    @FXML
+    private void naoTab(){
         getBoxes();
     }
 
@@ -569,32 +445,12 @@ public class Controller {
             colorBox.setItems(colorList);
             setTrackButtons(true);
         }catch (Exception e){
-            Log("An error has occured while setting the boxes. WARN");
-            e.printStackTrace();
+            log.write("An error has occured while setting the boxes."+e+". WARN");
         }
     }
 
-
-    private boolean isNumber(String number){
-        float d;
-        try
-        {
-             d = Float.parseFloat(number);
-        }
-        catch(NumberFormatException nfe)
-        {
-            Log("Please make sure to enter numbers. INFO");
-            return false;
-        }
-        return d >= (-180) && d <= 180;
-    }
-
-    private float round(double i, int v){
-        return (float) (Math.round(i/v) * v);
-    }
-
-
-    public void setLandmarkTracker() throws Exception {
+    @FXML
+    private void setLandmarkTracker() throws Exception {
         ToggleButton toggle =(ToggleButton) landmarkTracker.getSelectedToggle();
         if (toggle.getText().equals("Enabled")){
             checkerModel.setLandmarkTrackerActive(true);
@@ -612,6 +468,8 @@ public class Controller {
             setTrackButtons(true);
         }
     }
+
+    @FXML
     private void setTrackButtons(Boolean enabled){
             searchMarkButton.setDisable(enabled);
             bodyRadio.setDisable(enabled);
@@ -619,13 +477,17 @@ public class Controller {
             moveRadio.setDisable(enabled);
 
     }
-    public void searchLandmarks() throws Exception {
+
+    @FXML
+    private void searchLandmarks() throws Exception {
         if (trackerModel == null){
             trackerModel = new TrackerModel();
         }
         trackerModel.searchLandmark(session);
     }
-    public void changeTrackingMode() throws Exception {
+
+    @FXML
+    private void changeTrackingMode() throws Exception {
         if (trackerModel == null){
             trackerModel = new TrackerModel();
         }
@@ -635,7 +497,6 @@ public class Controller {
             RadioButton button = (RadioButton)landmarkMode.getSelectedToggle();
             System.out.println(button.getText());
         }
-        //trackerModel.setMode(landmarkMode.getSelectedToggle().getUserData().toString());
     }
 }
 

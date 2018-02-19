@@ -50,7 +50,6 @@ public class VideoController {
 
         @Override
         public void run() {
-            Mat blue = new Mat();
             List<Object> imageRemote = null;
             try {
                 imageRemote = (List<Object>) alVideoDevice.getImageRemote(subscribeCamera);
