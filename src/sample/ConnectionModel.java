@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -9,6 +10,9 @@ import javafx.scene.control.TextField;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 
 public class ConnectionModel {
@@ -85,6 +89,7 @@ public class ConnectionModel {
         }
 
     }
+
 
     private String[] changeConnectionArrays(String[] array, TextField tx, Integer duplicateIndex) {
         String dupl;
@@ -182,4 +187,26 @@ public class ConnectionModel {
             e.printStackTrace();
         }
     }
+
+    public boolean checkConnection() {
+        final FutureTask checkConnection = new FutureTask(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                return Controller.getSession().isConnected();
+            }
+        });
+        Platform.runLater(checkConnection);
+        String connected = null;
+        try {
+            connected = checkConnection.get().toString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if(connected.equals("true")) return true;
+        else return false;
+        }
+
 }
+

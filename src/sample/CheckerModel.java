@@ -32,6 +32,7 @@ public class CheckerModel {
         LandmarkTrackerActive = isActive;
     }
     private String landmarkID;
+    private LogModel log = new LogModel();
     boolean tracked = false;
 
 
@@ -275,11 +276,16 @@ public class CheckerModel {
         }
     }
 
-    public void systemInfo(Session session, Text systemText)throws Exception{
-        alSystem = new ALSystem(session);
-        String text = alSystem.systemInfo().toString();
-        System.out.println(text);
-        systemText.setText(text);
+    public void systemInfo(Session session, Text systemText){
+        try {
+            alSystem = new ALSystem(session);
+            String text = alSystem.systemInfo().toString();
+            System.out.println(text);
+            systemText.setText(text);
+        } catch (Exception e) {
+            log.write("Cannot create new Object alSystem. The referred Object might not exist. WARN");
+            log.write("This is e.g. the case for the virtual robot. INFO");
+        }
     }
     public void killCheckers(ProgressBar batteryPercentage, Text temperatureText) {
         end = true;

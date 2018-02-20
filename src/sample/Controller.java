@@ -286,14 +286,14 @@ public class Controller {
     }
 
     @FXML
-    private void changeColor()throws Exception{
+    private void changeColor(){
         ledModel = new LEDModel();
         if(colorBox.getValue() != null){
             ledModel.changeColor(session, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
         }
     }
 
-    @FXML
+    @FXML @SuppressWarnings("unchecked")
     private void changeChoice(){
         String selcetedGroup = cb_LEDS.getValue().toString();
         if (selcetedGroup != null){
@@ -313,9 +313,9 @@ public class Controller {
     }
 
     @SuppressWarnings("unchecked")
-    private void onConnected() throws Exception{
+    private void onConnected(){
         VideoController videoController = new VideoController();
-        videoController.startup(session, iv_camera);
+        videoController.initialize(session, iv_camera);
         connectionModel.write(tx_IP, tx_Port);
         UpdateItems(false, false);
         Utils.connectedMessage(session);

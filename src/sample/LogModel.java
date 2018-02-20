@@ -38,7 +38,7 @@ public class LogModel {
                 text.setStyle("-fx-fill:red; -fx-font-weight: bolder");
             }
             if(context.equals("ACTION")){
-                text.setStyle("-fx-fill: black; -fx-font-weight: 500");
+                text.setStyle("-fx-fill: black; -fx-font-weight: lighter");
             }
             this.lv_log.getItems().add(text);
             ListIndex++;
