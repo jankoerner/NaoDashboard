@@ -8,26 +8,22 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class Controller {
-    @FXML ToggleGroup mode, landmarkTracker, landmarkMode, cameracolor;
+    @FXML ToggleGroup mode, trackingMode, trackingTarget,cameracolor;
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
-    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play, searchMarkButton;
+    @FXML Button connectButton, disconnectButton, sayButton, poseButton, btn_play,startTrackingButton, stopTrackingButton;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -36,7 +32,7 @@ public class Controller {
     @FXML Text batteryPercentText, systemText;
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
-    @FXML RadioButton headRadio, bodyRadio, moveRadio;
+    @FXML RadioButton headRadio, bodyRadio, moveRadio, faceRadio, redBallRadio;
     @FXML CheckBox ch_camera;
 
     VideoController videoController = new VideoController();
@@ -543,80 +539,43 @@ public class Controller {
             Object[] colorArray = {"White", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan"};
             ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
             colorBox.setItems(colorList);
-            setTrackButtons(true);
+            stopTrackingButton.setDisable(true);
+
         }catch (Exception e){
             log.write("An error has occured while setting the boxes."+e+". WARN");
         }
     }
 
     /**
-     * sets the landmark tracker
+     * sets the tracker
      * @throws Exception
      */
-
-    @FXML
-    private void setLandmarkTracker() throws Exception {
-        ToggleButton toggle =(ToggleButton) landmarkTracker.getSelectedToggle();
-        if (toggle.getText().equals("Enabled")){
-            checkerModel.setLandmarkTrackerActive(true);
-            checkerModel.enableLandmarkTracker(session);
-            checkerModel.LandmarkTracker(session, landmarkMode.getSelectedToggle().selectedProperty().getName());
-            setTrackButtons(false);
-
-        }else {
-            checkerModel.setLandmarkTrackerActive(false);
-            if (trackerModel == null)
-            {
-                trackerModel = new TrackerModel();
-            }
-            trackerModel.stopTraker();
-            setTrackButtons(true);
-        }
-    }
-
-    /**
-     * sets track buttons
-     * @param enabled
-     */
-
-    @FXML
-    private void setTrackButtons(Boolean enabled){
-            searchMarkButton.setDisable(enabled);
-            bodyRadio.setDisable(enabled);
-            headRadio.setDisable(enabled);
-            moveRadio.setDisable(enabled);
-
-    }
-
-    /**
-     * starts searching for landmarks in trackermodel
-     * @throws Exception
-     */
-
-    @FXML
-    private void searchLandmarks() throws Exception {
+    public void startTracking() throws Exception {
         if (trackerModel == null){
             trackerModel = new TrackerModel();
         }
-        trackerModel.searchLandmark(session);
+        stopTrackingButton.setDisable(false);
+        startTrackingButton.setDisable(true);
+        RadioButton target = (RadioButton) trackingTarget.getSelectedToggle();
+        RadioButton mode = (RadioButton) trackingMode.getSelectedToggle();
+        setRadios(true);
+        trackerModel.startTracking(session,target.getId(),mode.getText());
     }
-
-    /**
-     * changes the tracking mode
-     * @throws Exception
-     */
-
-    @FXML
-    private void changeTrackingMode() throws Exception {
-        if (trackerModel == null){
+    public void stopTracking() throws Exception {
+        if (trackerModel==null){
             trackerModel = new TrackerModel();
         }
-        System.out.println(landmarkMode.selectedToggleProperty());
-        if (landmarkMode.getSelectedToggle().getClass().equals(RadioButton.class))
-        {
-            RadioButton button = (RadioButton)landmarkMode.getSelectedToggle();
-            System.out.println(button.getText());
-        }
+        setRadios(false);
+        trackerModel.stopTraker();
+        startTrackingButton.setDisable(false);
+        stopTrackingButton.setDisable(true);
+    }
+    private void setRadios(boolean enable){
+        faceRadio.setDisable(enable);
+        redBallRadio.setDisable(enable);
+        moveRadio.setDisable(enable);
+        faceRadio.setDisable(enable);
+        bodyRadio.setDisable(enable);
     }
 
     @FXML

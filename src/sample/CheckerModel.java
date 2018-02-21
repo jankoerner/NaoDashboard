@@ -4,7 +4,6 @@ import com.aldebaran.qi.CallError;
 import com.aldebaran.qi.Session;
 import com.aldebaran.qi.helper.EventCallback;
 import com.aldebaran.qi.helper.proxies.*;
-import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
@@ -13,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,15 +23,8 @@ public class CheckerModel {
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
     private boolean end = false; // to unsubscribe all events set to true
-    private boolean LandmarkTrackerActive = false;
-    private TrackerModel trackerModel = new TrackerModel();
-    private ALTracker alTracker;
-    public void setLandmarkTrackerActive(boolean isActive){
-        LandmarkTrackerActive = isActive;
-    }
-    private String landmarkID;
     private LogModel log = new LogModel();
-    boolean tracked = false;
+
 
 
     /**
@@ -279,33 +270,6 @@ public class CheckerModel {
         }
     }
 
-
-    public void LandmarkTracker(Session session, String mode)throws Exception{
-        if (LandmarkTrackerActive){
-            TrackerModel trackerModel = new TrackerModel();
-            memory.subscribeToEvent("LandmarkDetected", new EventCallback<ArrayList>() {
-                @Override
-                public void onEvent(ArrayList info ) throws InterruptedException, CallError {
-                    try {
-                        if (tracked==false){
-                            trackerModel.trackLandmark(session,info,alTracker);
-                            trackerModel.setMode(mode);
-                            tracked = true;
-                        }
-                    }catch (Exception e){
-
-                    }
-                }
-            });
-        }
-    }
-
-    public void enableLandmarkTracker(Session session)throws Exception{
-        if (LandmarkTrackerActive){
-            alTracker = new ALTracker(session);
-            alTracker.trackEvent("LandmarkDetected");
-        }
-    }
 
     /**
      * gets System info and prints it. system info is not available on virtual robot from choregraphe
