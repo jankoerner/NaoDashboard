@@ -8,10 +8,19 @@ import javafx.scene.paint.Color;
 import java.util.*;
 import java.util.List;
 
+/**
+ * this class handles the leds
+ */
 public class LEDModel {
    private ALLeds alLeds;
    private LogModel log = new LogModel();
 
+    /**
+     * changes naos leds to colors, depending on groupname
+     * @param session
+     * @param groupLED
+     * @param color
+     */
     public void changeColor(Session session, String groupLED, String color) {
         try {
             alLeds = new ALLeds(session);
@@ -64,6 +73,12 @@ public class LEDModel {
         }
     }
 
+    /**
+     * sets ledgroups
+     * @param session
+     * @return
+     * @throws Exception
+     */
 
     public List getLEDs(Session session) throws Exception {
         alLeds = new ALLeds(session);

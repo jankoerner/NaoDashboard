@@ -19,6 +19,9 @@ import com.aldebaran.qi.helper.proxies.ALVideoDevice;
 
 import javafx.scene.image.ImageView;
 
+/**
+ * a class to get the camera of the nao
+ */
 public class VideoController
 {
 
@@ -32,7 +35,7 @@ public class VideoController
     private LogModel log = new LogModel();
 
     /**
-     * Initialize method, automatically called by @{link FXMLLoader}
+     * initializes this class to use items at the FXML
      */
     public void initialize(Session session, ImageView iv)
     {
@@ -48,7 +51,7 @@ public class VideoController
     }
 
     /**
-     * initialise NAO camera interface
+     * initialise NAO camera
      * @throws Exception
      */
     protected void initNAO(Session session, ImageView iv) throws Exception {
@@ -106,6 +109,11 @@ public class VideoController
         this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * calls a platform run later which changes the image property to the current camera image
+     * @param view
+     * @param image
+     */
 
     private void updateImageView(ImageView view, Image image)
     {

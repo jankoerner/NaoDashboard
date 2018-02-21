@@ -33,6 +33,26 @@ public class ConnectionModel {
     ComboBox cb_IP;
     TextField tx_IP, tx_Port;
 
+    /**
+     * initializes the connectionmodel to use fxml items
+     * @param cb_IP
+     * @param tx_IP
+     * @param tx_Port
+     */
+    public void initialize(ComboBox cb_IP, TextField tx_IP, TextField tx_Port) {
+        this.cb_IP = cb_IP;
+        this.tx_IP = tx_IP;
+        this.tx_Port = tx_Port;
+        read();
+    }
+
+    /**
+     * returns true and sets the property NaoUrl to the entered address if reachable
+     * @param ip
+     * @param port
+     * @return
+     */
+
     public boolean connect(String ip, Integer port) {
         if (isIPValid(ip, port, 3000)) {
             setNaoUrl(ip, Integer.toString(port));
@@ -42,6 +62,13 @@ public class ConnectionModel {
         }
     }
 
+    /**
+     * checks if an entered address is reachable within a time
+     * @param ip
+     * @param port
+     * @param timeout
+     * @return
+     */
 
     private boolean isIPValid(String ip, int port, Integer timeout) {
         if ((!ip.equals("")) && (port > 0)) {
@@ -54,14 +81,29 @@ public class ConnectionModel {
         } else return false;
     }
 
+    /**
+     * sets nao url
+     * @param ip
+     * @param port
+     */
+
     private final void setNaoUrl(String ip, String port) {
         NaoUrl.set("tcp://"+ip + ":" + port);
     }
 
+    /**
+     *
+     * @return NaoUrl
+     */
     public final String getNaoUrl(){
         return NaoUrl.get();
     }
 
+    /**
+     * rewrites the arrays Port and Ip to the connectionlog
+     * @param tx_IP
+     * @param tx_Port
+     */
 
     public void write(TextField tx_IP, TextField tx_Port){
         try {
@@ -89,6 +131,15 @@ public class ConnectionModel {
         }
 
     }
+
+    /**
+     * changes the arrays. if a new url is entered its set to latest connection, meaning its at [0] of the arrays when reading
+     * duplicates also get moved to [0]
+     * @param array
+     * @param tx
+     * @param duplicateIndex
+     * @return an entered array, sorted by latest added connections
+     */
 
 
     private String[] changeConnectionArrays(String[] array, TextField tx, Integer duplicateIndex) {
@@ -132,22 +183,29 @@ public class ConnectionModel {
         return array;
     }
 
-    private int checkForDuplicates(String[] array, String txURL) {  //überprüft, ob die gespeicherten URLS bereits die neu eingegebene enthält
-        int duplicateArray = 999;                                   //liefert den Index zurück, an dessen Stelle die URL doppelt vorhanden ist
-        if(array[0].equals(txURL)) duplicateArray=0;                //falls nicht doppelt liefert es eine zahl zurück, deren größe der array niemals
-        else if (array[1].equals(txURL)) duplicateArray=1;          //hat
+    /**
+     * checks if an entered String already is in a String[] and returns the place of the duplicate
+     * if no duplicates returns 999
+     * @param array
+     * @param txURL
+     * @return
+     */
+
+    private int checkForDuplicates(String[] array, String txURL) {
+        int duplicateArray = 999;
+        if(array[0].equals(txURL)) duplicateArray=0;
+        else if (array[1].equals(txURL)) duplicateArray=1;
         else if (array[2].equals(txURL)) duplicateArray=2;
         else if (array[3].equals(txURL)) duplicateArray=3;
         else if (array[4].equals(txURL)) duplicateArray=4;
         return duplicateArray;
     }
 
-    public void initialize(ComboBox cb_IP, TextField tx_IP, TextField tx_Port) {
-        this.cb_IP = cb_IP;
-        this.tx_IP = tx_IP;
-        this.tx_Port = tx_Port;
-        read();
-    }
+
+    /**
+     * reads connectionlog and adds its connections to IP, Port and URL StringArrays
+     * sets the connection textfield to the latest connection added
+     */
 
     public void read() {
         try {
@@ -187,6 +245,11 @@ public class ConnectionModel {
             e.printStackTrace();
         }
     }
+
+    /**
+     * checks the connection during runtime
+     * @return connected
+     */
 
     public boolean checkConnection() {
         final FutureTask checkConnection = new FutureTask(new Callable() {

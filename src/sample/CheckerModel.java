@@ -24,7 +24,7 @@ public class CheckerModel {
     private ALSystem alSystem;
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
-    private boolean end = false;
+    private boolean end = false; // to unsubscribe all events set to true
     private boolean LandmarkTrackerActive = false;
     private TrackerModel trackerModel = new TrackerModel();
     private ALTracker alTracker;
@@ -36,16 +36,22 @@ public class CheckerModel {
     boolean tracked = false;
 
 
-    public static void main(String[] args) {
-
-    }
-
-
-
-
+    /**
+     * sets the progressbar to a percentage
+     * @param percentage
+     * @param batteryPercentage
+     */
     public void setBatteryPercentage(double percentage, ProgressBar batteryPercentage){
         batteryPercentage.setProgress(percentage/100);
     }
+
+    /**
+     * task which gets the battery charge of the nao.
+     * @param session
+     * @param batteryCicle
+     * @param batteryPercentage
+     * @param batteryPercentText
+     */
 
     public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage, Text batteryPercentText){
         try{
@@ -90,6 +96,18 @@ public class CheckerModel {
             exception.printStackTrace();
         }
     }
+
+    /**
+     * task which checks the temperature of the nao in its body parts
+     * doesnt work on naos (returns weird values)
+     * @param session
+     * @param temperatureText
+     * @param rightArmTempText
+     * @param leftArmTempText
+     * @param rightLegTempText
+     * @param leftLegTempText
+     * @param headTempText
+     */
 
     public void checkTemperature(Session session, Text temperatureText, Text rightArmTempText, Text leftArmTempText,
                                  Text rightLegTempText, Text leftLegTempText, Text headTempText){
@@ -174,6 +192,18 @@ public class CheckerModel {
         temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
     }
 
+    /**
+     * subscribes to touchevents for the sensor on the head
+     * the both back sensors allow saying a text
+     * the front sensor makes nao dab
+     * @param session
+     * @param midButtonText
+     * @param rearButtonText
+     * @param volumeSlider
+     * @param voiceSlider
+     * @param voiceSpeedSlider
+     * @param dropDownLanguages
+     */
     public void checkTouch(Session session, TextArea midButtonText, TextArea rearButtonText, Slider volumeSlider,
                            Slider voiceSlider, Slider voiceSpeedSlider, ComboBox dropDownLanguages){
         try {
@@ -249,6 +279,7 @@ public class CheckerModel {
         }
     }
 
+
     public void LandmarkTracker(Session session, String mode)throws Exception{
         if (LandmarkTrackerActive){
             TrackerModel trackerModel = new TrackerModel();
@@ -276,6 +307,12 @@ public class CheckerModel {
         }
     }
 
+    /**
+     * gets System info and prints it. system info is not available on virtual robot from choregraphe
+     * @param session
+     * @param systemText
+     */
+
     public void systemInfo(Session session, Text systemText){
         try {
             alSystem = new ALSystem(session);
@@ -287,6 +324,13 @@ public class CheckerModel {
             log.write("This is e.g. the case for the virtual robot. INFO");
         }
     }
+
+    /**
+     * kills timers and unsubscribes to all events
+     * sets the progressbar to transparent and the temp text to -
+     * @param batteryPercentage
+     * @param temperatureText
+     */
     public void killCheckers(ProgressBar batteryPercentage, Text temperatureText) {
         end = true;
         timerKiller = true;

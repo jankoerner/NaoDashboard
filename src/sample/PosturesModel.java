@@ -7,12 +7,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.List;
 
+/**
+ * this class is used to make the robot pose
+ */
 public class PosturesModel {
-    public static void main(String[] args) {
 
-    }
     private ALRobotPosture robotPosture;
     private Image image;
+
+    /**
+     * executing a selected pose
+     * @param session
+     * @param posture
+     * @throws Exception
+     */
     public void makePosture(Session session, String posture) throws Exception{
         robotPosture = new ALRobotPosture(session);
 
@@ -47,12 +55,23 @@ public class PosturesModel {
         }
     }
 
+    /**
+     * gets Naos available postures
+     * @param session
+     * @return
+     * @throws Exception
+     */
     public List getPostures(Session session)throws Exception{
         robotPosture = new ALRobotPosture(session);
         return robotPosture.getPostureList();
 
     }
 
+    /**
+     * views an image which shows the selected pose
+     * @param posture
+     * @param imageView
+     */
     public void changeImage(String posture, ImageView imageView) {
         try {
             System.out.println(posture);

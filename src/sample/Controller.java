@@ -2,6 +2,7 @@ package sample;
 
 
 import com.aldebaran.qi.Session;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,20 +49,33 @@ public class Controller {
         return session;
     }
 
+    /**
+     * initializes classes that need access to the FXML and Updates the FXML items
+     */
     public void initialize(){
         log.initializeLog(lv_log);
         connectionModel.initialize(cb_IP, tx_IP, tx_Port);
         UpdateItems(false, true);
     }
 
+    /**
+     * sets the textfields IP and Port on the connection tab on the fxml respective to the URL selected in the combobox
+     * @param actionEvent
+     */
+
     @FXML
-    private void setTextFields(ActionEvent actionEvent){        //set the textfields IP and Port
-       if((actionEvent.getSource().equals(cb_IP))){             //respective to the URL selected in the dropdown
+    private void setTextFields(ActionEvent actionEvent){
+       if((actionEvent.getSource().equals(cb_IP))){
             Integer Selected = cb_IP.getSelectionModel().getSelectedIndex();
             tx_IP.setText(connectionModel.getIP()[Selected]);
             tx_Port.setText(connectionModel.getPort()[Selected]);
         }
     }
+
+    /**
+     * checks the connection to the IP entered in the textfields and connects if the IP is valid
+     * @throws Exception
+     */
 
     @FXML
     private void btn_ConnectIsPressed() throws Exception {
@@ -90,6 +104,10 @@ public class Controller {
 
     }
 
+    /**
+     * turns the NAO by a degree entered in a Textfield (valid entries: -180<=x<=180)
+     */
+
     @FXML
     private void turn(){
        if (session.isConnected()){
@@ -114,6 +132,10 @@ public class Controller {
 
     }
 
+    /**
+     * plays a selected sound from a listview. setting the sound value doesnt work yet
+     */
+
     @FXML
     private void playSounds(){
         String filename = utils.getSelected(lv_Sounds);
@@ -122,6 +144,11 @@ public class Controller {
             audioModel.playSound(filename/*, (float) volumeSlider.getValue()*/);
         } else log.write("Please make sure to select a file to play. INFO ");
     }
+
+    /**
+     * moves nao head depending on which button is pressed on the fxml
+     * @param mouseEvent
+     */
 
     @FXML
     private void moveHeadButtons(MouseEvent mouseEvent){
@@ -140,6 +167,11 @@ public class Controller {
             }
         }
     }
+
+    /**
+     * nao walks depending on which button is pressed on the fxml
+     * @param mouseEvent
+     */
 
     @FXML
     private void moveBodyButtons(MouseEvent mouseEvent){
@@ -169,6 +201,12 @@ public class Controller {
             }
         }
     }
+
+    /**
+     * nao walks depending on keys pressed and speed selected
+     * before he walks nao always stands up
+     * @param keyEvent
+     */
 
     @FXML
     private void moveBody(KeyEvent keyEvent){
@@ -214,6 +252,10 @@ public class Controller {
         }
     }
 
+    /**
+     * lets nao say a text from a textfield
+     */
+
     @FXML
     private void say(){
        if (session.isConnected()){
@@ -236,6 +278,10 @@ public class Controller {
        }
     }
 
+    /**
+     * disconnects from nao, clears all tasks and boxes
+     */
+
     @FXML
     private void disconnect(){
         Utils.disconnectMessage(session);
@@ -244,6 +290,12 @@ public class Controller {
         UpdateItems(true, false);
         checkerModel.killCheckers(batteryPercentage, temperatureText);
     }
+
+    /**
+     * lets nao make a selected posture
+     * @param actionEvent
+     * @throws Exception
+     */
 
     @FXML
     private void postures(ActionEvent actionEvent) throws Exception{
@@ -260,6 +312,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Nao takes the pose of standing or relaxing depending on the togglebutton currently selected
+     * @throws Exception
+     */
+
     @FXML
     private void mode() throws Exception{
         if (session.isConnected()){
@@ -275,6 +332,12 @@ public class Controller {
 
     }
 
+    /**
+     * Nao shoots a Photo and saves it
+     * not yet local but on nao
+     * @throws Exception
+     */
+
     @FXML
     private void takePhoto()throws Exception{
         if (session.isConnected()){
@@ -285,6 +348,10 @@ public class Controller {
         }
     }
 
+    /**
+     * changes the color of a selected led
+     */
+
     @FXML
     private void changeColor(){
         ledModel = new LEDModel();
@@ -292,6 +359,10 @@ public class Controller {
             ledModel.changeColor(session, cb_LEDS.getValue().toString(),colorBox.getValue().toString().toLowerCase());
         }
     }
+
+    /**
+     * changes the Items of the colorlist depending on which body part is selected to set the LEDs
+     */
 
     @FXML @SuppressWarnings("unchecked")
     private void changeChoice(){
@@ -312,6 +383,10 @@ public class Controller {
 
     }
 
+    /**
+     * starts Tasks when nao is connected
+     */
+
     @SuppressWarnings("unchecked")
     private void onConnected(){
         VideoController videoController = new VideoController();
@@ -327,12 +402,22 @@ public class Controller {
 
     }
 
+    /**
+     * clears all comboboxes depending on boolean clearboxes
+     * sets various fxml elements depending on if the session to the nao is connected or not
+     * @param ClearBoxes
+     * @param Startup
+     */
+
     @SuppressWarnings("unchecked")
     private void UpdateItems(Boolean ClearBoxes, Boolean Startup) {
-          if(session!=null) {
-              tb_NAO.setDisable(!session.isConnected());
-              connectButton.setDisable(session.isConnected());
-              disconnectButton.setDisable(!session.isConnected());
+
+        if(session!=null) {
+            Platform.runLater(()->{
+                tb_NAO.setDisable(!session.isConnected());
+                connectButton.setDisable(session.isConnected());
+                disconnectButton.setDisable(!session.isConnected());
+            });
               if (session.isConnected()) {
                   connectCircle.setFill(Color.rgb(60, 230, 30));
               } else connectCircle.setFill(Color.rgb(240, 20, 20));
@@ -350,10 +435,18 @@ public class Controller {
           }
     }
 
+    /**
+     * Comboboxes are loaded when clicking on NAO tab
+     */
+
     @FXML
     private void naoTab(){
         getBoxes();
     }
+
+    /**
+     * loads boxes
+     */
 
     @SuppressWarnings("unchecked")
     private void getBoxes() {
@@ -449,6 +542,11 @@ public class Controller {
         }
     }
 
+    /**
+     * sets the landmark tracker
+     * @throws Exception
+     */
+
     @FXML
     private void setLandmarkTracker() throws Exception {
         ToggleButton toggle =(ToggleButton) landmarkTracker.getSelectedToggle();
@@ -469,6 +567,11 @@ public class Controller {
         }
     }
 
+    /**
+     * sets track buttons
+     * @param enabled
+     */
+
     @FXML
     private void setTrackButtons(Boolean enabled){
             searchMarkButton.setDisable(enabled);
@@ -478,6 +581,11 @@ public class Controller {
 
     }
 
+    /**
+     * starts searching for landmarks in trackermodel
+     * @throws Exception
+     */
+
     @FXML
     private void searchLandmarks() throws Exception {
         if (trackerModel == null){
@@ -485,6 +593,11 @@ public class Controller {
         }
         trackerModel.searchLandmark(session);
     }
+
+    /**
+     * changes the tracking mode
+     * @throws Exception
+     */
 
     @FXML
     private void changeTrackingMode() throws Exception {
