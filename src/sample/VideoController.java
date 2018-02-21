@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
@@ -7,6 +8,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +27,26 @@ import javafx.scene.image.ImageView;
  */
 public class VideoController
 {
+    Session session;
+    private ALVideoDevice video;
+    private void setVideo(ALVideoDevice video){
+        this.video = video;
+    }
+    private ALVideoDevice getVideo(){
+        return video;
+    }
+    private final int topCamera = 0;
+    private final int resolution = 1;
+    private final int colorspace = 13; //RGB
+    private final int frameRate = 30; // FPS
+    private final String NAO_CAMERA_NAME = "Nao Image";
+    private String subscriberID;
+    private void setSubscriberID(String name){
+        subscriberID = name;
+    }
+    private String getSubscriberID(){
+        return subscriberID;
+    }
 
     @FXML ImageView iv;
     // a timer for getting the video stream
@@ -31,7 +54,6 @@ public class VideoController
     // a flag to change the button behavior
     private boolean cameraActive;
     // the logo to be loaded
-    private final String NAO_CAMERA_NAME = "Nao Image";
     private LogModel log = new LogModel();
 
     /**
@@ -39,10 +61,22 @@ public class VideoController
      */
     public void initialize(Session session, ImageView iv)
     {
+        this.session = session;
+        ALVideoDevice video;
+        try {
+            video = new ALVideoDevice(session);
+            subscriberID = video.subscribeCamera(NAO_CAMERA_NAME, topCamera, resolution, colorspace, frameRate);
+        } catch (CallError callError) {
+            callError.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.cameraActive = false;
         this.iv = iv;
         try{
-            initNAO(session, iv);
+            initNAO(false);
         }
         catch(Exception e) {
             System.out.println(e.getStackTrace());
@@ -50,23 +84,19 @@ public class VideoController
 
     }
 
+
     /**
      * initialise NAO camera
      * @throws Exception
      */
-    protected void initNAO(Session session, ImageView iv) throws Exception {
-
-        int topCamera = 0;
-        int resolution = 1;
-        int colorspace = 13; // BGR
-        int frameRate = 30; // FPS
-        ALVideoDevice video;
-        String moduleName;
-
+    private void initNAO(boolean stop) {
         try {
-            video = new ALVideoDevice(session);
-            moduleName = video.subscribeCamera(NAO_CAMERA_NAME, topCamera, resolution, colorspace, frameRate);
-            getNaoFrames(video, moduleName);
+            ALVideoDevice video = new ALVideoDevice(session);
+            if(!stop) {
+                getNaoFrames(video, subscriberID);
+            } else if (stop){
+                video.unsubscribe(subscriberID);
+            }
         } catch(Exception e) {
             // if a Nao has received 8 subscriptions to his camera he returns void
             log.write("Too many subscriptions. Cant get an image. WARN");
@@ -118,6 +148,9 @@ public class VideoController
     private void updateImageView(ImageView view, Image image)
     {
         Utils.onFXThread(view.imageProperty(), image);
+    }
+    public void unsubscribe(){
+        initNAO(true);
     }
 }
 

@@ -19,7 +19,7 @@ import java.util.List;
 
 
 public class Controller {
-    @FXML ToggleGroup mode, trackingMode, trackingTarget;
+    @FXML ToggleGroup mode, trackingMode, trackingTarget,cameracolor;
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
@@ -33,7 +33,9 @@ public class Controller {
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
     @FXML RadioButton headRadio, bodyRadio, moveRadio, faceRadio, redBallRadio;
-    private VideoController videoController;
+    @FXML CheckBox ch_camera;
+
+    VideoController videoController = new VideoController();
     private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel = new ConnectionModel();
@@ -290,6 +292,8 @@ public class Controller {
         log.write("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
         checkerModel.killCheckers(batteryPercentage, temperatureText);
+        VideoController videoController = new VideoController();
+        videoController.unsubscribe();
     }
 
     /**
@@ -390,8 +394,6 @@ public class Controller {
 
     @SuppressWarnings("unchecked")
     private void onConnected(){
-        VideoController videoController = new VideoController();
-        videoController.initialize(session, iv_camera);
         connectionModel.write(tx_IP, tx_Port);
         UpdateItems(false, false);
         Utils.connectedMessage(session);
@@ -414,11 +416,11 @@ public class Controller {
     private void UpdateItems(Boolean ClearBoxes, Boolean Startup) {
 
         if(session!=null) {
-            Platform.runLater(()->{
+            //Platform.runLater(()->{
                 tb_NAO.setDisable(!session.isConnected());
                 connectButton.setDisable(session.isConnected());
                 disconnectButton.setDisable(!session.isConnected());
-            });
+            /*});*/
               if (session.isConnected()) {
                   connectCircle.setFill(Color.rgb(60, 230, 30));
               } else connectCircle.setFill(Color.rgb(240, 20, 20));
@@ -427,8 +429,8 @@ public class Controller {
                   dropDownLanguages.getItems().removeAll(dropDownLanguages.getItems());
                   cb_LEDS.getItems().removeAll(cb_LEDS.getItems());
                   colorBox.getItems().removeAll(colorBox.getItems());
-              } //else
-                  //getBoxes();
+                  ch_camera.setSelected(false);
+              }
           } else if(Startup){
               tb_NAO.setDisable(true);
               connectButton.setDisable(false);
@@ -576,6 +578,15 @@ public class Controller {
         bodyRadio.setDisable(enable);
     }
 
+    @FXML
+    private void setCamera(){
+        if(ch_camera.isSelected()) {
+            videoController.initialize(session, iv_camera);
+        }
+        else if(!ch_camera.isSelected()){
+            videoController.unsubscribe();
+        }
+    }
 }
 
 

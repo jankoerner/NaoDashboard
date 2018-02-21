@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -131,6 +132,11 @@
                                                 <ToggleGroup fx:id="trackingTarget" />
                                              </toggleGroup></RadioButton>
                                           <RadioButton id="Face" fx:id="faceRadio" layoutX="459.0" layoutY="130.0" mnemonicParsing="false" text="Face" toggleGroup="$trackingTarget" />
+                                           <ImageView fx:id="iv_camera" fitHeight="240.0" fitWidth="320.0" layoutX="77.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+                                               <image>
+                                                   <Image url="@../../default_app.png" />
+                                               </image></ImageView>
+                                           <CheckBox fx:id="ch_camera" layoutX="77.0" layoutY="350.0" mnemonicParsing="false" onAction="#setCamera" text="Camera active" />
                                        </children>
                                     </AnchorPane>
                                 </content>
