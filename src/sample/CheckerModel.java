@@ -22,13 +22,6 @@ public class CheckerModel {
     private ALSystem alSystem;
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
-    private boolean end = false;
-    private boolean RedballTrackerActive = false;
-    public void setRedballTrackerActive(boolean isActive){
-        RedballTrackerActive = isActive;
-    }
-    boolean tracked = false;
-
 
     public static void main(String[] args) {
 
@@ -43,11 +36,6 @@ public class CheckerModel {
             memory = new ALMemory(session);
             ALBattery alBattery = new ALBattery(session);
 
-
-            if(end){
-                memory.unsubscribeAllEvents();
-
-            }
             if(alBattery.getBatteryCharge() == 0){
                 batteryCicle.setFill(Color.BLACK);
                 System.out.println("No battery detected.");
@@ -176,9 +164,6 @@ public class CheckerModel {
                 textToSpeechModel = new TextToSpeechModel();
             }
 
-            if(end){
-                memory.unsubscribeAllEvents();
-            }
             memory.subscribeToEvent("FrontTactilTouched", new EventCallback<Float>() {
                 @Override
                 public void onEvent(Float val) throws InterruptedException, CallError {
@@ -242,36 +227,6 @@ public class CheckerModel {
         }
     }
 
-    public void RedballTracker(Session session)throws Exception{
-        if (RedballTrackerActive){
-            TrackerModel trackerModel = new TrackerModel();
-            System.out.println(memory.getEventList());
-            memory.subscribeToEvent("redBallDetected", new EventCallback<ArrayList>() {
-                @Override
-                public void onEvent(ArrayList info ) throws InterruptedException, CallError {
-                    try {
-                        if (tracked==false){
-                            trackerModel.trackRedball(session, info);
-                            tracked=true;
-                            System.out.println(tracked);
-                        }
-
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-        }
-    }
-
-    public void enableRedballTracker(Session session)throws Exception{
-        if (RedballTrackerActive){
-            ALRedBallDetection redBallDetection = new ALRedBallDetection(session);
-            redBallDetection.subscribe("redBallDetected");
-        }
-
-    }
 
     public void systemInfo(Session session, Text systemText)throws Exception{
         alSystem = new ALSystem(session);
@@ -280,10 +235,19 @@ public class CheckerModel {
         systemText.setText(text);
     }
     public void killCheckers(ProgressBar batteryPercentage, Text temperatureText) {
-        end = true;
         timerKiller = true;
         batteryPercentage.setStyle("-fx-background-color: transparent");
         temperatureText.setText("-");
+        try {
+            memory = new ALMemory(Controller.getSession());
+            memory.unsubscribeAllEvents();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (CallError callError) {
+            callError.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

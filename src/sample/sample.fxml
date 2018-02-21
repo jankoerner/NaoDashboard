@@ -115,20 +115,22 @@
                                        <children>
                                           <Button layoutX="77.0" layoutY="44.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                                            <ImageView fx:id="photoView" fitHeight="150.0" fitWidth="200.0" layoutX="769.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
-                                          <ToggleButton layoutX="512.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedballTracker" text="Enabled">
+                                          <RadioButton fx:id="headRadio" layoutX="580.0" layoutY="112.0" mnemonicParsing="false" selected="true" text="Head only">
                                              <toggleGroup>
-                                                <ToggleGroup fx:id="redBallTracker" />
-                                             </toggleGroup></ToggleButton>
-                                          <ToggleButton layoutX="583.0" layoutY="44.0" mnemonicParsing="false" onAction="#setRedballTracker" selected="true" text="Disabled" toggleGroup="$redBallTracker" />
-                                          <Label layoutX="512.0" layoutY="21.0" text="Redball Tracker" />
-                                          <RadioButton fx:id="headRadio" layoutX="518.0" layoutY="110.0" mnemonicParsing="false" onAction="#changeTrackingMode" selected="true" text="Head only">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="redballMode" />
+                                                <ToggleGroup fx:id="trackingMode" />
                                              </toggleGroup></RadioButton>
-                                          <RadioButton fx:id="bodyRadio" layoutX="518.0" layoutY="130.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Whole Body" toggleGroup="$redballMode" />
-                                          <RadioButton fx:id="moveRadio" layoutX="518.0" layoutY="150.0" mnemonicParsing="false" onAction="#changeTrackingMode" text="Move" toggleGroup="$redballMode" />
-                                          <Label layoutX="515.0" layoutY="87.0" text="Tracking Mode" />
+                                          <RadioButton fx:id="bodyRadio" layoutX="580.0" layoutY="130.0" mnemonicParsing="false" text="Whole Body" toggleGroup="$trackingMode" />
+                                          <RadioButton fx:id="moveRadio" layoutX="580.0" layoutY="148.0" mnemonicParsing="false" text="Move" toggleGroup="$trackingMode" />
+                                          <Label layoutX="583.0" layoutY="85.0" text="Tracking Mode" />
                                           <ImageView fx:id="iv_camera" fitHeight="150.0" fitWidth="200.0" layoutX="77.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" />
+                                          <Button fx:id="startTrackingButton" layoutX="468.0" layoutY="196.0" mnemonicParsing="false" onAction="#startTracking" text="Start Tracking" />
+                                          <Button fx:id="stopTrackingButton" layoutX="588.0" layoutY="196.0" mnemonicParsing="false" onAction="#stopTracking" text="Stop Tracking" />
+                                          <Label layoutX="468.0" layoutY="85.0" text="Target" />
+                                          <RadioButton id="RedBall" fx:id="redBallRadio" layoutX="459.0" layoutY="112.0" mnemonicParsing="false" selected="true" text="RedBall">
+                                             <toggleGroup>
+                                                <ToggleGroup fx:id="trackingTarget" />
+                                             </toggleGroup></RadioButton>
+                                          <RadioButton id="Face" fx:id="faceRadio" layoutX="459.0" layoutY="130.0" mnemonicParsing="false" text="Face" toggleGroup="$trackingTarget" />
                                        </children>
                                     </AnchorPane>
                                 </content>

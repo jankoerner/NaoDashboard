@@ -23,11 +23,11 @@ import java.util.List;
 
 
 public class Controller {
-    @FXML ToggleGroup mode, redBallTracker, redballMode;
+    @FXML ToggleGroup mode, trackingMode, trackingTarget;
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
-    @FXML Button w,a,s,d, connectButton, disconnectButton, sayButton, poseButton, btn_play;
+    @FXML Button connectButton, disconnectButton, sayButton, poseButton, btn_play,startTrackingButton, stopTrackingButton;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -36,7 +36,7 @@ public class Controller {
     @FXML Text batteryPercentText, systemText;
     @FXML ListView lv_Sounds, lv_log;
     @FXML ProgressBar batteryPercentage;
-    @FXML RadioButton headRadio, bodyRadio, moveRadio;
+    @FXML RadioButton headRadio, bodyRadio, moveRadio, faceRadio, redBallRadio;
     private VideoController videoController;
     private static  Integer ListIndex=0;
     private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
@@ -360,7 +360,7 @@ public class Controller {
        }
     }
 
-    public void disconnect(){
+    public void disconnect()throws Exception{
         session.close();
         Log("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
@@ -436,7 +436,7 @@ public class Controller {
     @SuppressWarnings("unchecked")
     private void onConnected() throws Exception{
         videoController= new VideoController();
-        videoController.startup(session, iv_camera);
+        //videoController.startup(session, iv_camera);
         this.write(getPort(),getIP());
         UpdateItems(false, false);
         ALAnimatedSpeech alAnimatedSpeech = new ALAnimatedSpeech(session);
@@ -564,13 +564,13 @@ public class Controller {
             Object[] colorArray = {"White", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan"};
             ObservableList colorList = FXCollections.observableArrayList(Arrays.asList(colorArray));
             colorBox.setItems(colorList);
-            setTrackButtons(true);
+            stopTrackingButton.setDisable(true);
+
         }catch (Exception e){
             Log("An error has occured while setting the boxes. WARN");
             e.printStackTrace();
         }
     }
-
 
     private boolean isNumber(String number){
         float d;
@@ -590,43 +590,34 @@ public class Controller {
         return (float) (Math.round(i/v) * v);
     }
 
-
-    public void setRedballTracker() throws Exception {
-        ToggleButton toggle =(ToggleButton) redBallTracker.getSelectedToggle();
-        if (toggle.getText().equals("Enabled")){
-            checkerModel.setRedballTrackerActive(true);
-            checkerModel.enableRedballTracker(session);
-            checkerModel.RedballTracker(session);
-            setTrackButtons(false);
-
-        }else {
-            checkerModel.setRedballTrackerActive(false);
-            if (trackerModel == null)
-            {
-                trackerModel = new TrackerModel();
-            }
-            trackerModel.stopTraker();
-            setTrackButtons(true);
-        }
-    }
-    private void setTrackButtons(Boolean enabled){
-            bodyRadio.setDisable(enabled);
-            headRadio.setDisable(enabled);
-            moveRadio.setDisable(enabled);
-
-    }
-    public void changeTrackingMode() throws Exception {
+    public void startTracking() throws Exception {
         if (trackerModel == null){
             trackerModel = new TrackerModel();
         }
-        System.out.println(redballMode.selectedToggleProperty());
-        if (redballMode.getSelectedToggle().getClass().equals(RadioButton.class))
-        {
-            RadioButton button = (RadioButton)redballMode.getSelectedToggle();
-            System.out.println(button.getText());
-            trackerModel.setMode(button.getText());
-        }
+        stopTrackingButton.setDisable(false);
+        startTrackingButton.setDisable(true);
+        RadioButton target = (RadioButton) trackingTarget.getSelectedToggle();
+        RadioButton mode = (RadioButton) trackingMode.getSelectedToggle();
+        setRadios(true);
+        trackerModel.startTracking(session,target.getId(),mode.getText());
     }
+    public void stopTracking() throws Exception {
+        if (trackerModel==null){
+            trackerModel = new TrackerModel();
+        }
+        setRadios(false);
+        trackerModel.stopTraker();
+        startTrackingButton.setDisable(false);
+        stopTrackingButton.setDisable(true);
+    }
+    private void setRadios(boolean enable){
+        faceRadio.setDisable(enable);
+        redBallRadio.setDisable(enable);
+        moveRadio.setDisable(enable);
+        faceRadio.setDisable(enable);
+        bodyRadio.setDisable(enable);
+    }
+
 }
 
 
