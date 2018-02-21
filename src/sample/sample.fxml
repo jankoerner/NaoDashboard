@@ -97,7 +97,7 @@
                                            <Slider fx:id="voiceSpeedSlider" layoutX="358.0" layoutY="249.0" majorTickUnit="0.1" max="400.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
                                            <Button fx:id="sayButton" layoutX="586.0" layoutY="330.0" mnemonicParsing="false" onAction="#say" styleClass="button" stylesheets="@../Buttons.css" text="Say" />
                                            <ComboBox fx:id="dropDownLanguages" layoutX="410.0" layoutY="330.0" prefHeight="26.0" prefWidth="171.0" promptText="Select Language" />
-                                           <Slider fx:id="voiceSlider" layoutX="384.0" layoutY="248.0" majorTickUnit="0.1" max="4.0" min="1.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="1.0" />
+                                           <Slider fx:id="voiceSlider" layoutX="384.0" layoutY="248.0" majorTickUnit="0.1" max="200.0" min="50.0" orientation="VERTICAL" prefHeight="77.0" prefWidth="16.0" value="100.0" />
                                            <Label layoutX="571.0" layoutY="227.0" text="Volume" />
                                            <Button fx:id="btn_play" layoutX="234.0" layoutY="492.0" mnemonicParsing="false" onAction="#playSounds" styleClass="button" stylesheets="@../Buttons.css" text="Play" />
                                            <Label layoutX="366.0" layoutY="227.0" text="Voice Pitch" />
@@ -106,6 +106,7 @@
                                           <TextArea fx:id="midButtonText" layoutX="55.0" layoutY="223.0" prefHeight="53.0" prefWidth="151.0" promptText="Bind a phrase to the middle button!" />
                                           <Label layoutX="86.0" layoutY="150.0" text="Head Buttons" />
                                           <Label layoutX="267.0" layoutY="279.0" prefHeight="16.0" prefWidth="123.0" text="Voice Speed" />
+                                          <Button layoutX="242.0" layoutY="335.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
 
                                        </children></AnchorPane>
                               </content>
