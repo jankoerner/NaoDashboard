@@ -8,11 +8,25 @@ import javafx.scene.paint.Color;
 import java.util.*;
 import java.util.List;
 
+/**
+ * this class handles the leds
+ */
 public class LEDModel {
    private ALLeds alLeds;
+   private LogModel log = new LogModel();
 
-    public void changeColor(Session session, String groupLED, String color)throws Exception {
-        alLeds = new ALLeds(session);
+    /**
+     * changes naos leds to colors, depending on groupname
+     * @param session
+     * @param groupLED
+     * @param color
+     */
+    public void changeColor(Session session, String groupLED, String color) {
+        try {
+            alLeds = new ALLeds(session);
+        } catch (Exception e) {
+            log.write("Cannot create the object alLeds:"+e+". WARN");
+        }
         String groupName = "AllLeds";
         switch (groupLED) {
             case "All LEDs":
@@ -47,15 +61,24 @@ public class LEDModel {
                 break;
 
         }
+        try{
         if (!color.equals("on") && !color.equals("off")&& !color.equals("")){
             alLeds.fadeRGB(groupName, color.toString(), 1f);
         }else if (color.equals("on")){
             alLeds.on(groupName);
         }else if(color.equals("off")){
             alLeds.off(groupName);
+        }} catch (Exception e){
+            log.write("Setting the LEDS was not successfull:"+e+". WARN");
         }
     }
 
+    /**
+     * sets ledgroups
+     * @param session
+     * @return
+     * @throws Exception
+     */
 
     public List getLEDs(Session session) throws Exception {
         alLeds = new ALLeds(session);
