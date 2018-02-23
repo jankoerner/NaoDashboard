@@ -115,10 +115,9 @@ public class TrackerModel {
         }
         alTracker.stopTracker();
         tracked = false;
-        if (mode.equals("Move")){
             PosturesModel posturesModel = new PosturesModel();
             posturesModel.makePosture(Controller.getSession(),"Stand");
-        }
+
     }
 
 
