@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NaoDashboardRichtig:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NaoDashboardRichtig_jar</output-path>
+    <root id="archive" name="NaoDashboardRichtig.jar">
+      <element id="module-output" name="NaoDashboardRichtig" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/java-naoqi-sdk-2.1.4.13-linux64.jar" path-in-jar="/" />
+      <element id="library" level="project" name="opencv-340" />
+    </root>
+  </artifact>
+</component>

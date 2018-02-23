@@ -2,7 +2,6 @@ package sample;
 
 
 import com.aldebaran.qi.Session;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -35,7 +34,7 @@ public class Controller {
     @FXML RadioButton headRadio, bodyRadio, moveRadio, faceRadio, redBallRadio;
     @FXML CheckBox ch_camera;
 
-    VideoController videoController = new VideoController();
+    VideoModel videoModel = new VideoModel();
     private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel = new ConnectionModel();
@@ -292,8 +291,8 @@ public class Controller {
         log.write("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
         UpdateItems(true, false);
         checkerModel.killCheckers(batteryPercentage, temperatureText);
-        VideoController videoController = new VideoController();
-        videoController.unsubscribe();
+        VideoModel videoModel = new VideoModel();
+        videoModel.unsubscribe();
     }
 
     /**
@@ -581,10 +580,10 @@ public class Controller {
     @FXML
     private void setCamera(){
         if(ch_camera.isSelected()) {
-            videoController.initialize(session, iv_camera);
+            videoModel.initialize(session, iv_camera);
         }
         else if(!ch_camera.isSelected()){
-            videoController.unsubscribe();
+            videoModel.unsubscribe();
         }
     }
 }

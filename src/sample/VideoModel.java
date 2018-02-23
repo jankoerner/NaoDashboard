@@ -25,7 +25,7 @@ import javafx.scene.image.ImageView;
 /**
  * a class to get the camera of the nao
  */
-public class VideoController
+public class VideoModel
 {
     Session session;
     private ALVideoDevice video;

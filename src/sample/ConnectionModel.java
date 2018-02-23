@@ -217,7 +217,9 @@ public class ConnectionModel {
                     Port[I] = reader.readLine();
                     URL[I]=IP[I]+":"+Port[I];
                 }
-                cb_IP.setItems(FXCollections.observableArrayList(URL));
+                for (Integer I=0; I<IP.length; I++) {
+                    if(IP[I]!=null) cb_IP.getItems().add(IP[I]+Port[I]);
+                }
             } catch (FileNotFoundException e) {
                 log.write("The text document connectionlog could not be found on your Computer. WARN");
                 log.write("Please check if the file exists in the correct directory. INFO");
