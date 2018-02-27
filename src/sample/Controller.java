@@ -22,7 +22,7 @@ public class Controller {
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
-    @FXML Button connectButton, disconnectButton, sayButton, poseButton, btn_play,startTrackingButton, stopTrackingButton;
+    @FXML Button connectButton, disconnectButton, sayButton, poseButton, btn_play,startTrackingButton, stopTrackingButton, alarmButton;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -47,6 +47,7 @@ public class Controller {
     private CheckerModel checkerModel = new CheckerModel();
     private LogModel log = new LogModel();
     private Utils utils = new Utils();
+    private MovementDetectionModel movementDetectionModel = new MovementDetectionModel();
     public static Session getSession() {
         return session;
     }
@@ -280,6 +281,16 @@ public class Controller {
        }
     }
 
+
+    private void activateAlarm(Session session) throws Exception{
+        if(!movementDetectionModel.detectionEnabled){
+            movementDetectionModel.setDetectionEnabled(true);
+        }else{
+            movementDetectionModel.setDetectionEnabled(false);
+        }
+        movementDetectionModel.movementDetection(session);
+    }
+
     /**
      * disconnects from nao, clears all tasks and boxes
      */
@@ -396,7 +407,7 @@ public class Controller {
         connectionModel.write(tx_IP, tx_Port);
         UpdateItems(false, false);
         Utils.connectedMessage(session);
-        checkerModel.checkBatteryCharge(session, batteryCircle, batteryPercentage, batteryPercentText);
+        checkerModel.checkBatteryCharge(session, batteryPercentage, batteryPercentText);
         checkerModel.checkTemperature(session, temperatureText, rightArmTempText, leftArmTempText, rightLegTempText,
                 leftLegTempText, headTempText);
         checkerModel.checkTouch(session, midButtonText, rearButtonText, volumeSlider, voiceSlider, voiceSpeedSlider,dropDownLanguages);

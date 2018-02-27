@@ -39,12 +39,11 @@ public class CheckerModel {
     /**
      * task which gets the battery charge of the nao.
      * @param session
-     * @param batteryCicle
      * @param batteryPercentage
      * @param batteryPercentText
      */
 
-    public void checkBatteryCharge(Session session, Circle batteryCicle, ProgressBar batteryPercentage, Text batteryPercentText){
+    public void checkBatteryCharge(Session session, ProgressBar batteryPercentage, Text batteryPercentText){
         try{
             memory = new ALMemory(session);
             ALBattery alBattery = new ALBattery(session);
@@ -55,27 +54,37 @@ public class CheckerModel {
 
             }
             if(alBattery.getBatteryCharge() == 0){
-                batteryCicle.setFill(Color.BLACK);
                 System.out.println("No battery detected.");
                 batteryPercentage.setStyle("-fx-background-color: black");
                 batteryPercentText.setText("No battery detected");
+            }else{
+                int charge = alBattery.getBatteryCharge();
+                if (charge > 75){
+                    System.out.println("Battery remaining " + charge);
+                    batteryPercentage.getStyleClass().add("green-bar");
+                }else if (charge < 75 & charge > 30){
+                    System.out.println("Battery remaining " + charge);
+                    batteryPercentage.getStyleClass().add("orange-bar");
+                }else if (charge < 30 & charge != 0 ){
+                    System.out.println("Battery remaining " + charge);
+                    batteryPercentage.getStyleClass().add("red-bar");
+                }
+                setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
+                batteryPercentText.setText(alBattery.getBatteryCharge().toString());
             }
             memory.subscribeToEvent("BatteryChargeChanged", new EventCallback<Integer>() {
                 @Override
                 public void onEvent(Integer percentage) throws InterruptedException, CallError {
                     int charge = percentage;
                     if (charge > 75){
-                        batteryCicle.setFill(Color.GREEN);
                         System.out.println("Battery remaining " + charge);
-                        batteryPercentage.setStyle("-fx-background-color: green");
+                        batteryPercentage.getStyleClass().add("green-bar");
                     }else if (charge < 75 & charge > 30){
-                        batteryCicle.setFill(Color.ORANGE);
                         System.out.println("Battery remaining " + charge);
-                        batteryPercentage.setStyle("-fx-background-color: orange");
+                        batteryPercentage.getStyleClass().add("orange-bar");
                     }else if (charge < 30 & charge != 0 ){
-                        batteryCicle.setFill(Color.RED);
                         System.out.println("Battery remaining " + charge);
-                        batteryPercentage.setStyle("-fx-background-color: red");
+                        batteryPercentage.getStyleClass().add("red-bar");
                     }
                     setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
                     batteryPercentText.setText(alBattery.getBatteryCharge().toString());
@@ -102,6 +111,7 @@ public class CheckerModel {
 
     public void checkTemperature(Session session, Text temperatureText, Text rightArmTempText, Text leftArmTempText,
                                  Text rightLegTempText, Text leftLegTempText, Text headTempText){
+
         Timer temperatureTimer = new Timer();
         TimerTask checkTemp = new TimerTask() {
             @Override
@@ -110,53 +120,74 @@ public class CheckerModel {
                     if(timerKiller){
                         temperatureTimer.cancel();
                     }
-                    if (session.isConnected()){
+                    if(session.isConnected()){
                         ALBodyTemperature alBodyTemperature = new ALBodyTemperature(session);
                         if(alBodyTemperature.getTemperatureDiagnosis() instanceof ArrayList){
-                            ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
-                            for (int i = 0; i < tempEvent.size() ; i++) {
-                                if(tempEvent.get(i) instanceof ArrayList){
-                                    ArrayList tempe = (ArrayList) tempEvent.get(i);
-                                    if(tempe.get(0).equals(1) & tempe.get(1).equals("LArm")){
-                                        leftArmTempText.setText("Warm");
-                                        leftArmTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LArm")){
-                                        leftArmTempText.setText("Hot");
-                                        leftArmTempText.setFill(Color.RED);
-                                    }else if(tempe.get(0).equals(1) & tempe.get(1).equals("RArm")){
-                                        rightArmTempText.setText("Warm");
-                                        rightArmTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("RArm")) {
-                                        rightArmTempText.setText("Hot");
-                                        rightArmTempText.setFill(Color.RED);
-                                    }else if(tempe.get(0).equals(1) & tempe.get(1).equals("LLeg")) {
-                                        leftLegTempText.setText("Warm");
-                                        leftLegTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LLeg")) {
-                                        leftLegTempText.setText("Hot");
-                                        leftLegTempText.setFill(Color.RED);
-                                    }else if (tempe.get(0).equals(1) & tempe.get(1).equals("RLeg")){
-                                        rightLegTempText.setText("Warm");
-                                        rightLegTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("LLeg")) {
-                                        rightLegTempText.setText("Hot");
-                                        rightLegTempText.setFill(Color.RED);
-                                    }else if (tempe.get(0).equals(1) & tempe.get(1).equals("Head")){
-                                        headTempText.setText("Warm");
-                                        headTempText.setFill(Color.ORANGE);
-                                    }else if(tempe.get(0).equals(2) & tempe.get(1).equals("Head")) {
-                                        headTempText.setText("Hot");
-                                        headTempText.setFill(Color.RED);
-                                    }
-                                }
 
-                            }
-                            if(tempEvent.get(0).equals(1)){
-                                temperatureText.setText("Warm");
-                                temperatureText.setFill(Color.ORANGE);
-                            }else if(tempEvent.get(0).equals(2)){
-                                temperatureText.setText("Hot");
-                                temperatureText.setFill(Color.RED);
+                            ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
+                            System.out.println(tempEvent);
+
+                            for (int i = 0; i <= tempEvent.size() -1; i++) {
+                                if(tempEvent.get(i).equals(0)){
+                                    temperatureText.setText("Cool");
+                                    temperatureText.setFill(Color.GREEN);
+                                    rightArmTempText.setText("Cool");
+                                    rightArmTempText.setFill(Color.GREEN);
+                                    leftArmTempText.setText("Cool");
+                                    leftArmTempText.setFill(Color.GREEN);
+                                    rightLegTempText.setText("Cool");
+                                    rightLegTempText.setFill(Color.GREEN);
+                                    leftLegTempText.setText("Cool");
+                                    leftLegTempText.setFill(Color.GREEN);
+                                    headTempText.setText("Cool");
+                                    headTempText.setFill(Color.GREEN);
+                                }else if(tempEvent.get(i).equals(1)){
+                                    temperatureText.setText("Warm");
+                                    temperatureText.setFill(Color.ORANGE);
+                                    ArrayList bodyParts = (ArrayList)tempEvent.get(i+1);
+                                    for (int j = 0; j <= bodyParts.size() - 1 ; j++) {
+                                        if(bodyParts.get(j).equals("LArm")){
+                                            leftArmTempText.setText("Warm");
+                                            leftArmTempText.setFill(Color.ORANGE);
+                                        }else if(bodyParts.get(j).equals("LLeg")){
+                                            leftLegTempText.setText("Warm");
+                                            leftLegTempText.setFill(Color.ORANGE);
+                                        }else if(bodyParts.get(j).equals("RArm")){
+                                            rightArmTempText.setText("Warm");
+                                            rightArmTempText.setFill(Color.ORANGE);
+                                        }else if(bodyParts.get(j).equals("RLeg")){
+                                            rightLegTempText.setText("Warm");
+                                            rightLegTempText.setFill(Color.ORANGE);
+                                        }else if(bodyParts.get(j).equals("Head")){
+                                            headTempText.setText("Warm");
+                                            headTempText.setFill(Color.ORANGE);
+                                        }
+                                    }
+                                }else if(tempEvent.get(i).equals(2)){
+                                    temperatureText.setText("Hot");
+                                    temperatureText.setFill(Color.RED);
+                                    ArrayList bodyParts = (ArrayList)tempEvent.get(i+1);
+                                    for (int j = 0; j <= bodyParts.size(); i++) {
+                                        if(bodyParts.get(j).equals("LArm")){
+                                            leftArmTempText.setText("Hot");
+                                            leftArmTempText.setFill(Color.RED);
+                                        }else if(bodyParts.get(j).equals("LLeg")){
+                                            leftLegTempText.setText("Hot");
+                                            leftLegTempText.setFill(Color.RED);
+                                        }else if(bodyParts.get(j).equals("RArm")){
+                                            rightArmTempText.setText("Hot");
+                                            rightArmTempText.setFill(Color.RED);
+                                        }else if(bodyParts.get(j).equals("RLeg")){
+                                            rightLegTempText.setText("Hot");
+                                            rightLegTempText.setFill(Color.RED);
+                                        }else if(bodyParts.get(j).equals("Head")){
+                                            headTempText.setText("Hot");
+                                            headTempText.setFill(Color.RED);
+                                        }
+                                    }
+                                }else{
+                                    continue;
+                                }
                             }
                         }else{
                             temperatureText.setText("Cool");
@@ -171,7 +202,6 @@ public class CheckerModel {
                             leftLegTempText.setFill(Color.GREEN);
                             headTempText.setText("Cool");
                             headTempText.setFill(Color.GREEN);
-
                         }
                     }
 
@@ -180,7 +210,7 @@ public class CheckerModel {
                 }
             }
         };
-        temperatureTimer.scheduleAtFixedRate(checkTemp, 1000, 6000);
+        temperatureTimer.scheduleAtFixedRate(checkTemp, 1, 60000);
     }
 
     /**
@@ -270,6 +300,12 @@ public class CheckerModel {
         }
     }
 
+
+    /**
+     * gets System info and prints it. system info is not available on virtual robot from choregraphe
+     * @param session
+     * @param systemText
+     */
 
     /**
      * gets System info and prints it. system info is not available on virtual robot from choregraphe
