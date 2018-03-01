@@ -281,15 +281,19 @@ public class Controller {
        }
     }
 
+    /*
+    This method would have enbaled method detection, but was left out because of a bug. The class has been left
+    so it can be read through. Without a robot we can't test for where the bug is.
 
-    private void activateAlarm(Session session) throws Exception{
+    @FXML
+    private void activateAlarm() throws Exception{
         if(!movementDetectionModel.detectionEnabled){
             movementDetectionModel.setDetectionEnabled(true);
         }else{
             movementDetectionModel.setDetectionEnabled(false);
         }
         movementDetectionModel.movementDetection(session);
-    }
+    }*/
 
     /**
      * disconnects from nao, clears all tasks and boxes
