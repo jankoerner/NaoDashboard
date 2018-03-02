@@ -15,7 +15,7 @@ import java.util.Date;
  * This class is used to add items to a log on the FXML
  */
 public class LogModel {
-    private static  Integer ListIndex=4;
+    private static  Integer ListIndex=0;
     private final static SimpleDateFormat timestampFormatter = new SimpleDateFormat("HH:mm:ss");
     private ListView lv_log;
 
@@ -63,7 +63,7 @@ public class LogModel {
             }
             this.lv_log.getItems().add(text);
             ListIndex++;
-            this.lv_log.scrollTo(ListIndex);
+            this.lv_log.scrollTo(ListIndex+4);
         });
     }
 

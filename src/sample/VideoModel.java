@@ -51,10 +51,7 @@ public class VideoModel
     @FXML ImageView iv;
     // a timer for getting the video stream
     private ScheduledExecutorService timer;
-    // a flag to change the button behavior
     private boolean cameraActive;
-    // the logo to be loaded
-    private LogModel log = new LogModel();
 
     /**
      * initializes this class to use items at the FXML
@@ -73,10 +70,10 @@ public class VideoModel
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.cameraActive = false;
+        this.cameraActive = true;
         this.iv = iv;
         try{
-            initNAO(false);
+            initNAO();
         }
         catch(Exception e) {
             System.out.println(e.getStackTrace());
@@ -89,17 +86,19 @@ public class VideoModel
      * initialise NAO camera
      * @throws Exception
      */
-    private void initNAO(boolean stop) {
+    private void initNAO() {
         try {
             ALVideoDevice video = new ALVideoDevice(session);
-            if(!stop) {
+            if(this.cameraActive) {
                 getNaoFrames(video, subscriberID);
-            } else if (stop){
+                this.cameraActive=true;
+            } else if (!this.cameraActive){
                 video.unsubscribe(subscriberID);
+                this.cameraActive=false;
             }
         } catch(Exception e) {
             // if a Nao has received 8 subscriptions to his camera he returns void
-            log.write("Too many subscriptions. Cant get an image. WARN");
+            Controller.log.write("Too many subscriptions. Cant get an image. WARN");
         }
     }
 
@@ -137,6 +136,7 @@ public class VideoModel
         };
         this.timer = Executors.newSingleThreadScheduledExecutor();
         this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
+        if(!this.cameraActive) this.timer.shutdown();
     }
 
     /**
@@ -150,7 +150,8 @@ public class VideoModel
         Utils.onFXThread(view.imageProperty(), image);
     }
     public void unsubscribe(){
-        initNAO(true);
+        this.cameraActive=false;
+        initNAO();
     }
 }
 

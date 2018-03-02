@@ -13,12 +13,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class Controller {
-    @FXML ToggleGroup mode, trackingMode, trackingTarget,cameracolor;
+    @FXML ToggleGroup mode, trackingMode, trackingTarget;
+    @FXML ToggleButton tb_relax, tb_stand;
     @FXML Tab tb_NAO;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
@@ -35,6 +38,7 @@ public class Controller {
     @FXML CheckBox ch_camera;
 
     VideoModel videoModel = new VideoModel();
+    public static LogModel log = new LogModel();
     private static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel = new ConnectionModel();
@@ -45,7 +49,6 @@ public class Controller {
     private CameraModel cameraModel;
     private TrackerModel trackerModel;
     private CheckerModel checkerModel = new CheckerModel();
-    private LogModel log = new LogModel();
     private Utils utils = new Utils();
     private MovementDetectionModel movementDetectionModel = new MovementDetectionModel();
     public static Session getSession() {
@@ -281,8 +284,8 @@ public class Controller {
        }
     }
 
-
-    private void activateAlarm(Session session) throws Exception{
+@FXML
+    private void activateAlarm() throws Exception{
         if(!movementDetectionModel.detectionEnabled){
             movementDetectionModel.setDetectionEnabled(true);
         }else{
@@ -303,7 +306,10 @@ public class Controller {
         UpdateItems(true, false);
         checkerModel.killCheckers(batteryPercentage, temperatureText);
         VideoModel videoModel = new VideoModel();
-        videoModel.unsubscribe();
+        if(ch_camera.isSelected()){
+            videoModel.unsubscribe();
+            ch_camera.setSelected(false);
+        }
     }
 
     /**
@@ -341,6 +347,9 @@ public class Controller {
             ToggleButton object;
             if(mode.getSelectedToggle().getClass() == ToggleButton.class){
                object =(ToggleButton) mode.getSelectedToggle();
+               tb_relax.setStyle("-fx-background-color: lightblue");
+               tb_stand.setStyle("-fx-background-color: lightblue");
+               object.setStyle("-fx-background-color: deepskyblue; -fx-border-style: solid");
                moveBodyModel.mode(session, object.getText());
             }
         }
@@ -426,11 +435,9 @@ public class Controller {
     private void UpdateItems(Boolean ClearBoxes, Boolean Startup) {
 
         if(session!=null) {
-            //Platform.runLater(()->{
                 tb_NAO.setDisable(!session.isConnected());
                 connectButton.setDisable(session.isConnected());
                 disconnectButton.setDisable(!session.isConnected());
-            /*});*/
               if (session.isConnected()) {
                   connectCircle.setFill(Color.rgb(60, 230, 30));
               } else connectCircle.setFill(Color.rgb(240, 20, 20));
@@ -535,10 +542,14 @@ public class Controller {
                 moveBodyModel.mode(session, "Stand");
                 toggle = (Toggle) list.get(0);
                 mode.selectToggle(toggle);
+                tb_stand.setStyle("-fx-background-color: deepskyblue; -fx-border-style: solid");
+                tb_relax.setStyle("-fx-background-color: lightblue");
             } else {
                 moveBodyModel.mode(session, "Relax");
                 toggle = (Toggle) list.get(1);
                 mode.selectToggle(toggle);
+                tb_relax.setStyle("-fx-background-color: deepskyblue; -fx-border-style: solid");
+                tb_stand.setStyle("-fx-background-color: lightblue");
             }
 
             if (ledModel == null) {
@@ -592,6 +603,8 @@ public class Controller {
     private void setCamera(){
         if(ch_camera.isSelected()) {
             videoModel.initialize(session, iv_camera);
+            log.write("Camera is running. All other activities might lead to complications. INFO");
+            log.write("Please deactivate Camera before disconnecting. WARN");
         }
         else if(!ch_camera.isSelected()){
             videoModel.unsubscribe();

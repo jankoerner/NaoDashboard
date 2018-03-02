@@ -29,7 +29,6 @@ public class ConnectionModel {
     public String[] getIP(){
         return IP;
     }
-    LogModel log = new LogModel();
     ComboBox cb_IP;
     TextField tx_IP, tx_Port;
 
@@ -218,11 +217,11 @@ public class ConnectionModel {
                     URL[I]=IP[I]+":"+Port[I];
                 }
                 for (Integer I=0; I<IP.length; I++) {
-                    if(IP[I]!=null) cb_IP.getItems().add(IP[I]+Port[I]);
+                    if(IP[I]!=null) cb_IP.getItems().add(IP[I]+":"+Port[I]);
                 }
             } catch (FileNotFoundException e) {
-                log.write("The text document connectionlog could not be found on your Computer. WARN");
-                log.write("Please check if the file exists in the correct directory. INFO");
+                Controller.log.write("The text document connectionlog could not be found on your Computer. WARN");
+                Controller.log.write("Please check if the file exists in the correct directory. INFO");
             } catch (IOException e){
                 Integer actualEntries=0;
                 for (Integer I=0; I<IP.length; I++){
@@ -230,7 +229,7 @@ public class ConnectionModel {
                         actualEntries = I;
                     }
                 }
-                log.write("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
+                Controller.log.write("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
             }
         } finally {
             try {

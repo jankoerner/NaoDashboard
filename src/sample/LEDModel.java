@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class LEDModel {
    private ALLeds alLeds;
-   private LogModel log = new LogModel();
 
     /**
      * changes naos leds to colors, depending on groupname
@@ -25,7 +24,7 @@ public class LEDModel {
         try {
             alLeds = new ALLeds(session);
         } catch (Exception e) {
-            log.write("Cannot create the object alLeds:"+e+". WARN");
+            Controller.log.write("Cannot create the object alLeds:"+e+". WARN");
         }
         String groupName = "AllLeds";
         switch (groupLED) {
@@ -69,7 +68,7 @@ public class LEDModel {
         }else if(color.equals("off")){
             alLeds.off(groupName);
         }} catch (Exception e){
-            log.write("Setting the LEDS was not successfull:"+e+". WARN");
+            Controller.log.write("Setting the LEDS was not successfull:"+e+". WARN");
         }
     }
 

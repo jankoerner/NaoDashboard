@@ -42,6 +42,8 @@ public class TrackerModel {
 
     public void startTracking(Session session, String target, String mode)throws Exception{
         memory = new ALMemory(session);
+        Controller.log.write("You have to end the tracker by yourself if you selected \"Move\" as tracking mode. WARN");
+        Controller.log.write("Press \"Stop Tracker\" to stop tracking. INFO");
         System.out.println(memory.getEventList());
         setMode(mode);
         this.target = target;

@@ -7,27 +7,71 @@
     -fx-display: inline-block;
     -fx-font-size: 12px;
 }
-.button:hover{
+.button:pressed{
+    -fx-border-color: none;
     -fx-display: inline-block;
-    -fx-border-color: lightblue;
-    -fx-background-color: none;
+    -fx-background-color: deepskyblue;
     -fx-text-fill: black;
 }
 .anchor{
     -fx-background-color: white;
     -fx-border-color: lightblue;
 }
-.tab-pane{
-    -fx-background-color: white;
+.tab-header-area{
+    -fx-background-color: lightseagreen;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane .tab
+{
+    -fx-background-color: lightgrey;
+}
+
+.tab-pane .tab:selected
+{
+    -fx-background-color: lightblue;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: black;
 }
 .list-view{
     -fx-border-color: lightblue;
+    -fx-font-family: Arial;
 }
 .combo-box{
     -fx-background-color: lightblue;
-    -fx-border-color: none ;
+    -fx-border-color: none;
     -fx-padding: 6px 12px;
     -fx-text-alignment: left;
     -fx-text-fill: black;
     -fx-font-size: 12px;
 }
+.root {
+    -fx-font-size: 13px;
+    -fx-font-family: Arial;
+    -fx-background-color: ghostwhite;
+}
+.label{
+    -fx-text-fill: lightseagreen;
+}
+.toggle-button{
+    -fx-font-size: 12px;
+}
+
+
+
+
+
+

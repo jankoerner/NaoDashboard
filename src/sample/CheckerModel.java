@@ -23,7 +23,6 @@ public class CheckerModel {
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
     private boolean end = false; // to unsubscribe all events set to true
-    private LogModel log = new LogModel();
 
 
 
@@ -320,8 +319,8 @@ public class CheckerModel {
             System.out.println(text);
             systemText.setText(text);
         } catch (Exception e) {
-            log.write("Cannot create new Object alSystem. The referred Object might not exist. WARN");
-            log.write("This is e.g. the case for the virtual robot. INFO");
+            Controller.log.write("Cannot create new Object alSystem. The referred Object might not exist. WARN");
+            Controller.log.write("This is e.g. the case for the virtual robot. INFO");
         }
     }
 
