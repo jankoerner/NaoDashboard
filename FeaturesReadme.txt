@@ -27,7 +27,7 @@ Sensoren:
 - beim vorderen Sensor 'dabt' der Nao 
 - die hinteren beiden lassen den Nao einen eingegebenen Satz sagen
 Batterie:
-- Batteriestand wird geladen und am unteren Programmrand angezeigt und ins log geschrieben wenn er unter 5% liegt.
+- Batteriestand wird geladen und am unteren Programmrand angezeigt und ins log geschrieben wenn er unter 10% liegt.
 Temperatur:
 - wird geladen: Anzeige am unteren Programmrand
 - auch Übersicht über Temperatur aller Körperteile vorhanden, Nao liefert aber keine guten Werte (Tab System Information) 
