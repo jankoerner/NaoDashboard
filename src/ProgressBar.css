@@ -17,3 +17,7 @@
 .orange-bar { -fx-background-color: orange; }
 .red-bar    { -fx-background-color: red;    }
 .black-bar  { -fx-background-color: black;  }
+
+.tab-header-area{
+    -fx-background-color: #209e96;
+}

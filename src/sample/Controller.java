@@ -45,13 +45,16 @@ public class Controller {
     private AudioModel audioModel;
     private PosturesModel posturesModel;
     private MoveBodyModel moveBodyModel;
-    private CameraModel cameraModel;
     private TrackerModel trackerModel;
     private CheckerModel checkerModel = new CheckerModel();
     private Utils utils = new Utils();
     private MovementDetectionModel movementDetectionModel = new MovementDetectionModel();
     public static Session getSession() {
         return session;
+    }
+
+    public static LogModel getLog() {
+        return log;
     }
 
     /**
@@ -365,15 +368,6 @@ public class Controller {
      * @throws Exception
      */
 
-    @FXML
-    private void takePhoto()throws Exception{
-        if (session.isConnected()){
-            if (cameraModel == null){
-                cameraModel = new CameraModel();
-            }
-            cameraModel.takePhoto(imageView, session);
-        }
-    }
 
     /**
      * changes the color of a selected led
@@ -608,7 +602,7 @@ public class Controller {
     private void setCamera(){
         if(ch_camera.isSelected()) {
             videoModel.initialize(session, iv_camera);
-            log.write("Camera is running. All other activities might lead to complications. INFO");
+            log.write("Camera is running. All other activities might lead to complications. IMPORTANT");
             log.write("Please deactivate Camera before disconnecting. WARN");
         }
         else if(!ch_camera.isSelected()){

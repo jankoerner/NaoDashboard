@@ -18,9 +18,9 @@ public class TrackerModel {
     private ALTracker alTracker;
     private long redBallid;
     private long faceid;
-    public static void main(String[] args) {
+    private LogModel log = Controller.getLog();
 
-    }
+
     public void setMode(String mode) throws Exception {
         switch (mode){
             case"Head only":
@@ -42,8 +42,8 @@ public class TrackerModel {
 
     public void startTracking(Session session, String target, String mode)throws Exception{
         memory = new ALMemory(session);
-        Controller.log.write("You have to end the tracker by yourself if you selected \"Move\" as tracking mode. WARN");
-        Controller.log.write("Press \"Stop Tracker\" to stop tracking. INFO");
+        log.write("You have to end the tracker by yourself if you selected \"Move\" as tracking mode. WARN");
+        log.write("Press \"Stop Tracker\" to stop tracking. IMPORTANT");
         System.out.println(memory.getEventList());
         setMode(mode);
         this.target = target;

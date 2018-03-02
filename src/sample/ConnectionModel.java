@@ -20,6 +20,7 @@ public class ConnectionModel {
     private BufferedWriter writer;
     private FileInputStream file;
     private BufferedReader reader;
+    private LogModel log = Controller.getLog();
     private static String[] IP = new String[5];
     private static String[] Port = new String[IP.length];
     private static String[] URL = new String[Port.length];
@@ -220,8 +221,8 @@ public class ConnectionModel {
                     if(IP[I]!=null) cb_IP.getItems().add(IP[I]+":"+Port[I]);
                 }
             } catch (FileNotFoundException e) {
-                Controller.log.write("The text document connectionlog could not be found on your Computer. WARN");
-                Controller.log.write("Please check if the file exists in the correct directory. INFO");
+                log.write("The text document connectionlog could not be found on your Computer. WARN");
+                log.write("Please check if the file exists in the correct directory. IMPORTANT");
             } catch (IOException e){
                 Integer actualEntries=0;
                 for (Integer I=0; I<IP.length; I++){
@@ -229,7 +230,7 @@ public class ConnectionModel {
                         actualEntries = I;
                     }
                 }
-                Controller.log.write("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
+                log.write("Your connection log might be incomplete. It needs to have "+IP.length+" entries, but it has "+actualEntries+". WARN");
             }
         } finally {
             try {

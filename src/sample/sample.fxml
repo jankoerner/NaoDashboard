@@ -113,7 +113,6 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Button layoutX="77.0" layoutY="44.0" mnemonicParsing="false" onAction="#takePhoto" text="Take Photo" />
                                            <ImageView fx:id="photoView" fitHeight="150.0" fitWidth="200.0" layoutX="769.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
                                           <RadioButton fx:id="headRadio" layoutX="580.0" layoutY="112.0" mnemonicParsing="false" selected="true" text="Head only">
                                              <toggleGroup>
@@ -122,7 +121,6 @@
                                           <RadioButton fx:id="bodyRadio" layoutX="580.0" layoutY="130.0" mnemonicParsing="false" text="Whole Body" toggleGroup="$trackingMode" />
                                           <RadioButton fx:id="moveRadio" layoutX="580.0" layoutY="148.0" mnemonicParsing="false" text="Move" toggleGroup="$trackingMode" />
                                           <Label layoutX="583.0" layoutY="85.0" text="Tracking Mode" />
-                                          <ImageView fx:id="iv_camera" fitHeight="150.0" fitWidth="200.0" layoutX="77.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" />
                                           <Button fx:id="startTrackingButton" layoutX="468.0" layoutY="196.0" mnemonicParsing="false" onAction="#startTracking" text="Start Tracking" />
                                           <Button fx:id="stopTrackingButton" layoutX="588.0" layoutY="196.0" mnemonicParsing="false" onAction="#stopTracking" text="Stop Tracking" />
                                           <Label layoutX="468.0" layoutY="85.0" text="Target" />
@@ -181,7 +179,7 @@
           </Tab>
         </tabs>
       </TabPane>
-        <ProgressBar fx:id="batteryPercentage" layoutX="188.0" layoutY="680.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" stylesheets="@../ProgressBar.css">
+        <ProgressBar fx:id="batteryPercentage" layoutX="157.0" layoutY="680.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" stylesheets="@../ProgressBar.css">
          <styleClass>
             <String fx:value="bar" />
             <String fx:value="track" />

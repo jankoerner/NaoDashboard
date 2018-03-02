@@ -23,8 +23,8 @@ public class CheckerModel {
     private TextToSpeechModel textToSpeechModel;
     private boolean timerKiller = false;
     private boolean end = false; // to unsubscribe all events set to true
-
-
+    private LogModel log = Controller.getLog();
+    private int lastcharge=100;
 
     /**
      * sets the progressbar to a percentage
@@ -53,7 +53,6 @@ public class CheckerModel {
 
             }
             if(alBattery.getBatteryCharge() == 0){
-                System.out.println("No battery detected.");
                 batteryPercentage.setStyle("-fx-background-color: black");
                 batteryPercentText.setText("No battery detected");
             }else{
@@ -76,15 +75,17 @@ public class CheckerModel {
                 public void onEvent(Integer percentage) throws InterruptedException, CallError {
                     int charge = percentage;
                     if (charge > 75){
-                        System.out.println("Battery remaining " + charge);
                         batteryPercentage.getStyleClass().add("green-bar");
                     }else if (charge < 75 & charge > 30){
-                        System.out.println("Battery remaining " + charge);
                         batteryPercentage.getStyleClass().add("orange-bar");
                     }else if (charge < 30 & charge != 0 ){
-                        System.out.println("Battery remaining " + charge);
+                        if(charge<=10 && lastcharge>=charge){
+                            log.write("Nao will soon shutdown due to low battery level. WARN");
+                            log.write("Please plug Nao in to charge. IMPORTANT");
+                        }
                         batteryPercentage.getStyleClass().add("red-bar");
                     }
+                    lastcharge=charge;
                     setBatteryPercentage(alBattery.getBatteryCharge(), batteryPercentage);
                     batteryPercentText.setText(alBattery.getBatteryCharge().toString());
                 }
@@ -319,8 +320,8 @@ public class CheckerModel {
             System.out.println(text);
             systemText.setText(text);
         } catch (Exception e) {
-            Controller.log.write("Cannot create new Object alSystem. The referred Object might not exist. WARN");
-            Controller.log.write("This is e.g. the case for the virtual robot. INFO");
+            log.write("Cannot create new Object alSystem. The referred Object might not exist. WARN");
+            log.write("This is e.g. the case for the virtual robot. IMPORTANT");
         }
     }
 

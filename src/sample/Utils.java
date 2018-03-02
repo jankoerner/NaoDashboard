@@ -13,7 +13,7 @@ import javafx.scene.control.ListView;
  */
 
 public class Utils {
-
+    private LogModel log = Controller.getLog();
 
     public float round(double i, int v){
         return (float) (Math.round(i/v) * v);
@@ -28,8 +28,8 @@ public class Utils {
            String selected = (String) cb.getSelectionModel().getSelectedItem();
            return selected;
        }else {
-           Controller.log.write("Could not get any selected Item. WARN");
-           Controller.log.write("Please check if you selected an item from the combobox. INFO");
+           log.write("Could not get any selected Item. WARN");
+           log.write("Please check if you selected an item from the combobox. INFO");
            return null;
        }
     }
@@ -43,8 +43,8 @@ public class Utils {
             String selected = lv.getSelectionModel().getSelectedItem().toString();
             return selected;
         } else{
-            Controller.log.write("Could not get any selected Item. WARN");
-            Controller.log.write("Please check if you selected an item from the list. INFO");
+            log.write("Could not get any selected Item. WARN");
+            log.write("Please check if you selected an item from the list. IMPORTANT");
             return null;
         }
     }
@@ -62,7 +62,7 @@ public class Utils {
         }
         catch(NumberFormatException nfe)
         {
-            Controller.log.write("Please make sure to enter numbers. INFO");
+            log.write("Please make sure to enter numbers. INFO");
             return false;
         }
         return d >= (-180) && d <= 180;

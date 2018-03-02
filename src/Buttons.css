@@ -61,7 +61,7 @@
 .root {
     -fx-font-size: 13px;
     -fx-font-family: Arial;
-    -fx-background-color: ghostwhite;
+    -fx-background-color: aliceblue;
 }
 .label{
     -fx-text-fill: lightseagreen;

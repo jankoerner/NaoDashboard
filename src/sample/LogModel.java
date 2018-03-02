@@ -52,6 +52,9 @@ public class LogModel {
             String time = timestampFormatter.format(timestamp);
             String log = "\r"+"\n"+ time + ">> "+message+" <<"+"\r"+"\n";
             Text text = new Text(log);
+            if(context.equals("IMPORTANT")){
+                text.setStyle("-fx-fill: blue; -fx-font-weight: bold");
+            }
             if(context.equals("INFO")){
                 text.setStyle("-fx-fill:green; -fx-font-weight:bold");
             }
@@ -73,6 +76,10 @@ public class LogModel {
      */
 
     private synchronized void FilterLogLevel(String message){
+        if(message.contains("IMPORTANT")){
+            message = message.replaceAll(" IMPORTANT","");
+            addTimestampandColor(message,"IMPORTANT");
+        }
         if(message.contains("INFO")){
             message = message.replaceAll(" INFO","");
             addTimestampandColor(message,"INFO");
