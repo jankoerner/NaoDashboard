@@ -13,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -284,7 +283,11 @@ public class Controller {
        }
     }
 
-@FXML
+    /*
+    This method would have enbaled method detection, but was left out because of a bug. The class has been left
+    so it can be read through. Without a robot we can't test for where the bug is.
+
+    @FXML
     private void activateAlarm() throws Exception{
         if(!movementDetectionModel.detectionEnabled){
             movementDetectionModel.setDetectionEnabled(true);
@@ -292,7 +295,7 @@ public class Controller {
             movementDetectionModel.setDetectionEnabled(false);
         }
         movementDetectionModel.movementDetection(session);
-    }
+    }*/
 
     /**
      * disconnects from nao, clears all tasks and boxes
@@ -435,9 +438,11 @@ public class Controller {
     private void UpdateItems(Boolean ClearBoxes, Boolean Startup) {
 
         if(session!=null) {
+            //Platform.runLater(()->{
                 tb_NAO.setDisable(!session.isConnected());
                 connectButton.setDisable(session.isConnected());
                 disconnectButton.setDisable(!session.isConnected());
+            /*});*/
               if (session.isConnected()) {
                   connectCircle.setFill(Color.rgb(60, 230, 30));
               } else connectCircle.setFill(Color.rgb(240, 20, 20));

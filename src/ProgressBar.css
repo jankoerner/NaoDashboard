@@ -1,11 +1,19 @@
-.progress-bar .bar{
-    -fx-background-color: black;
-    -fx-background-color: green;
-    -fx-background-color: orange;
-    -fx-background-color: red;
+.progress-bar {
+    -fx-background-radius: 10, 10, 10, 10;
 }
 
-.progress-bar {
-    -fx-background-color: grey;
-    -fx-background-radius: 10, 10, 10, 10;
- }
+.progress-bar .track{
+    -fx-background-insets: 20;
+    -fx-background-radius: 6, 6, 6, 6;
+}
+
+.progress-bar .bar {
+    -fx-background-insets: 30, 30, 30, 30;
+    -fx-background-radius: 4, 4, 4, 4;
+}
+
+.green-bar  { -fx-background-color: green;  }
+.yellow-bar { -fx-background-color: yellow; }
+.orange-bar { -fx-background-color: orange; }
+.red-bar    { -fx-background-color: red;    }
+.black-bar  { -fx-background-color: black;  }

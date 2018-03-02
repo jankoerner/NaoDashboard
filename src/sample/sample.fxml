@@ -25,7 +25,6 @@
 <AnchorPane id="Relax" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="700.0" prefWidth="1080.0" styleClass="anchor" stylesheets="@../Buttons.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <Label layoutX="18.0" layoutY="682.0" text="Battery remaining:" />
-        <Circle fx:id="batteryCircle" fill="#1fff5e" layoutX="164.0" layoutY="691.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
         <Label layoutX="334.0" layoutY="682.0" text="Body temperature:" />
         <Text fx:id="temperatureText" layoutX="475.0" layoutY="695.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="1080.0" styleClass="outertab" stylesheets="@../Buttons.css" tabClosingPolicy="UNAVAILABLE">
@@ -85,7 +84,6 @@
                                            <Button fx:id="poseButton" layoutX="446.0" layoutY="335.0" mnemonicParsing="false" onAction="#postures" styleClass="button" stylesheets="@../Buttons.css" text="Pose" />
                                            <Slider fx:id="angleSlider" layoutX="18.0" layoutY="57.0" majorTickUnit="30.0" max="90.0" min="-90.0" minorTickCount="2" prefHeight="39.0" prefWidth="257.0" showTickLabels="true" showTickMarks="true" />
                                           <Label layoutX="906.0" layoutY="20.0" text="Mode" />
-                                          <Button fx:id="alarmButton" layoutX="29.0" layoutY="370.0" mnemonicParsing="false" onAction="#activateAlarm" text="Activate Alarm Mode" />
                                        </children></AnchorPane>
                               </content>
                             </Tab>
