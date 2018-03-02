@@ -22,12 +22,12 @@ Sprechen:
 - Lautstärke, pitch, Geschwindigkeit regulierbar
 Audio:
 - Audiofiles im Set "Aldebaran" können abgespielt werden
-- Abfrage, ob Set existiert. Wenn nicht wird die listview auch nicht angezeigt. PLAY BUTTON WIRD ANGEZEIGT?!! ÄNDERN
+- Abfrage, ob Set existiert. Wenn nicht wird die listview auch nicht angezeigt.
 Sensoren:
 - beim vorderen Sensor 'dabt' der Nao 
 - die hinteren beiden lassen den Nao einen eingegebenen Satz sagen
 Batterie:
-- Batteriestand wird geladen und am unteren Programmrand angezeigt - > INS LOG SCHREIBEN WENN ER LEER WIRD
+- Batteriestand wird geladen und am unteren Programmrand angezeigt und ins log geschrieben wenn er unter 5% liegt.
 Temperatur:
 - wird geladen: Anzeige am unteren Programmrand
 - auch Übersicht über Temperatur aller Körperteile vorhanden, Nao liefert aber keine guten Werte (Tab System Information) 
