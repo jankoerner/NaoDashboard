@@ -1,11 +1,14 @@
 .button{
     -fx-background-color: lightblue;
+    -fx-font-weight: bold;
     -fx-border-color: none;
     -fx-padding: 10px 12px;
     -fx-text-align: center;
     -fx-text-fill: black;
     -fx-display: inline-block;
     -fx-font-size: 12px;
+}
+.button:hover{
 }
 .button:pressed{
     -fx-border-color: none;
@@ -19,6 +22,7 @@
 }
 .tab-header-area{
     -fx-background-color: lightseagreen;
+    -fx-pref-height: 38px;
 }
 
 .tab-pane .tab-header-area .tab-header-background {
@@ -27,12 +31,14 @@
 
 .tab-pane .tab
 {
-    -fx-background-color: lightgrey;
+    -fx-pref-height: 33px;
+    -fx-pref-width: 150px;
+    -fx-background-color: #00c6c7;
 }
 
 .tab-pane .tab:selected
 {
-    -fx-background-color: lightblue;
+    -fx-background-color: #009495;
 }
 
 .tab .tab-label {
@@ -52,6 +58,7 @@
 }
 .combo-box{
     -fx-background-color: lightblue;
+    -fx-font-weight: bold;
     -fx-border-color: none;
     -fx-padding: 6px 12px;
     -fx-text-alignment: left;
@@ -65,9 +72,12 @@
 }
 .label{
     -fx-text-fill: lightseagreen;
+    -fx-font-weight: bold;
 }
 .toggle-button{
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+
 }
 
 

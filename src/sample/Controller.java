@@ -6,7 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -21,10 +23,10 @@ import java.util.List;
 public class Controller {
     @FXML ToggleGroup mode, trackingMode, trackingTarget;
     @FXML ToggleButton tb_relax, tb_stand;
-    @FXML Tab tb_NAO;
+    @FXML Tab tb_NAO, tab_Connection, tab_Controls, tab_Audio, tab_Camera, tab_Status;
     @FXML Slider velocitySlider, volumeSlider, voiceSlider, voiceSpeedSlider, angleSlider;
     @FXML TextArea textToSpeech, midButtonText, rearButtonText;
-    @FXML Button connectButton, disconnectButton, sayButton, poseButton, btn_play,startTrackingButton, stopTrackingButton, alarmButton;
+    @FXML Button connectButton, disconnectButton, sayButton, poseButton, btn_play,startTrackingButton, stopTrackingButton, alarmButton, test;
     @FXML Circle connectCircle, batteryCircle;
     @FXML ComboBox dropDownPostures, dropDownLanguages, cb_LEDS, colorBox, cb_IP;
     @FXML TextField tx_IP, tx_Port, degreeField;
@@ -430,13 +432,10 @@ public class Controller {
 
     @SuppressWarnings("unchecked")
     private void UpdateItems(Boolean ClearBoxes, Boolean Startup) {
-
         if(session!=null) {
-            //Platform.runLater(()->{
                 tb_NAO.setDisable(!session.isConnected());
                 connectButton.setDisable(session.isConnected());
                 disconnectButton.setDisable(!session.isConnected());
-            /*});*/
               if (session.isConnected()) {
                   connectCircle.setFill(Color.rgb(60, 230, 30));
               } else connectCircle.setFill(Color.rgb(240, 20, 20));
@@ -451,6 +450,19 @@ public class Controller {
               tb_NAO.setDisable(true);
               connectButton.setDisable(false);
               disconnectButton.setDisable(true);
+              Utils.onFXThread(iv_camera.imageProperty(), new Image("file:./default_app.png"));
+            Image image = new Image("file:./settingsresized.png");
+            tab_Connection.setGraphic(new ImageView(image));
+            image= new Image("file:./naoresized.png");
+            tb_NAO.setGraphic(new ImageView(image));
+            image=new Image("file:./controlsresized.png");
+            tab_Controls.setGraphic(new ImageView(image));
+            image=new Image("file:./soundsresized.png");
+            tab_Audio.setGraphic(new ImageView(image));
+            image = new Image("file:./cameraresized.png");
+            tab_Camera.setGraphic(new ImageView(image));
+            image = new Image("file:./systemresized.png");
+            tab_Status.setGraphic(new ImageView(image));
           }
     }
 

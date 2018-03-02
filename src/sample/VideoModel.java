@@ -152,6 +152,7 @@ public class VideoModel
     public void unsubscribe(){
         this.cameraActive=false;
         initNAO();
+        Utils.onFXThread(iv.imageProperty(), new Image("file:./default_app.png"));
     }
 }
 

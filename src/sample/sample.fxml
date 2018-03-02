@@ -25,23 +25,23 @@
 <AnchorPane id="Relax" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#moveBody" onKeyReleased="#moveBody" prefHeight="700.0" prefWidth="1080.0" styleClass="anchor" stylesheets="@../Buttons.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <children>
         <Label layoutX="18.0" layoutY="682.0" text="Battery remaining:" />
-        <Label layoutX="334.0" layoutY="682.0" text="Body temperature:" />
+        <Label layoutX="320.0" layoutY="682.0" text="Body temperature:" />
         <Text fx:id="temperatureText" layoutX="475.0" layoutY="695.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-" />
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="1080.0" styleClass="outertab" stylesheets="@../Buttons.css" tabClosingPolicy="UNAVAILABLE">
        <tabs>
-          <Tab text="Connection">
+          <Tab fx:id="tab_Connection" text="Connection">
             <content>
               <AnchorPane maxHeight="477.0" maxWidth="1080.0" minHeight="0.0" minWidth="0.0" prefHeight="477.0" prefWidth="1080.0">
                      <children>
                           <Button fx:id="connectButton" layoutX="196.0" layoutY="128.0" mnemonicParsing="false" onAction="#btn_ConnectIsPressed" styleClass="button" stylesheets="@../Buttons.css" text="Connect" />
                           <Button fx:id="disconnectButton" layoutX="276.0" layoutY="128.0" mnemonicParsing="false" onAction="#disconnect" styleClass="button" stylesheets="@../Buttons.css" text="Disconnect" />
-                          <TextField fx:id="tx_IP" layoutX="196.0" layoutY="38.0" promptText="Enter Nao IP" />
-                          <TextField fx:id="tx_Port" layoutX="196.0" layoutY="85.0" promptText="Enter Nao Port" />
+                          <TextField fx:id="tx_IP" layoutX="196.0" layoutY="38.0" prefHeight="26.0" prefWidth="176.0" promptText="Enter Nao IP" />
+                          <TextField fx:id="tx_Port" layoutX="196.0" layoutY="85.0" prefHeight="26.0" prefWidth="177.0" promptText="Enter Nao Port" />
                         <ComboBox fx:id="cb_IP" layoutX="402.0" layoutY="85.0" onAction="#setTextFields" prefWidth="150.0" />
                         <Label layoutX="122.0" layoutY="43.0" text="Enter IP" />
                         <Label layoutX="107.0" layoutY="90.0" text="Enter Port" />
-                        <Label layoutX="402.0" layoutY="33.0" prefHeight="20.0" prefWidth="146.0" text="Or select one of your " />
-                        <Label layoutX="402.0" layoutY="51.0" text="recent connections" />
+                        <Label layoutX="402.0" layoutY="33.0" prefHeight="20.0" prefWidth="173.0" text="Or select one of your " />
+                        <Label layoutX="402.0" layoutY="51.0" prefHeight="16.0" prefWidth="146.0" text="recent connections" />
                      </children>
                   </AnchorPane>
             </content>
@@ -52,7 +52,7 @@
                      <children>
                          <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="1080.0" stylesheets="@../ProgressBar.css" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
-                            <Tab text="Controls">
+                            <Tab fx:id="tab_Controls" text="Controls">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="640" prefWidth="1080">
                                        <children>
@@ -69,7 +69,7 @@
                                            <Button layoutX="33.0" layoutY="287.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="j" />
                                            <Button layoutX="60.0" layoutY="317.0" mnemonicParsing="false" onMousePressed="#moveHeadButtons" onMouseReleased="#moveHeadButtons" styleClass="button" stylesheets="@../Buttons.css" text="k" />
                                            <Label layoutX="44.0" layoutY="219.0" text="Head controls" />
-                                           <ToggleButton id="Stand" fx:id="tb_stand" layoutX="956.0" layoutY="44.0" mnemonicParsing="false" onAction="#mode" text="Stand">
+                                           <ToggleButton id="Stand" fx:id="tb_stand" layoutX="952.0" layoutY="44.0" mnemonicParsing="false" onAction="#mode" text="Stand">
                                                <toggleGroup>
                                                    <ToggleGroup fx:id="mode" />
                                                </toggleGroup>
@@ -87,7 +87,7 @@
                                        </children></AnchorPane>
                               </content>
                             </Tab>
-                            <Tab text="Audio">
+                            <Tab fx:id="tab_Audio" text="Audio">
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -104,12 +104,12 @@
                                           <TextArea fx:id="midButtonText" layoutX="734.0" layoutY="217.0" prefHeight="53.0" prefWidth="151.0" promptText="Bind a phrase to the middle button!" />
                                           <Label layoutX="765.0" layoutY="176.0" text="Head Buttons" />
                                           <Label layoutX="267.0" layoutY="279.0" prefHeight="16.0" prefWidth="123.0" text="Voice Speed" />
-                                          <Button fx:id="btn_play" layoutX="242.0" layoutY="335.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
+                                          <Button fx:id="btn_play" layoutX="234.0" layoutY="324.0" mnemonicParsing="false" onAction="#playSounds" text="Play" />
 
                                        </children></AnchorPane>
                               </content>
                             </Tab>
-                              <Tab text="Camera">
+                              <Tab fx:id="tab_Camera" text="Camera">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -138,7 +138,7 @@
                                     </AnchorPane>
                                 </content>
                               </Tab>
-                              <Tab text="System Status">
+                              <Tab fx:id="tab_Status" text="System Status">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                       <children>
@@ -179,13 +179,13 @@
           </Tab>
         </tabs>
       </TabPane>
-        <ProgressBar fx:id="batteryPercentage" layoutX="157.0" layoutY="680.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" stylesheets="@../ProgressBar.css">
+        <ProgressBar fx:id="batteryPercentage" layoutX="166.0" layoutY="680.0" prefHeight="20.0" prefWidth="102.0" progress="0.0" stylesheets="@../ProgressBar.css">
          <styleClass>
             <String fx:value="bar" />
             <String fx:value="track" />
          </styleClass></ProgressBar>
         <Circle fx:id="connectCircle" fill="#f01414" layoutX="616.0" layoutY="691.0" radius="8.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="523.0" layoutY="683.0" text="Connected:" />
+      <Label layoutX="508.0" layoutY="683.0" text="Connected:" />
         <ListView fx:id="lv_log" layoutX="21.0" layoutY="495.0" prefHeight="160.0" prefWidth="1037.0" />
 
     </children>
