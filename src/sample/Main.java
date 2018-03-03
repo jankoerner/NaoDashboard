@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.image.*;
+import javafx.stage.WindowEvent;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -33,7 +35,19 @@ public class Main extends Application {
         scene = new Scene(root,1080,720);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.getIcons().add(new Image("file:./default_app.png"));
+        primaryStage.getIcons().add(new Image("file:./default_app.png")); // fügt ein icon hinzu, nicht sicher ob das als jar auch funktioniert
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                event.consume();                       // verhindert, dass das event (stageclose) ausgeführt wird
+                if(Controller.session!=null&&Controller.session.isConnected()) Controller.log.write("Please disconnect before exiting. WARN");
+                else System.exit(0);
+                //wenn hier die methode aus dem controller, sich zu disconnecten aufgerufen wird
+                //sind die ganzen elemente aus dem fxml null weswegen es zu einem fehler kommt
+                //deswegen einfach meldung an den nutzer dass man disconnecten sollte
+                // System.exit um alle threads zu killen
+            }
+        });
     }
 
     public static void main(String[] args) {

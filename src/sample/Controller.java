@@ -40,7 +40,7 @@ public class Controller {
 
     VideoModel videoModel = new VideoModel();
     public static LogModel log = new LogModel();
-    private static Session session;
+    public static Session session;
     private LEDModel ledModel;
     private ConnectionModel connectionModel = new ConnectionModel();
     private TextToSpeechModel textToSpeechModel;
@@ -309,15 +309,15 @@ public class Controller {
     @FXML
     private void disconnect(){
         Utils.disconnectMessage(session);
-        session.close();
-        log.write("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
-        UpdateItems(true, false);
         checkerModel.killCheckers(batteryPercentage, temperatureText);
         VideoModel videoModel = new VideoModel();
         if(ch_camera.isSelected()){
             videoModel.unsubscribe();
             ch_camera.setSelected(false);
         }
+        session.close();
+        log.write("Disconnected from Nao "+connectionModel.getNaoUrl()+". INFO");
+        UpdateItems(true, false);
     }
 
     /**
