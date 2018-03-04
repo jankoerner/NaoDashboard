@@ -6,6 +6,8 @@ Verbindungen:
 - Verbindungen werden nicht doppelt gespeichert: auf Duplikate überprüft und entsprechend die Reihenfolge angepasst
 - dazu: eigene Überprüfung mit timeout ob die eingegebene Adresse erreichbar ist. Erst dann wird verbunden. 
 - connect & disconnect möglich
+Ausruhen, Aufstehen:
+- per Togglebuttons
 Laufen:
 - Nao läuft gerade aus, zur Seite, nach hinten auf Tastendruck (wasd) oder auf "Button" druck (wasd) 
 - kann kurven laufen indem man den slider während der Bewegung bewegt
@@ -15,16 +17,17 @@ Kopf:
 - Nao bewegt seinen Kopf mit ijklm per Tastendruck oder per "Button" druck
 - m setzt seinen Kopf dabei in die mitte
 LED:
-- alle LEDs des Nao ansteuerbar, in Gruppen unterteilt
+- alle LEDs des Nao ansteuerbar, in Gruppen unterteilt (nicht nur Augen, wie in Must-Haves gefordert)
 - alle Farben und an/aus möglich
 Sprechen:
 - Nao kann in allen verfügbaren Sprachen einen eingegebenen Text sprechen
 - Lautstärke, pitch, Geschwindigkeit regulierbar
 Audio:
 - Audiofiles im Set "Aldebaran" können abgespielt werden
-- Abfrage, ob Set existiert. Wenn nicht wird die listview auch nicht angezeigt.
+- Abfrage, ob Set existiert. Wenn nicht wird die listview und der playbutton auch nicht angezeigt.
+  Es gibt keine Fehlermeldung bei nicht vorhandenem Set.
 Sensoren:
-- beim vorderen Sensor 'dabt' der Nao 
+- beim vorderen Kopfsensor 'dabt' der Nao
 - die hinteren beiden lassen den Nao einen eingegebenen Satz sagen
 Batterie:
 - Batteriestand wird geladen und am unteren Programmrand angezeigt und ins log geschrieben wenn er unter 10% liegt.
@@ -57,3 +60,5 @@ GUI:
 Enthält tabs: Control, Audio, Camera, System Information (...).
 Diese Tabs enthalten Boxen/Listen mit Informationen, die vom NAO geladen werden müssen. Damit die Verbindung zum Nao nicht so lange hängt, werden diese Informationen erst beim Wechseln auf den NAO-tab geladen.
 Laufen und kopfbewegung durch Tastendruck ist auf allen Tabs möglich.
+FXML - Grün-Blaues Theme
+- Außerdem: windowresizelistener durch den die gui je nach Größe der Scene verschoben und teils skaliert wird.
