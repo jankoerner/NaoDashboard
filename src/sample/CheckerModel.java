@@ -51,7 +51,7 @@ public class CheckerModel {
             if(end){
                 memory.unsubscribeAllEvents();
 
-            }
+            }//css changes bar color depending on current charge
             if(alBattery.getBatteryCharge() == 0){
                 batteryPercentage.setStyle("-fx-background-color: black");
                 batteryPercentText.setText("No battery detected");
@@ -99,7 +99,7 @@ public class CheckerModel {
 
     /**
      * task which checks the temperature of the nao in its body parts
-     * doesnt work on naos (returns weird values)
+     * doesnt work on all naos (returns weird values)
      * @param session
      * @param temperatureText
      * @param rightArmTempText
@@ -126,7 +126,9 @@ public class CheckerModel {
 
                             ArrayList tempEvent = (ArrayList) alBodyTemperature.getTemperatureDiagnosis();
                             System.out.println(tempEvent);
-
+                            //loops over array determining body parts and their temperature status
+                            //because status 0 is negligible, the temperature warning only changes state
+                            //for status 1 (critical) or 2 (very serious)
                             for (int i = 0; i <= tempEvent.size() -1; i++) {
                                 if(tempEvent.get(i).equals(0)){
                                     temperatureText.setText("Cool");

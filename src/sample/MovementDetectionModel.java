@@ -50,7 +50,7 @@ public class MovementDetectionModel {
                 alTextToSpeech.say("Danger Will Robinson! Danger!", "English");
                 // This is the suspected bug.
                 // Because alMemory is likely not visible within onEvent, the unsubscribe doesn't function
-                // and the loop gets created. We would need a robot to test.  
+                // and the loop gets created. We would need a robot to test.
                 alMemory.unsubscribeToEvent(eventID);
             }
         });
